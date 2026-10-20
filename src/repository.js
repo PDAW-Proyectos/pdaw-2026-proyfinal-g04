@@ -39,7 +39,7 @@ export class Repository {
     }
 
     async actualizar(entidad) {
-            const entidadIndex = this.entidades.indexOf(entidad.id);
+            const entidadIndex = this.entidades.indexOf(entidad);
             this.entidades[entidadIndex] = entidad;
             await this.guardar();
             return this.entidades[entidadIndex];
