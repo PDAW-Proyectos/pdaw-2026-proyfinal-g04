@@ -60,6 +60,7 @@ npm test
 
 Registrar aquí qué herramientas se usaron, para qué tareas y qué se adoptó de sus propuestas.
 
-| Fecha | Herramienta | Tarea | Qué se adoptó y por qué |
-| ----- | ----------- | ----- | ----------------------- |
-|       |             |       |                         |
+| Fecha | Herramienta |             Tarea                   | Qué se adoptó y por qué |
+| ----- | ----------- | ----------------------------------- | ----------------------- |
+| 19/10 |    Copilot  | Ejercicio de creación de            |                         |
+|       |             | wireframes de una misma página web  |                         |
