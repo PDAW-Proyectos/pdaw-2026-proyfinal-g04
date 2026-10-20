@@ -1,12 +1,12 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-export class repository {
+export class Repository {
     ruta;
     entidades;
     proximoId;
 
     constructor(ruta) {
-        if (new.target === User) throw new TypeError('Repository es abstracta');
+        if (new.target === Repository) throw new TypeError('Repository es abstracta');
         if (!ruta) throw new TypeError('ruta no puede ser nulo');
         this.ruta = ruta;
         this.entidades = [];
