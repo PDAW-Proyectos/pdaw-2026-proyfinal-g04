@@ -2,9 +2,11 @@ import express from "express";
 import path from "node:path";
 import session from "express-session";
 import { fileURLToPath } from "node:url";
+import { Repository } from "./src/repository";
+import crearRouterUsuarios from "./src/modules/Usuario/usuario.routes";
 
 const app = express();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+export const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -17,13 +19,11 @@ app.use(
   }),
 );
 
-const RUTA_DATOS = path.join(__dirname, "data", "publicaciones.json");
 
 
-// app.use(
-//   "/api/usuarios",
-//   crearRouterUsuario(repositorio, repositorioUsuarios),
-// );
+// Rutas
+app.use("/api/usuarios", crearRouterUsuarios());
+
 
 const port = Number(process.env.PORT ?? 3000);
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
