@@ -13,6 +13,12 @@ export class Repository {
         this.proximoId = 1;
     }
 
+    static async inicializar(ruta) {
+        const repository = new Repository(ruta)
+        await repository.#cargar();
+        return repository;
+    }
+
     buscarPorId(id) {
         return this.entidades.find((e) => e.id === Number(id));
     }
@@ -21,7 +27,7 @@ export class Repository {
         return [...this.entidades];
     }
 
-    async agregar(entidad) {
+    async crear(entidad) {
         entidad.id = this.proximoId++;
         this.entidades.push(entidad);
         await this.guardar();
@@ -49,7 +55,7 @@ export class Repository {
         await writeFile(this.ruta, JSON.stringify(this.entidades, null, 2), "utf8");
     }
 
-    async cargar() {
+    async #cargar() {
         try {
             const datos = JSON.parse(await readFile(this.ruta, "utf8"));
             this.cargarDesdeJson(datos);

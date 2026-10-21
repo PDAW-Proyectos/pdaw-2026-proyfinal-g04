@@ -1,15 +1,19 @@
 
-import { UserRepository } from "./usuario.repository.js";
+import path from "node:path";
+import { Repository } from "../../repository.js";
+import { __dirname } from "../../../server.js";
+
+const RUTA_USUARIOS = path.join(__dirname, "data", "Usuarios.json");
 
 export class UserService {
     userRepository;
 
-    constructor(userRepository = new UserRepository()) {
-        this.userRepository = userRepository;
+    constructor(userRepository = Repository.inicializar(RUTA_USUARIOS)) {
+        this.userRepository = userRepository
     }
 
     async listarUsuarios() {
-        return await this.userRepository.listar();
+        return this.userRepository.listar();
     }
 
     async buscarUsuario(id) {
@@ -25,7 +29,7 @@ export class UserService {
     }
 
     async crearUsuario(datos) {
-        return await this.userRepository.agregar(datos);
+        return await this.userRepository.crear(datos);
     }
 
     async actualizarUsuario(id, datos) {
