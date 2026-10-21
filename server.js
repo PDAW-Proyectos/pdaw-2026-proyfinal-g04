@@ -2,6 +2,7 @@ import express from "express";
 import path from "node:path";
 import session from "express-session";
 import { fileURLToPath } from "node:url";
+import { Repository } from "./src/repository";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,13 +18,12 @@ app.use(
   }),
 );
 
-const RUTA_DATOS = path.join(__dirname, "data", "publicaciones.json");
+const RUTA_USUARIOS = path.join(__dirname, "data", "Usuarios.json");
+const userRepository = new Repository(RUTA_USUARIOS)
 
+// Rutas
+app.use("/api/usuarios",crearRouterUsuarios(userRepository),);
 
-// app.use(
-//   "/api/usuarios",
-//   crearRouterUsuario(repositorio, repositorioUsuarios),
-// );
 
 const port = Number(process.env.PORT ?? 3000);
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
