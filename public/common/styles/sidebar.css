@@ -1,0 +1,363 @@
+
+/* =========================
+   CONFIGURACIÓN GENERAL
+========================= */
+
+body {
+    font-family: "Century Gothic", sans-serif;
+    background-color: #f1f9e4;
+}
+
+/* =========================
+   BARRA LATERAL
+========================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+
+    width: 88px;
+    height: 100vh;
+    margin-left: 15px;
+    padding: 22px 8px;
+
+    box-sizing: border-box;
+    overflow: visible;
+
+    background: transparent;
+    color: #e8e9e3;
+    border: none;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.sidebar-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 8px;
+}
+
+.sidebar-logo img {
+    width: 80px;
+    height: auto;
+
+    transition: transform 500ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.sidebar-logo:hover img {
+    transform: rotate(-7deg) scale(1.3);
+}
+
+/* =========================
+   PERFIL
+========================= */
+
+.sidebar-perfil {
+    position: relative;
+    isolation: isolate;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+
+    padding: 0;
+    margin-bottom: 4px;
+
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    background: #dde1d6c8;
+    color: #292b27;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color 400ms ease,
+        color 350ms ease,
+        transform 500ms cubic-bezier(.22, .8, .25, 1),
+        box-shadow 400ms ease;
+}
+
+/* Foto de perfil */
+
+.perfil-foto {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 8px;
+    object-fit: cover;
+
+    transition: transform 500ms cubic-bezier(.16, 1, .3, 1);
+}
+
+/* Hover del perfil */
+
+.sidebar-perfil:hover {
+    background: #050505;
+    color: #c2ff38;
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px #00000030;
+}
+
+.sidebar-perfil:hover .perfil-foto {
+    transform: scale(1.20);
+}
+
+/* =========================
+   NAVEGACIÓN
+========================= */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+}
+
+/* Enlaces y botón Productos */
+
+.sidebar .nav-enlace {
+    position: relative;
+    isolation: isolate;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+
+    padding: 0;
+    box-sizing: border-box;
+
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    background: #dde1d6c8;
+    color: #292b27;
+
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+        background-color 400ms ease,
+        color 350ms ease,
+        transform 500ms cubic-bezier(.22, .8, .25, 1),
+        box-shadow 400ms ease;
+}
+
+/* Íconos */
+
+.sidebar .nav-enlace svg,
+.sidebar-cerrar-caja svg {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+
+    color: inherit;
+
+    transition:
+        transform 500ms cubic-bezier(.22, .8, .25, 1),
+        color 350ms ease;
+}
+
+/* Hover */
+
+.sidebar .nav-enlace:hover,
+.sidebar .nav-enlace:focus-visible {
+    background: #050505;
+    color: #c2ff38;
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px #00000030;
+}
+
+.sidebar .nav-enlace:hover svg {
+    transform: scale(1.20);
+}
+
+/* Los enlaces vecinos siguen el hover con una leve curva */
+.sidebar-nav .nav-enlace:not(:hover):not(:focus-visible):not(.activo):has(+ .nav-enlace:is(:hover, :focus-visible, .activo)) {
+    transform: translateX(6px) scale(1.12);
+}
+
+.sidebar-nav .nav-enlace:is(:hover, :focus-visible, .activo) + .nav-enlace:not(:hover):not(:focus-visible):not(.activo) {
+    transform: translateX(-6px) scale(1.12);
+}
+
+/* Opción seleccionada */
+
+.sidebar .nav-enlace.activo {
+    background: #050505;
+    color: #c2ff38;
+    border-color: #c2ff3840;
+    transform: scale(1.06);
+    box-shadow: 0 5px 16px #00000020;
+}
+
+.sidebar .nav-enlace.activo:hover {
+    transform: scale(1.12);
+    box-shadow: 0 8px 22px #00000035;
+}
+
+/* Ocultar flecha del desplegable */
+
+.nav-flecha {
+    display: none;
+}
+
+/* =========================
+   ETIQUETAS FLOTANTES
+   Perfil, menú y Cerrar caja
+========================= */
+
+.sidebar-perfil > span,
+.sidebar .nav-enlace > span,
+.sidebar-cerrar-caja > span {
+    position: absolute;
+    left: calc(100% + 14px);
+    top: 50%;
+    z-index: 20;
+
+    width: max-content;
+    max-width: 180px;
+    padding: 9px 12px;
+
+    border-radius: 9px;
+    background: #20221d;
+    color: #f3f4ed;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: left;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transform: translate(-6px, -50%);
+
+    transition:
+        opacity 250ms ease,
+        transform 400ms cubic-bezier(.16, 1, .3, 1),
+        visibility 250ms ease;
+}
+
+/* Mostrar etiquetas al pasar el mouse o usar el teclado */
+
+.sidebar-perfil:hover > span,
+.sidebar-perfil:focus-visible > span,
+.sidebar .nav-enlace:hover > span,
+.sidebar .nav-enlace:focus-visible > span,
+.sidebar-cerrar-caja:hover > span,
+.sidebar-cerrar-caja:focus-visible > span {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, -50%);
+}
+
+/* =========================
+   SUBMENÚ DE PRODUCTOS
+========================= */
+
+.nav-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    width: 100%;
+    padding: 4px 0;
+}
+
+.nav-submenu[hidden] {
+    display: none;
+}
+
+.nav-submenu a {
+    display: block;
+
+    padding: 7px 2px;
+
+    color: #92958c;
+    font-size: 9px;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+
+    overflow-wrap: anywhere;
+    transition: color 250ms ease;
+}
+
+.nav-submenu a:hover {
+    color: #c2ff38;
+}
+
+/* =========================
+   CERRAR CAJA
+========================= */
+
+.sidebar-cerrar-caja {
+    position: relative;
+    isolation: isolate;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+
+    padding: 0;
+    margin-top: auto;
+    margin-bottom: 8px;
+
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    background: #c2ff38;
+    color: #292b27;
+
+    cursor: pointer;
+
+    transition:
+        background-color 400ms ease,
+        color 350ms ease,
+        transform 600ms cubic-bezier(.16, 1, .3, 1),
+        box-shadow 400ms ease;
+}
+
+.sidebar-cerrar-caja:hover,
+.sidebar-cerrar-caja:focus-visible {
+    background: #050505;
+    color: #c2ff38;
+    transform: scale(1.20);
+    box-shadow: 0 8px 20px #00000030;
+}
+
+.sidebar-cerrar-caja:hover svg {
+    transform: scale(1.08);
+}

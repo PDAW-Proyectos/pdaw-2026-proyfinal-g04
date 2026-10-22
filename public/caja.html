@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="common/styles/sidebar.css" rel="stylesheet">
+    <link href="common/styles/caja.css" rel="stylesheet">
+    <title>KCHIN</title>
+</head>
+<body>
+    <!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <a class="sidebar-logo">
+        <img src="img/Logo-reducido-negro.svg" alt="KCHIN">
+    </a>
+    <a class="sidebar-perfil">
+        <i data-lucide="user-round" aria-hidden="true"></i>
+        <span>Perfil</span>
+    </a>
+    <nav class="sidebar-nav" aria-label="Navegación principal">
+
+        <a href="index.html" class="nav-enlace">
+            <i data-lucide="layout-grid" aria-hidden="true"></i>
+            <span>Catálogo</span>
+        </a>
+
+        <a class="nav-enlace">
+            <i data-lucide="receipt-text" aria-hidden="true"></i>
+            <span>Ventas</span>
+        </a>
+
+        <a class="nav-enlace" data-nav="arqueo">
+            <i data-lucide="calculator" aria-hidden="true"></i>
+            <span>Arqueo</span>
+        </a>
+
+        <a class="nav-enlace" data-nav="historial">
+            <i data-lucide="history" aria-hidden="true"></i>
+            <span>Historial</span>
+        </a>
+
+    </nav>
+
+    <button
+        type="button"
+        class="sidebar-cerrar-caja"
+        id="boton-cerrar-caja"
+    >
+        <i data-lucide="lock-keyhole" aria-hidden="true"></i>
+        <span>Cerrar caja</span>
+    </button>
+
+</aside>
+
+<main class="caja-main">
+    <header class="caja-header">
+        <div>
+            <p class="caja-eyebrow">KCHIN / PUNTO DE VENTA</p>
+            <h1 id="nombre-cajero">Cajero 1</h1>
+            <p class="caja-descripcion">
+                ¡Todo listo para vender!
+            </p>
+        </div>
+
+        <div class="caja-estado">
+            <span class="estado-indicador"></span>
+            Caja abierta
+        </div>
+    </header>
+
+    <!-- Búsqueda y filtros -->
+    <section class="catalogo-controles" aria-label="Buscar productos">
+        <label class="buscador">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input
+                type="search"
+                id="buscar-producto"
+                placeholder="Buscar productos..."
+                autocomplete="off"
+            >
+        </label>
+
+        <button
+            type="button"
+            class="boton-filtros"
+            id="boton-filtros"
+            aria-label="Filtrar productos"
+        >
+            <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
+            <span>Filtros</span>
+        </button>
+    </section>
+
+    <!-- Catálogo dinámico -->
+    <div id="catalogo-productos">
+        <section class="catalogo-seccion">
+            <div class="seccion-header">
+                <div>
+                    <p class="seccion-etiqueta">LO MÁS ELEGIDO</p>
+                    <h2>Más vendidos</h2>
+                </div>
+
+                <div class="seccion-controles">
+                    <button
+                        type="button"
+                        class="boton-desplazar"
+                        aria-label="Ver productos anteriores"
+                    >
+                        <i data-lucide="chevron-left" aria-hidden="true"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="boton-desplazar"
+                        aria-label="Ver más productos"
+                    >
+                        <i data-lucide="chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="productos-carrusel" id="productos-mas-vendidos">
+           
+            </div>
+        </section>
+
+        <div id="catalogo-categorias">
+         
+        </div>
+    </div>
+</main>
+
+<!-- Panel de cobro -->
+<aside class="cobro-panel" aria-labelledby="titulo-cobro">
+    <header class="cobro-header">
+        <div>
+            <p class="cobro-eyebrow">PUNTO DE VENTA</p>
+            <h2 id="titulo-cobro">Venta actual</h2>
+        </div>
+
+        <span class="cobro-contador" id="cantidad-productos">0</span>
+    </header>
+
+    <div class="cobro-vacio" id="carrito-productos">
+        <i data-lucide="shopping-basket" aria-hidden="true"></i>
+        <h3>Tu venta está vacía</h3>
+        <p>Elegí productos del catálogo para comenzar.</p>
+    </div>
+
+    <div class="cobro-resumen">
+        <div class="cobro-linea">
+            <span>Subtotal</span>
+            <span id="subtotal-venta">$ 0,00</span>
+        </div>
+
+        <div class="cobro-linea">
+            <span>Descuentos</span>
+            <span id="descuento-venta">$ 0,00</span>
+        </div>
+
+        <div class="cobro-total">
+            <span>Total</span>
+            <strong id="total-venta">$ 0,00</strong>
+        </div>
+
+        <button type="button" class="boton-cobrar" id="boton-cobrar" disabled>
+            <span>Cobrar venta</span>
+            <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+        </button>
+    </div>
+</aside>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="common/components/sidebar.js"></script>
+</body>
+
+</html>
