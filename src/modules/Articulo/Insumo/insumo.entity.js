@@ -1,3 +1,5 @@
+import { Articulo } from "../articulo.entity.js"
+
 export class Insumo extends Articulo {
     #uso;
 

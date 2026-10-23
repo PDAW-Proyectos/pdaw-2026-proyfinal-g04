@@ -1,4 +1,6 @@
-export class Insumo extends Articulo {
+import { Articulo } from "../articulo.entity.js"
+
+export class Producto extends Articulo {
     #precio;
 
     constructor({ id, nombre, categoria, descripcion, stock, precio }) {

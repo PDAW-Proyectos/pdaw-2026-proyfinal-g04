@@ -62,7 +62,8 @@ export class Repository {
     }
 
     async guardar() {
-        await writeFile(this.#ruta, JSON.stringify(this.#entidades, null, 2), "utf8");
+        const mapeo = this.#entidades.map((e) => e.tipo = e.constructor.name)
+        await writeFile(this.#ruta, JSON.stringify(mapeo, null, 2), "utf8");
     }
 
     async #cargar() {

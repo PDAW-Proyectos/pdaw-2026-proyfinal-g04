@@ -1,6 +1,3 @@
-
-import { Repository } from "../../repository.js";
-
 export class ProductoService {
     articuloRepository;
 

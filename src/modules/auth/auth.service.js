@@ -4,7 +4,7 @@ import { UserService } from "../Usuario/usuario.service.js";
 export class AuthService {
     userService;
 
-    constructor(userService = new UserService()) {
+    constructor(userService) {
         this.userService = userService;
     }
 

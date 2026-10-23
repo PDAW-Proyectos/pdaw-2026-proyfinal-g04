@@ -1,5 +1,6 @@
 
 import { Repository } from "../../repository.js";
+import { Usuario } from "./Usuario.entity.js";
 
 export class UserService {
     userRepository;
@@ -31,6 +32,7 @@ export class UserService {
 
     async crearUsuario(datos) {
         const usuario = new Usuario(datos)
+        usuario.tipo = "Usuario"
         return await this.userRepository.crear(usuario);
     }
 
@@ -38,7 +40,7 @@ export class UserService {
             const anterior = await this.userRepository.buscarPorId(id)
             let usuario
             if(!anterior) {
-                const error = new Error =("Usuario no encontrado")
+                const error = new Error ("Usuario no encontrado")
                 error.status = 404
                 throw error
             }
