@@ -30,8 +30,9 @@ export class Repository {
     }
 
     async crear(entidad) {
-        entidad.id = this.proximoId++;
-        this.entidades.push(entidad);
+        entidad.id = this.#proximoId++;
+        const entidadCreada = this.#factory.crear(entidad);
+        this.#entidades.push(entidadCreada);
         await this.guardar();
         return this.#entidades[this.#entidades.length - 1];
     }
@@ -47,11 +48,13 @@ export class Repository {
     }
 
     async actualizar(entidad) {
-            const entidadIndex = this.#entidades.indexOf(entidad);
-            this.#entidades[entidadIndex] = entidad;
-            await this.guardar();
-            return this.#entidades[entidadIndex];
-        }
+        const entidadActualizada = this.#factory.crear(entidad);
+        Object.assign(entidadActualizada, entidad);
+        const entidadIndex = this.#entidades.indexOf(entidadActualizada);
+        this.#entidades[entidadIndex] = entidad;
+        await this.guardar();
+        return this.#entidades[entidadIndex];
+    }
 
     async guardar() {
         await writeFile(this.#ruta, JSON.stringify(this.#entidades, null, 2), "utf8");
