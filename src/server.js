@@ -2,8 +2,13 @@ import express from "express";
 import path from "node:path";
 import session from "express-session";
 import { fileURLToPath } from "node:url";
-import { Repository } from "./repository";
-import crearRouterUsuarios from "./modules/Usuario/usuario.routes";
+import { Repository } from "./src/repository";
+import { UserService } from "./src/modules/Usuario/usuario.service.js";
+import { UserController } from "./src/modules/Usuario/usuario.controller.js";
+import { InsumoService } from "./src/modules/Articulo/Insumo/insumo.service.js";
+import { ProductoService } from "./src/modules/Articulo/Producto/producto.service.js";
+import { DependencyInjector } from "./src/dependencyInjector";
+import crearRouterUsuarios from "./src/modules/Usuario/usuario.routes";
 
 const app = express();
 export const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,10 +24,26 @@ app.use(
   }),
 );
 
+const dependencyInjector = new DependencyInjector();
+dependencyInjector.registerSingleton("userRepository", {factory: () => Repository.inicializar(path.join(__dirname, "data", "Usuarios.json"))});
+dependencyInjector.registerSingleton("articuloRepository", {factory: () => Repository.inicializar(path.join(__dirname, "data", "Articulos.json"))});
+dependencyInjector.registerTransient("userService", {
+  factory: () => {
+    const userRepository = dependencyInjector.resolve("userRepository");
+    return new UserService(userRepository);
+  }
+});
+dependencyInjector.registerTransient("userController", {
+  factory: () => {
+    const userService = dependencyInjector.resolve("userService");
+    return new UserController(userService);
+  }
+});
 
+const userController = dependencyInjector.resolve("userController");
 
 // Rutas
-app.use("/api/usuarios", crearRouterUsuarios());
+app.use("/api/usuarios", crearRouterUsuarios(userController));
 
 
 const port = Number(process.env.PORT ?? 3000);

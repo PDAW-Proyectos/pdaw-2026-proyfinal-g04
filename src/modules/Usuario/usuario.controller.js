@@ -4,7 +4,7 @@ import { UserService } from "./usuario.service.js";
 export class UserController {
     userService;
 
-    constructor(userService = new UserService()) {
+    constructor(userService) {
         this.userService = userService;
     }
 

@@ -3,7 +3,7 @@ import { ProductoService } from "./producto.service.js";
 export class ProductoController {
     productoService;
 
-    constructor(productoService = new ProductoService()) {
+    constructor(productoService) {
         this.productoService = productoService;
     }
 

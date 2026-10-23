@@ -3,7 +3,7 @@ import { InsumoService } from "./insumo.service.js";
 export class InsumoController {
     insumoService;
 
-    constructor(insumoService = new InsumoService()) {
+    constructor(insumoService) {
         this.insumoService = insumoService;
     }
 
