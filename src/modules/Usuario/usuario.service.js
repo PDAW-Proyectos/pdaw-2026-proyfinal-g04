@@ -1,14 +1,10 @@
 
-import path from "node:path";
 import { Repository } from "../../repository.js";
-import { __dirname } from "../../../server.js";
-
-const RUTA_USUARIOS = path.join(__dirname, "data", "Usuarios.json");
 
 export class UserService {
     userRepository;
 
-    constructor(userRepository = Repository.inicializar(RUTA_USUARIOS)) {
+    constructor(userRepository) {
         this.userRepository = userRepository
     }
 
