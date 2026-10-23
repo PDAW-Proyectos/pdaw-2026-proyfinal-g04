@@ -25,6 +25,11 @@ export class Repository {
         return this.#entidades.find((e) => e.id === Number(id));
     }
 
+    buscarPorPropiedad({ ...propiedad }) {
+        const [key, value] = Object.entries(propiedad)[0];
+        return this.#entidades.find((e) => e[key] === value);
+    }
+
     listar() {
         return [...this.#entidades];
     }

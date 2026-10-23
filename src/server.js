@@ -2,8 +2,8 @@ import express from "express";
 import path from "node:path";
 import session from "express-session";
 import { fileURLToPath } from "node:url";
-import { Repository } from "./src/repository";
-import crearRouterUsuarios from "./src/modules/Usuario/usuario.routes";
+import { Repository } from "./repository";
+import crearRouterUsuarios from "./modules/Usuario/usuario.routes";
 
 const app = express();
 export const __dirname = path.dirname(fileURLToPath(import.meta.url));

@@ -1,7 +1,8 @@
 
 import path from "node:path";
 import { Repository } from "../../repository.js";
-import { __dirname } from "../../../server.js";
+import { __dirname } from "../../server.js";
+import { Usuario } from "./Usuario.entity.js";
 
 const RUTA_USUARIOS = path.join(__dirname, "data", "Usuarios.json");
 
@@ -28,23 +29,33 @@ export class UserService {
         return usuario;
     }
 
+    async buscarUsuarioPorEmail(email) {
+        const usuario = await (await this.userRepository).buscarPorPropiedad(email);
+        return usuario;
+    }
+
     async crearUsuario(datos) {
-        return await this.userRepository.crear(datos);
+        const usuario = new Usuario(datos)
+        return await this.userRepository.crear(usuario);
     }
 
     async actualizarUsuario(id, datos) {
-        const usuario = await this.userRepository.actualizar(
-            id,
-            datos
-        );
-
-        if (!usuario) {
-            const error = new Error("Usuario no encontrado");
-            error.status = 404;
-            throw error;
-        }
-
-        return usuario;
+            const anterior = await this.userRepository.buscarPorId(id)
+            let usuario
+            if(!anterior) {
+                const error = new Error =("Usuario no encontrado")
+                error.status = 404
+                throw error
+            }
+            try {
+                const datosBase = Object.assign(anterior, datos)
+                usuario = await this.userRepository.actualizar(datosBase);
+            } catch (error) {
+                error.status = 400
+                throw error
+            }
+            
+        return usuario
     }
 
     async eliminarUsuario(id) {
