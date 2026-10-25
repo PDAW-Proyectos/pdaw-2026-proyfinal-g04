@@ -17,7 +17,7 @@ export class Repository {
 
     static async inicializar(ruta) {
         const repository = new Repository(ruta)
-        await repository.#cargar();
+        await repository.cargar();
         return repository;
     }
 
@@ -25,7 +25,7 @@ export class Repository {
         return this.#entidades.find((e) => e.id === Number(id));
     }
 
-    buscarPorPropiedad({ ...propiedad }) {
+    buscarPorPropiedad(propiedad) {
         const [key, value] = Object.entries(propiedad)[0];
         return this.#entidades.find((e) => e[key] === value);
     }
@@ -38,7 +38,7 @@ export class Repository {
         entidad.id = this.#proximoId++;
         const entidadCreada = this.#factory.crear(entidad);
         this.#entidades.push(entidadCreada);
-        await this.guardar();
+        await this.#guardar();
         return this.#entidades[this.#entidades.length - 1];
     }
 
@@ -48,25 +48,27 @@ export class Repository {
             return false;
         }
         this.#entidades.splice(this.#entidades.indexOf(entidad), 1);
-        await this.guardar();
+        await this.#guardar();
         return true;
     }
 
     async actualizar(entidad) {
         const entidadActualizada = this.#factory.crear(entidad);
-        Object.assign(entidadActualizada, entidad);
-        const entidadIndex = this.#entidades.indexOf(entidadActualizada);
-        this.#entidades[entidadIndex] = entidad;
-        await this.guardar();
+        const entidadEncontrada = this.buscarPorId(entidad.id);
+        const entidadIndex = this.#entidades.indexOf(entidadEncontrada)
+        const {tipo, ...entidadSinTipo} = entidad
+        Object.assign(entidadActualizada, entidadSinTipo);
+        this.#entidades[entidadIndex] = entidadActualizada;
+        await this.#guardar();
         return this.#entidades[entidadIndex];
     }
 
-    async guardar() {
-        const mapeo = this.#entidades.map((e) => e.tipo = e.constructor.name)
+    async #guardar() {
+        const mapeo = this.#entidades.map((e) => ({ ...e, tipo: e.constructor.name }));
         await writeFile(this.#ruta, JSON.stringify(mapeo, null, 2), "utf8");
     }
 
-    async #cargar() {
+    async cargar() {
         try {
             const datos = JSON.parse(await readFile(this.#ruta, "utf8"));
             this.#cargarDesdeJson(datos);

@@ -1,3 +1,11 @@
 [
-  "Usuario"
+  {
+    "id": 1,
+    "email": "nachoalonso",
+    "contraseña": "$2b$12$U02NASStzt.O0lZ4ifeawOeaQmPF5NMnkrBTDKrLsp00eSea.OqWi",
+    "nombre": "Joaco",
+    "apellido": "Yakete",
+    "rol": "admin",
+    "tipo": "Usuario"
+  }
 ]

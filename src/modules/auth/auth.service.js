@@ -11,13 +11,13 @@ export class AuthService {
     async signup({ nombre, apellido, email, password, rol }) {
         const exists = await this.userService.buscarUsuarioPorEmail(email);
         if(exists) throw new Error("El email está en uso")
-        const passwordHash = await bcrypt.hash(password, 12);
+        const contraseña = await bcrypt.hash(password, 12);
 
         const datos = {
             nombre,
             apellido,
             email,
-            passwordHash,
+            contraseña,
             rol
         };
 
@@ -27,10 +27,9 @@ export class AuthService {
     async login({ email, password }) {
         const credenciales =
             await this.userService.buscarUsuarioPorEmail(email);
-
         if (
             !credenciales ||
-            !(await bcrypt.compare(password, credenciales.passwordHash))
+            !(await bcrypt.compare(password, credenciales.contraseña))
         ) {
             const error = new Error("Email o contraseña incorrectos");
             error.status = 401;

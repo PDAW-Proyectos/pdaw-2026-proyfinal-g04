@@ -26,14 +26,13 @@ export class UserService {
     }
 
     async buscarUsuarioPorEmail(email) {
-        const usuario = await (await this.userRepository).buscarPorPropiedad(email);
+        const usuario = await this.userRepository.buscarPorPropiedad({email: email});
         return usuario;
     }
 
     async crearUsuario(datos) {
-        const usuario = new Usuario(datos)
-        usuario.tipo = "Usuario"
-        return await this.userRepository.crear(usuario);
+        datos.tipo = "Usuario"
+        return await this.userRepository.crear(datos);
     }
 
     async actualizarUsuario(id, datos) {
@@ -46,6 +45,7 @@ export class UserService {
             }
             try {
                 const datosBase = Object.assign(anterior, datos)
+                datosBase.tipo = "Usuario"
                 usuario = await this.userRepository.actualizar(datosBase);
             } catch (error) {
                 error.status = 400

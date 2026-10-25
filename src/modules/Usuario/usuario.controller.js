@@ -6,6 +6,11 @@ export class UserController {
 
     constructor(userService) {
         this.userService = userService;
+        this.listarUsuarios = this.listarUsuarios.bind(this);
+        this.buscarUsuario = this.buscarUsuario.bind(this);
+        this.crearUsuario = this.crearUsuario.bind(this);
+        this.actualizarUsuario = this.actualizarUsuario.bind(this);
+        this.eliminarUsuario = this.eliminarUsuario.bind(this);
     }
 
     async listarUsuarios(req, res, next) {

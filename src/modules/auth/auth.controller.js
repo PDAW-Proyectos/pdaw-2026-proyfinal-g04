@@ -11,7 +11,6 @@ export class AuthController {
 
     async signup(req, res, next) {
         try {
-            console.log(this.authService);
             const usuario = await this.authService.signup(req.body);
 
             return res.status(201).json(usuario);

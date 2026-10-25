@@ -7,11 +7,13 @@ export class Usuario {
     activo
     rol
 
-    constructor({ id, email, passwordHash, nombre, apellido, rol }) {
-
-        this.id
+    constructor({ id, email, contraseña, nombre, apellido, rol }) {
+        if(!email || email.length === 0) {
+            throw new Error("Email vacio")
+        }
+        this.id = id;
         this.email = email
-        this.contraseña = passwordHash
+        this.contraseña = contraseña
         this.nombre = nombre;
         this.apellido = apellido;
         this.rol = rol;
