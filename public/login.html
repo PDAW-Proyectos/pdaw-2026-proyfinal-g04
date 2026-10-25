@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="common/styles/login.css" />
+    <title>KCHIN | Iniciar sesión</title>
+  </head>
+ <body>
+  <main class="login-card role-cajero" id="loginCard">
+
+  <div class="fondo-hero" aria-hidden="true"></div>
+  <div class="grafica-hero" aria-hidden="true">
+    <img src="img/Logo-desenfoque.svg" alt="Fondo KCHIN" style="width: 100%; height: 100%; object-fit: contain;">
+  </div>
+
+
+  <section class="form-container" aria-label="Acceso a KCHIN">
+    <div class="form-content">
+      
+      <header class="encabezado-formulario">
+        <p class="sub-badge">TU NEGOCIO, MÁS SIMPLE</p>
+        <h1 id="titulo-login" class="form-greeting">¡Hola de nuevo!</h1>
+        <p class="form-instruction" id="form-subtext">
+          Ingresá a tu cuenta de <strong>Cajero</strong> para continuar.
+        </p>
+      </header>
+
+      <form id="auth-form" class="auth-form">
+        <input type="hidden" name="role" id="selected-role-input" value="cajero">
+
+        <div class="input-group">
+          <label for="username">Correo electrónico o Legajo</label>
+          <input type="text" id="username" name="correo" placeholder="cajero@email.com" required />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <input type="password" name="contrasena" id="password" placeholder="Tu contraseña" required />
+        </div>
+
+        <p id="mensaje-login" class="mensaje-login"></p>
+
+        <button type="submit" id="boton-ingresar" class="btn-submit">
+          <span id="btn-text">Iniciar como Cajero</span>
+          <span aria-hidden="true" class="fa-solid fa-arrow-right">→</span>
+        </button>
+      </form>
+      
+    </div>
+  </section>
+
+  <section class="toggle-container" id="zona-hero" aria-label="Selecciona tu área de trabajo">
+    <div class="toggle">
+
+      <!-- Vista cajero -->
+      <article class="toggle-panel panel-cajero is-active" aria-hidden="false">
+        <div>
+          <div class="panel-header">
+            <p class="system-tag"><i class="fa-solid fa-circle"></i> KCHIN · PUNTO DE VENTA</p>
+          </div>
+          
+          <div class="panel-body">
+            <p class="panel-pretitle">Tu jornada empieza acá</p>
+            <h2 id="titulo-hero-cajero">¡A vender!</h2>
+            <p>Agilizá cada operación y disfrutá una caja más simple y rápida.</p>
+          </div>
+          
+          <div class="panel-step">
+            <span class="step-num">01</span>
+            <span class="step-line" aria-hidden="true"></span>
+            <p class="step-desc">Todo listo para atender clientes.</p>
+          </div>
+        </div>
+        
+        <nav class="panel-footer">
+          <p>¿Cuál es tu área?</p>
+          <div class="role-buttons">
+            <button type="button" class="btn-role active" data-role="cajero">Soy Cajero</button>
+            <button type="button" class="btn-role" data-role="admin">Soy Administrador</button>
+            <button type="button" class="btn-role" data-role="repositor">Soy Repositor</button>
+          </div>
+        </nav>
+      </article>
+
+      <!-- Vista admin -->
+      <article class="toggle-panel panel-admin" aria-hidden="true">
+        <div>
+          <div class="panel-header">
+            <p class="system-tag"><i class="fa-solid fa-circle"></i> KCHIN · ADMINISTRACIÓN</p>
+          </div>
+          
+          <div class="panel-body">
+            <p class="panel-pretitle">Panel de Control</p>
+            <h2 id="titulo-hero-administrador">¡A gestionar!</h2>
+            <p>Monitoreá métricas clave, controlá balances y configuraciones generales.</p>
+          </div>
+          
+          <div class="panel-step">
+            <span class="step-num">02</span>
+            <span class="step-line" aria-hidden="true"></span>
+            <p class="step-desc">Supervisión en tiempo real.</p>
+          </div>
+        </div>
+        
+        <nav class="panel-footer">
+          <p>¿Cuál es tu área?</p>
+          <div class="role-buttons">
+            <button type="button" class="btn-role" data-role="cajero">Soy Cajero</button>
+            <button type="button" class="btn-role active" data-role="admin">Soy Administrador</button>
+            <button type="button" class="btn-role" data-role="repositor">Soy Repositor</button>
+          </div>
+        </nav>
+      </article>
+
+      <!-- Vista repositor -->
+      <article class="toggle-panel panel-repositor" aria-hidden="true">
+        <div>
+          <div class="panel-header">
+            <p class="system-tag"><i class="fa-solid fa-circle"></i> KCHIN · INVENTARIO</p>
+          </div>
+          
+          <div class="panel-body">
+            <p class="panel-pretitle">Control de Stock</p>
+            <h2 id="titulo-hero-repositor">¡A ordenar!</h2>
+            <p>Gestioná ingresos de mercadería, rotación de productos y reposición de góndolas.</p>
+          </div>
+          
+          <div class="panel-step">
+            <span class="step-num">03</span>
+            <span class="step-line" aria-hidden="true"></span>
+            <p class="step-desc">Stock actualizado y sincronizado.</p>
+          </div>
+        </div>
+        
+        <nav class="panel-footer">
+          <p>¿Cuál es tu área?</p>
+          <div class="role-buttons">
+            <button type="button" class="btn-role" data-role="cajero">Soy Cajero</button>
+            <button type="button" class="btn-role" data-role="admin">Soy Administrador</button>
+            <button type="button" class="btn-role active" data-role="repositor">Soy Repositor</button>
+          </div>
+        </nav>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+  
+  <script src="./js/login.js"></script>
+</body>
+</html>
