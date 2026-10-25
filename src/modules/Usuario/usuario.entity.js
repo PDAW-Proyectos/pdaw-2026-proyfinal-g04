@@ -8,8 +8,10 @@ export class Usuario {
     rol
 
     constructor({ id, email, contraseña, nombre, apellido, rol }) {
-
-        this.id
+        if(!email || email.length === 0) {
+            throw new Error("Email vacio")
+        }
+        this.id = id;
         this.email = email
         this.contraseña = contraseña
         this.nombre = nombre;

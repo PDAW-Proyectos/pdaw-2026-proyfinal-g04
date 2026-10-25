@@ -10,17 +10,21 @@ export class DependencyInjector {
         this.#registrations.set(token, { factory, lifecycle: "transient" });
     }
 
-    resolve(token) {
+    async resolve(token) {
         const registration = this.#registrations.get(token);
-        if (!registration) throw new Error(`No registration for "${token}"`);
+        if (!registration) {
+            throw new Error(`No registration for "${token}"`);
+        }
 
         if (registration.lifecycle === "singleton") {
             if (!this.#singletonInstances.has(token)) {
-                this.#singletonInstances.set(token, registration.factory(this));
+                const instancia = Promise.resolve().then(() => registration.factory(this));
+                this.#singletonInstances.set(token, instancia);
             }
-            return this.#singletonInstances.get(token);
+
+            return await this.#singletonInstances.get(token);
         }
-        return registration.factory(this);
+
+        return await registration.factory(this);
     }
 }
-

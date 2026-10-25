@@ -3,8 +3,10 @@ import { AuthService } from "./auth.service.js";
 export class AuthController {
     authService;
 
-    constructor(authService = new AuthService()) {
+    constructor(authService) {
         this.authService = authService;
+        this.signup = this.signup.bind(this);
+        this.login = this.login.bind(this);
     }
 
     async signup(req, res, next) {

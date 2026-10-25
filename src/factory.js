@@ -1,4 +1,12 @@
-const CLASES = { usuario: Usuario, caja: Caja, ingreso: Ingreso, egreso: Egreso, producto: Producto, insumo: Insumo };
+import { Insumo } from "./modules/Articulo/Insumo/insumo.entity.js";
+import { Producto } from "./modules/Articulo/Producto/producto.entity.js";
+import { Usuario } from "./modules/Usuario/Usuario.entity.js";
+
+const CLASES = { 
+    Usuario: Usuario,
+    //  caja: Caja, ingreso: Ingreso, egreso: Egreso,
+    Producto: Producto, Insumo: Insumo 
+    };
 
 export class Factory {
     crear(entidad) {
