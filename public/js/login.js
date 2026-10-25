@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
   roleButtons.forEach(button => {
     button.addEventListener("click", () => {
       const targetRole = button.getAttribute("data-role");
-      if (roleInput.value === targetRole) return;
 
       // Actualiza los botones
       // Quitamos la clase 'active' de TODOS los botones
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loginCard.classList.remove("role-cajero", "role-admin", "role-repositor");
       loginCard.classList.add(`role-${targetRole}`);
 
-        
+      roleInput.value = targetRole;
       formSubtext.innerHTML = formTexts[targetRole].instruction;
       btnText.textContent = formTexts[targetRole].button;
     });

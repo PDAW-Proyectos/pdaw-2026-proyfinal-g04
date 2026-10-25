@@ -67,10 +67,10 @@ background: radial-gradient(circle at center, #275d3c 0%, #0e2b1b 55%, #05120a 1
   top: 50%;
   left: 8%;
   transform: translateY(-50%);
-  width: 400px;
+  width: 480px;
   height: auto;
-  min-height: 520px;
-  padding: 40px 50px;
+  min-height: 580px;
+  padding: 50px 60px;
   
   /* Efecto Vidrio */
   background: rgba(255, 255, 255, 0.08);
