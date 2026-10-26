@@ -1,6 +1,6 @@
 import { Insumo } from "./modules/Articulo/Insumo/insumo.entity.js";
 import { Producto } from "./modules/Articulo/Producto/producto.entity.js";
-import { Usuario } from "./modules/Usuario/Usuario.entity.js";
+import { Usuario } from "./modules/Usuario/usuario.entity.js";
 
 const CLASES = { 
     Usuario: Usuario,
