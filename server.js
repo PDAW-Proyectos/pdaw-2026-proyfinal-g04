@@ -14,7 +14,7 @@ import crearRouterUsuarios from "./src/modules/Usuario/usuario.routes.js";
 import crearRouterAuth from "./src/modules/auth/auth.routes.js";
 import { AuthService } from "./src/modules/auth/auth.service.js";
 import { AuthController } from "./src/modules/auth/auth.controller.js";
-import { requireAuth, allowRoles } from "./src/modules/middlewares/auth.js";
+import { requireAuth, allowRoles } from "./src/common/middlewares/auth.guard.js";
 
 const app = express();
 export const __dirname = path.dirname(fileURLToPath(import.meta.url));
