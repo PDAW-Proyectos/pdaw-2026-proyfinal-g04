@@ -134,7 +134,7 @@ background: radial-gradient(circle at center, #275d3c 0%, #0c1911 55%, #05120a 1
   transform: translateY(-50%);
   background: transparent;
   border: 0;
-  color: white;
+  color: var(--texto-secundario);
   cursor: pointer;
 }
 
