@@ -24,6 +24,7 @@ export class InsumoService {
     async crearInsumo(datos) {
         let insumoCreado;
         try {
+            datos.tipo = "Insumo";
             insumoCreado = await this.articuloRepository.crear(datos);
         } catch (error) {
             error.status = 400;
@@ -43,7 +44,7 @@ export class InsumoService {
         
         try {
             const datosBase = Object.assign(anterior, datos);
-            datosBase.tipo = "insumo";
+            datos.tipo = "Insumo";
             insumoActualizado = await this.articuloRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
