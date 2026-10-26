@@ -23,7 +23,7 @@ export class UserController {
     }
 
     async buscarUsuario(req, res, next) {
-        try {
+        try { 
             const usuario = await this.userService.getUsuario(req.params.id);
             res.status(200).json(usuario);
         } catch (error) {

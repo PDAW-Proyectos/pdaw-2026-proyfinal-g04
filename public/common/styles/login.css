@@ -1,0 +1,350 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --kchin-lima: #c7ff3e;
+  --kchin-claro: #f1f9e4;
+  --kchin-oscuro: #161615;
+  --verde-base: #173825; 
+  --texto-secundario: #d4d4d8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--kchin-oscuro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==============================
+Full screen card 
+============================== */
+.login-card {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  /* Gradiente principal que acompaña al logo: de oscuro a verde profundo */
+background: radial-gradient(circle at center, #275d3c 0%, #0e2b1b 55%, #05120a 100%);
+  overflow: hidden;
+}
+
+/* Gradiente radial*/
+.fondo-hero {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(circle at 35% 50%, rgba(199, 255, 62, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Logo SVG desenfocado */
+.grafica-hero {
+  position: absolute;
+  top: -15%;
+  left: 10%;
+  width: min(60vw, 900px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  filter: blur(12px);
+  z-index: 0;
+  opacity: 0.85;
+}
+
+/* ==============================
+ Card glass
+============================== */
+.form-container {
+  position: absolute;
+  top: 50%;
+  left: 8%;
+  transform: translateY(-50%);
+  width: 480px;
+  height: auto;
+  min-height: 580px;
+  padding: 50px 60px;
+  
+  /* Efecto Vidrio */
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(28px);
+  backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: left 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.form-content {
+  width: 100%;
+}
+
+.sub-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--kchin-lima);
+}
+
+.form-content h1 {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--kchin-claro);
+  margin: 8px 0 6px;
+}
+
+.form-instruction {
+  font-size: 13px;
+  color: var(--texto-secundario);
+  margin-bottom: 30px;
+}
+
+.input-group {
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--kchin-claro);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  border-bottom-color: var(--kchin-lima);
+}
+
+.btn-submit {
+  width: 100%;
+  background-color: var(--kchin-lima);
+  color: var(--kchin-oscuro);
+  border: none;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 30px;
+  transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+  box-shadow: 0 10px 20px rgba(199, 255, 62, 0.2);
+}
+
+
+/* ==============================
+  Textos toggle
+============================== */
+.toggle-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: right 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+  
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.toggle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  border: none !important;
+}
+.toggle-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 12%; 
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Vistas Activas */
+.login-card.role-cajero .panel-cajero,
+.login-card.role-admin .panel-admin,
+.login-card.role-repositor .panel-repositor {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+.system-tag {
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: var(--kchin-claro);
+  margin-bottom: 20px;
+}
+.system-tag i { color: var(--kchin-lima); margin-right: 6px; }
+
+.panel-pretitle {
+  font-size: 13px;
+  color: var(--kchin-lima);
+  font-weight: 600;
+}
+
+.panel-body h2 {
+  font-size: clamp(3rem, 5vw, 4.5rem); /* Tipografía fluida */
+  font-weight: 800;
+  color: var(--kchin-claro);
+  margin: 6px 0 16px;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.panel-body p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--texto-secundario);
+  max-width: 450px;
+}
+
+.panel-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 30px;
+  font-size: 13px;
+  color: var(--kchin-lima);
+  font-weight: 600;
+}
+.step-line { width: 30px; height: 1px; background-color: var(--kchin-lima); opacity: 0.6; }
+.step-desc { color: var(--kchin-claro); font-weight: 400; }
+
+.panel-footer {
+ margin-top: 50px;
+}
+
+.panel-footer p {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--texto-secundario);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.role-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.btn-role {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--kchin-claro);
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+
+.btn-role:hover { 
+  background: rgba(255, 255, 255, 0.15); 
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-role.active {
+  background-color: var(--kchin-claro);
+  color: var(--kchin-oscuro);
+  border-color: var(--kchin-claro);
+}
+
+/* ==============================
+   Efecto swap
+============================== */
+/* La card de vidrio cruza al lado derecho */
+.login-card.swapped .form-container {
+  left: calc(92% - 400px); /* 100% menos el margen de 8% y su ancho */
+}
+
+/* El panel derecho de textos cruza al lado izquierdo */
+.login-card.swapped .toggle-container {
+  right: 50%; /* Se mueve la mitad de la pantalla */
+}
+
+
+/* ==============================
+   Responsive
+============================== */
+@media (max-width: 900px) {
+  .login-card {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-container {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    top: auto;
+    left: 0 !important;
+    transform: none;
+    margin: 40px auto;
+    order: 2;
+  }
+
+  .toggle-container {
+    position: relative;
+    width: 100%;
+    right: 0 !important;
+    min-height: 450px;
+    order: 1;
+  }
+
+  .toggle-panel {
+    padding: 40px 8%;
+  }
+
+  .panel-footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    margin-top: 40px;
+  }
+}
