@@ -139,6 +139,14 @@ background: radial-gradient(circle at center, #275d3c 0%, #0e2b1b 55%, #05120a 1
   border-bottom-color: var(--kchin-lima);
 }
 
+.mensaje-login {
+  min-height: 18px;
+  margin-top: 8px;
+  color: #ffb4ab;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .btn-submit {
   width: 100%;
   background-color: var(--kchin-lima);

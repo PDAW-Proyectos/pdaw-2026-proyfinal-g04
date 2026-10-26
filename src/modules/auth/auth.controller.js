@@ -1,31 +1,46 @@
-import { AuthService } from "./auth.service.js";
-
 export class AuthController {
-    authService;
+  authService;
 
-    constructor(authService) {
-        this.authService = authService;
-        this.signup = this.signup.bind(this);
-        this.login = this.login.bind(this);
-    }
+  constructor(authService) {
+    this.authService = authService;
+  }
 
-    async signup(req, res, next) {
-        try {
-            const usuario = await this.authService.signup(req.body);
+  login = async (req, res) => {
+    try {
+      const email = req.body.email || req.body.correo;
+      const password = req.body.password || req.body.contrasena;
+      const requestedRole = req.body.requestedRole;
 
-            return res.status(201).json(usuario);
-        } catch (error) {
-            next(error);
+      const user = await this.authService.login({ email, password });
+
+      if (user.role !== "admin" && requestedRole !== user.role) {
+        return res.status(403).json({
+          error: "No tenés permisos para ingresar a esta área",
+        });
+      }
+
+      // 1. Regenerar sesión para mitigar fijación de sesión (Clase 08)
+      req.session.regenerate((err) => {
+        if (err) {
+          return res.status(500).json({ error: "Error al regenerar sesión" });
         }
-    }
 
-    async login(req, res, next) {
-        try {
-            const resultado = await this.authService.login(req.body);
+        // 2. Guardar datos mínimos de identidad en la sesión
+        req.session.userId = user.idUsuario || user.id;
+        req.session.role = user.role;
 
-            return res.status(200).json(resultado);
-        } catch (error) {
-            next(error);
-        }
+        // 3. Forzar el guardado antes de responder para asegurar la cabecera Set-Cookie
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            return res.status(500).json({ error: "Error al guardar sesión" });
+          }
+          return res.status(200).json(user);
+        });
+      });
+    } catch (error) {
+      return res.status(error.status || 401).json({
+        error: error.message || "Credenciales incorrectas",
+      });
     }
+  };
 }

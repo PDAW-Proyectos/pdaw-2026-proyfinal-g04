@@ -1,44 +1,42 @@
 import bcrypt from "bcrypt";
-import { UserService } from "../Usuario/usuario.service.js";
 
 export class AuthService {
-    userService;
+  userService;
 
-    constructor(userService) {
-        this.userService = userService;
+  constructor(userService) {
+    this.userService = userService;
+  }
+
+  async login({ email, password, requestedRole }) {
+    const credenciales = await this.userService.buscarUsuarioPorEmail(email);
+
+    if (
+      !credenciales ||
+      !(await bcrypt.compare(
+        password,
+        credenciales.contraseña || credenciales.password,
+      ))
+    ) {
+      const error = new Error("Email o contraseña incorrectos");
+      error.status = 401;
+      throw error;
     }
 
-    async signup({ nombre, apellido, email, password, rol }) {
-        const exists = await this.userService.buscarUsuarioPorEmail(email);
-        if(exists) throw new Error("El email está en uso")
-        const contraseña = await bcrypt.hash(password, 12);
+    const rolReal = credenciales.rol || credenciales.role;
 
-        const datos = {
-            nombre,
-            apellido,
-            email,
-            contraseña,
-            rol
-        };
-
-        return await this.userService.crearUsuario(datos);
+    // Si el usuario intenta entrar desde una solapa que no coincide con su rol real:
+    if (requestedRole && rolReal !== "admin" && rolReal !== requestedRole) {
+      const error = new Error("No tienes permisos para acceder con este rol");
+      error.status = 403;
+      throw error;
     }
 
-    async login({ email, password }) {
-        const credenciales =
-            await this.userService.buscarUsuarioPorEmail(email);
-        if (
-            !credenciales ||
-            !(await bcrypt.compare(password, credenciales.contraseña))
-        ) {
-            const error = new Error("Email o contraseña incorrectos");
-            error.status = 401;
-            throw error;
-        }
-
-        return {
-            idUsuario: credenciales.idUsuario,
-            mensaje: "Inicio de sesión exitoso"
-        };
-    }
+    return {
+      idUsuario: credenciales.idUsuario || credenciales.id,
+      nombre: credenciales.nombre,
+      email: credenciales.email,
+      role: rolReal,
+      mensaje: "Inicio de sesión exitoso",
+    };
+  }
 }

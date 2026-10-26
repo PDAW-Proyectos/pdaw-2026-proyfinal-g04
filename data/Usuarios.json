@@ -1,11 +1,29 @@
 [
   {
     "id": 1,
-    "email": "nachoalonso",
-    "contraseña": "$2b$12$U02NASStzt.O0lZ4ifeawOeaQmPF5NMnkrBTDKrLsp00eSea.OqWi",
+    "email": "admin@kchin.com",
+    "contraseña": "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
     "nombre": "Joaco",
     "apellido": "Yakete",
     "rol": "admin",
+    "tipo": "Usuario"
+  },
+  {
+    "id": 2,
+    "email": "cajero@kchin.com",
+    "contraseña": "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "rol": "cajero",
+    "tipo": "Usuario"
+  },
+  {
+    "id": 3,
+    "email": "repositor@kchin.com",
+    "contraseña": "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
+    "nombre": "Pedro",
+    "apellido": "Gomez",
+    "rol": "repositor",
     "tipo": "Usuario"
   }
 ]
