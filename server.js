@@ -3,18 +3,25 @@ import path from "node:path";
 import session from "express-session";
 import { fileURLToPath } from "node:url";
 
+import { DependencyInjector } from "./src/dependencyInjector.js";
 import { Repository } from "./src/repository.js";
+
+import crearRouterUsuarios from "./src/modules/Usuario/usuario.routes.js";
 import { UserService } from "./src/modules/Usuario/usuario.service.js";
 import { UserController } from "./src/modules/Usuario/usuario.controller.js";
-import { InsumoService } from "./src/modules/Articulo/Insumo/insumo.service.js";
-import { ProductoService } from "./src/modules/Articulo/Producto/producto.service.js";
-import { DependencyInjector } from "./src/dependencyInjector.js";
-import crearRouterUsuarios from "./src/modules/Usuario/usuario.routes.js";
 
 import crearRouterAuth from "./src/modules/auth/auth.routes.js";
 import { AuthService } from "./src/modules/auth/auth.service.js";
 import { AuthController } from "./src/modules/auth/auth.controller.js";
 import { requireAuth, allowRoles } from "./src/common/middlewares/auth.guard.js";
+
+import crearRouterProductos from "./src/modules/Articulo/Producto/producto.routes.js";
+import { ProductoService } from "./src/modules/Articulo/Producto/producto.service.js";
+import { ProductoController } from "./src/modules/Articulo/Producto/producto.controller.js";
+
+import crearRouterInsumos from "./src/modules/Articulo/Insumo/insumo.routes.js";
+import { InsumoService } from "./src/modules/Articulo/Insumo/insumo.service.js";
+import { InsumoController } from "./src/modules/Articulo/Insumo/insumo.controller.js";
 
 const app = express();
 export const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -45,7 +52,7 @@ dependencyInjector.registerSingleton("userRepository", () =>
   Repository.inicializar(path.join(__dirname, "data", "Usuarios.json")),
 );
 
-dependencyInjector.registerSingleton("articuloRepository", () =>
+dependencyInjector.registerSingleton("articulosRepository", () =>
   Repository.inicializar(path.join(__dirname, "data", "Articulos.json")),
 );
 
@@ -69,12 +76,36 @@ dependencyInjector.registerSingleton("authController", async () => {
   return new AuthController(authService);
 });
 
+dependencyInjector.registerSingleton("productoService", async () => {
+  const articulosRepository = await dependencyInjector.resolve("articulosRepository");
+  return new ProductoService(articulosRepository);
+});
+
+dependencyInjector.registerSingleton("productoController", async () => {
+  const productoService = await dependencyInjector.resolve("productoService");
+  return new ProductoController(productoService);
+});
+
+dependencyInjector.registerSingleton("insumoService", async () => {
+  const articulosRepository = await dependencyInjector.resolve("articulosRepository");
+  return new InsumoService(articulosRepository);
+});
+
+dependencyInjector.registerSingleton("insumoController", async () => {
+  const insumoService = await dependencyInjector.resolve("insumoService");
+  return new InsumoController(insumoService);
+});
+
 const userController = await dependencyInjector.resolve("userController");
 const authController = await dependencyInjector.resolve("authController");
+const productoController = await dependencyInjector.resolve("productoController");
+const insumoController = await dependencyInjector.resolve("insumoController");
 
 // 4. Rutas de la API
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
+app.use("/api/productos", crearRouterProductos(productoController));
+app.use("/api/insumos", crearRouterInsumos(insumoController));
 
 // 5. Redirección de la raíz
 app.get("/", (req, res) => {
