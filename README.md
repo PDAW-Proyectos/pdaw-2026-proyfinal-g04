@@ -31,10 +31,10 @@ Proyecto del equipo 4 para _7513 · Proyecto de Desarrollo de Aplicaciones Web_
 
 | Integrante | Usuario de GitHub | Rol en el sprint      |
 | ---------- | ----------------- | --------------------- |
-|            |                   | Referente de producto |
-|            |                   | Facilitación          |
-|            |                   | Repositorio           |
-|            |                   | Calidad               |
+| Joaquin Mendez | JooacoMendez | Referente de producto |
+| Ignacio Alonso | ITAlonsoRabanal | Facilitación          |
+| Clara Ornella | Clariornella | Repositorio           |
+|Geraldine Lagarrigue | geraldinelaga | Calidad               |
 
 ## Cómo ejecutar el proyecto
 
