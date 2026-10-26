@@ -1,3 +1,4 @@
+lucide.createIcons();
 document.addEventListener("DOMContentLoaded", () => {
   const loginCard = document.getElementById("loginCard");
   const roleButtons = document.querySelectorAll(".btn-role");
@@ -10,6 +11,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const mensajeError = document.getElementById("mensaje-login");
   const usernameInput = document.getElementById("username");
   const passwordInput = document.getElementById("password");
+  const mostrarContrasena = document.getElementById("mostrar-contrasena");
+
+
+  //Boton mostrar/ocultar contraseña
+
+  mostrarContrasena.addEventListener("click", () => {
+    const mostrar = passwordInput.type === "password";
+
+    passwordInput.type = mostrar ? "text" : "password";
+    mostrarContrasena.setAttribute(
+      "aria-label", mostrar ? "Ocultar contraseña" : "Mostrar contraseña",
+    );
+
+    mostrarContrasena.innerHTML = `<i data-lucide="${mostrar ? "eye-off" : "eye"}" aria-hidden="true"></i>`;
+    lucide.createIcons();
+  })
 
   // Textos dinámicos para el formulario según el rol elegido
   const formTexts = {

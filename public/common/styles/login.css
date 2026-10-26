@@ -50,7 +50,7 @@ background: radial-gradient(circle at center, #275d3c 0%, #0c1911 55%, #05120a 1
 .grafica-hero {
   position: absolute;
   top: -15%;
-  left: 10%;
+  left: 15%;
   width: min(60vw, 900px);
   aspect-ratio: 1;
   pointer-events: none;
@@ -116,6 +116,26 @@ background: radial-gradient(circle at center, #275d3c 0%, #0c1911 55%, #05120a 1
   margin-bottom: 22px;
   display: flex;
   flex-direction: column;
+}
+
+.input-password {
+  position: relative;
+}
+
+.input-password input {
+  width: 100%;
+  padding-right: 36px;
+}
+
+.input-password button {
+   position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: transparent;
+  border: 0;
+  color: white;
+  cursor: pointer;
 }
 
 .input-group label {
