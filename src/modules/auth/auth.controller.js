@@ -5,6 +5,18 @@ export class AuthController {
     this.authService = authService;
   }
 
+    signup = async (req, res, next) => {
+        try {
+            const usuario = await this.authService.signup(req.body);
+
+            return res.status(201).json(usuario);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
+
   login = async (req, res) => {
     try {
       const email = req.body.email || req.body.correo;
@@ -13,7 +25,7 @@ export class AuthController {
 
       const user = await this.authService.login({ email, password });
 
-      if (user.role !== "admin" && requestedRole !== user.role) {
+      if (user.rol !== "admin" && requestedRole !== user.rol) {
         return res.status(403).json({
           error: "No tenés permisos para ingresar a esta área",
         });

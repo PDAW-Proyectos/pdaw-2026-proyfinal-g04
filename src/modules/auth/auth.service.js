@@ -24,7 +24,6 @@ export class AuthService {
 
     const rolReal = credenciales.rol || credenciales.role;
 
-    // Si el usuario intenta entrar desde una solapa que no coincide con su rol real:
     if (requestedRole && rolReal !== "admin" && rolReal !== requestedRole) {
       const error = new Error("No tienes permisos para acceder con este rol");
       error.status = 403;
@@ -35,8 +34,24 @@ export class AuthService {
       idUsuario: credenciales.idUsuario || credenciales.id,
       nombre: credenciales.nombre,
       email: credenciales.email,
-      role: rolReal,
+      rol: rolReal,
       mensaje: "Inicio de sesión exitoso",
     };
   }
+	
+	signup = async ({ nombre, apellido, email, password, rol }) => {
+		const exists = await this.userService.buscarUsuarioPorEmail(email);
+		if(exists) throw new Error("El email está en uso")
+		const contraseña = await bcrypt.hash(password, 12);
+
+		const datos = {
+			nombre,
+			apellido,
+			email,
+			contraseña,
+			rol
+		};
+
+		return await this.userService.crearUsuario(datos);
+	}
 }
