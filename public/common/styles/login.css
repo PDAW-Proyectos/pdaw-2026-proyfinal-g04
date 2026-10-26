@@ -33,7 +33,7 @@ Full screen card
   width: 100vw;
   height: 100vh;
   /* Gradiente principal que acompaña al logo: de oscuro a verde profundo */
-background: radial-gradient(circle at center, #275d3c 0%, #0e2b1b 55%, #05120a 100%);
+background: radial-gradient(circle at center, #275d3c 0%, #0c1911 55%, #05120a 100%);
   overflow: hidden;
 }
 
@@ -42,7 +42,7 @@ background: radial-gradient(circle at center, #275d3c 0%, #0e2b1b 55%, #05120a 1
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(circle at 35% 50%, rgba(199, 255, 62, 0.05) 0%, transparent 60%);
+  background: radial-gradient(circle at 35% 50%, rgba(25, 26, 21, 0.648) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -71,6 +71,7 @@ background: radial-gradient(circle at center, #275d3c 0%, #0e2b1b 55%, #05120a 1
   height: auto;
   min-height: 580px;
   padding: 50px 60px;
+  color: white;
   
   /* Efecto Vidrio */
   background: rgba(255, 255, 255, 0.08);
