@@ -1,5 +1,5 @@
 
-import { Repository } from "../../repository.js";
+import { Repository } from "../../common/config/repository.js";
 import { Usuario } from "./usuario.entity.js";
 
 export class UserService {
@@ -30,7 +30,6 @@ export class UserService {
     };
 
     crearUsuario = async (datos) => {
-        datos.tipo = "Usuario";
         return await this.userRepository.crear(datos);
     };
 
@@ -45,8 +44,6 @@ export class UserService {
 
         try {
             const datosBase = Object.assign(anterior, datos);
-            datosBase.tipo = "Usuario";
-
             return await this.userRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;

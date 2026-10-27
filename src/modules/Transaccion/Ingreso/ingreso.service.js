@@ -22,7 +22,6 @@ export class IngresoService {
     };
 
     crearIngreso = async (datos) => {
-        datos.tipo = "Ingreso";
         return await this.transaccionRepository.crear(datos);
     };
 
@@ -37,7 +36,6 @@ export class IngresoService {
 
         try {
             const datosBase = Object.assign(anterior, datos);
-            datosBase.tipo = "Ingreso";
 
             return await this.transaccionRepository.actualizar(datosBase);
         } catch (error) {

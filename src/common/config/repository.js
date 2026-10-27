@@ -7,16 +7,16 @@ export class Repository {
     #proximoId;
     #factory;
 
-    constructor(ruta) {
+    constructor(ruta, factory) {
         if (!ruta) throw new TypeError('ruta no puede ser nulo');
         this.#ruta = ruta;
         this.#entidades = [];
         this.#proximoId = 1;
-        this.#factory = new Factory();
+        this.#factory = factory;
     }
 
-    static async inicializar(ruta) {
-        const repository = new Repository(ruta)
+    static async inicializar(ruta, factory) {
+        const repository = new Repository(ruta, factory)
         await repository.cargar();
         return repository;
     }
@@ -36,7 +36,7 @@ export class Repository {
 
     async crear(entidad) {
         entidad.id = this.#proximoId++;
-        const entidadCreada = this.#factory.crear(entidad);
+        const entidadCreada = this.#factory(entidad);
         this.#entidades.push(entidadCreada);
         await this.#guardar();
         return this.#entidades[this.#entidades.length - 1];
@@ -53,11 +53,10 @@ export class Repository {
     }
 
     async actualizar(entidad) {
-        const entidadActualizada = this.#factory.crear(entidad);
         const entidadEncontrada = this.buscarPorId(entidad.id);
         const entidadIndex = this.#entidades.indexOf(entidadEncontrada)
-        const {tipo, ...entidadSinTipo} = entidad
-        Object.assign(entidadActualizada, entidadSinTipo);
+        const entidadActualizada = this.#factory(entidad);
+        Object.assign(entidadActualizada, entidad);
         this.#entidades[entidadIndex] = entidadActualizada;
         await this.#guardar();
         return this.#entidades[entidadIndex];
@@ -81,6 +80,6 @@ export class Repository {
     }
 
     #cargarDesdeJson(datos) { 
-        this.#entidades = datos.map((e) => this.#factory.crear(e));
+        this.#entidades = datos.map((e) => this.#factory(e));
     }
 }
