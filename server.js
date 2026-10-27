@@ -15,9 +15,9 @@ import { AuthService } from "./src/modules/auth/auth.service.js";
 import { AuthController } from "./src/modules/auth/auth.controller.js";
 import { requireAuth, allowRoles } from "./src/common/middlewares/auth.guard.js";
 
-import crearRouterProductos from "./src/modules/Articulo/Producto/producto.routes.js";
-import { ProductoService } from "./src/modules/Articulo/Producto/producto.service.js";
-import { ProductoController } from "./src/modules/Articulo/Producto/producto.controller.js";
+import crearRouterProductos from "./src/modules/Producto/producto.routes.js";
+import { ProductoService } from "./src/modules/Producto/producto.service.js";
+import { ProductoController } from "./src/modules/Producto/producto.controller.js";
 
 import crearRouterInsumos from "./src/modules/Articulo/Insumo/insumo.routes.js";
 import { InsumoService } from "./src/modules/Articulo/Insumo/insumo.service.js";
@@ -52,8 +52,12 @@ dependencyInjector.registerSingleton("userRepository", () =>
   Repository.inicializar(path.join(__dirname, "data", "Usuarios.json")),
 );
 
-dependencyInjector.registerSingleton("articulosRepository", () =>
-  Repository.inicializar(path.join(__dirname, "data", "Articulos.json")),
+dependencyInjector.registerSingleton("productoRepository", () =>
+  Repository.inicializar(path.join(__dirname, "data", "Productos.json")),
+);
+
+dependencyInjector.registerSingleton("insumoRepository", () =>
+  Repository.inicializar(path.join(__dirname, "data", "Insumos.json")),
 );
 
 dependencyInjector.registerSingleton("userService", async () => {
@@ -77,8 +81,8 @@ dependencyInjector.registerSingleton("authController", async () => {
 });
 
 dependencyInjector.registerSingleton("productoService", async () => {
-  const articulosRepository = await dependencyInjector.resolve("articulosRepository");
-  return new ProductoService(articulosRepository);
+  const productoRepository = await dependencyInjector.resolve("productoRepository");
+  return new ProductoService(productoRepository);
 });
 
 dependencyInjector.registerSingleton("productoController", async () => {
@@ -87,8 +91,8 @@ dependencyInjector.registerSingleton("productoController", async () => {
 });
 
 dependencyInjector.registerSingleton("insumoService", async () => {
-  const articulosRepository = await dependencyInjector.resolve("articulosRepository");
-  return new InsumoService(articulosRepository);
+  const insumoRepository = await dependencyInjector.resolve("insumoRepository");
+  return new InsumoService(insumoRepository);
 });
 
 dependencyInjector.registerSingleton("insumoController", async () => {

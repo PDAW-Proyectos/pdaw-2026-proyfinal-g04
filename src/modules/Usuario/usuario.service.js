@@ -1,6 +1,6 @@
 
 import { Repository } from "../../repository.js";
-import { Usuario } from "./Usuario.entity.js";
+import { Usuario } from "./usuario.entity.js";
 
 export class UserService {
     userRepository;

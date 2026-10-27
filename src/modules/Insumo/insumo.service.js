@@ -1,16 +1,16 @@
 export class InsumoService {
-    articuloRepository;
+    insumoRepository;
 
-    constructor(articuloRepository) {
-        this.articuloRepository = articuloRepository
+    constructor(insumoRepository) {
+        this.insumoRepository = insumoRepository
     }
 
     async listarInsumos() {
-        return this.articuloRepository.listar();
+        return this.insumoRepository.listar();
     }
 
     async buscarInsumo(id) {
-        const insumo = await this.articuloRepository.buscarPorId(id);
+        const insumo = await this.insumoRepository.buscarPorId(id);
 
         if (!insumo) {
             const error = new Error("insumo no encontrado");
@@ -25,7 +25,7 @@ export class InsumoService {
         let insumoCreado;
         try {
             datos.tipo = "Insumo";
-            insumoCreado = await this.articuloRepository.crear(datos);
+            insumoCreado = await this.insumoRepository.crear(datos);
         } catch (error) {
             error.status = 400;
             throw error;
@@ -35,7 +35,7 @@ export class InsumoService {
 
     async actualizarInsumo(id, datos) {
         let insumoActualizado;
-        const anterior = await this.articuloRepository.buscarPorId(id);
+        const anterior = await this.insumoRepository.buscarPorId(id);
         if (!anterior) {
             const error = new Error("insumo no encontrado");
             error.status = 404;
@@ -45,7 +45,7 @@ export class InsumoService {
         try {
             const datosBase = Object.assign(anterior, datos);
             datos.tipo = "Insumo";
-            insumoActualizado = await this.articuloRepository.actualizar(datosBase);
+            insumoActualizado = await this.insumoRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
             throw error;
@@ -55,7 +55,7 @@ export class InsumoService {
     }
 
     async eliminarInsumo(id) {
-        const eliminado = await this.articuloRepository.eliminar(id);
+        const eliminado = await this.insumoRepository.eliminar(id);
 
         if (!eliminado) {
             const error = new Error("insumo no encontrado");

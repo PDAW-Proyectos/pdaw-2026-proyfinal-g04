@@ -1,16 +1,16 @@
 export class ProductoService {
-    articuloRepository;
+    productoRepository;
 
-    constructor(articuloRepository) {
-        this.articuloRepository = articuloRepository
+    constructor(productoRepository) {
+        this.productoRepository = productoRepository
     }
 
     async listarProductos() {
-        return this.articuloRepository.listar();
+        return this.productoRepository.listar();
     }
 
     async buscarProducto(id) {
-        const producto = await this.articuloRepository.buscarPorId(id);
+        const producto = await this.productoRepository.buscarPorId(id);
 
         if (!producto) {
             const error = new Error("producto no encontrado");
@@ -24,8 +24,8 @@ export class ProductoService {
     async crearProducto(datos) {
         let productoCreado;
         try {
-            datos.tipo = "Producto";
-            productoCreado = await this.articuloRepository.crear(datos);
+            datos.tipo = unidad ? "ProductoUnidad" : "ProductoPeso";
+            productoCreado = await this.productoRepository.crear(datos);
         } catch (error) {
             error.status = 400;
             throw error;
@@ -35,7 +35,7 @@ export class ProductoService {
 
     async actualizarProducto(id, datos) {
         let productoActualizado;
-        const anterior = await this.articuloRepository.buscarPorId(id);
+        const anterior = await this.productoRepository.buscarPorId(id);
         if (!anterior) {
             const error = new Error("producto no encontrado");
             error.status = 404;
@@ -44,8 +44,8 @@ export class ProductoService {
         
         try {
             const datosBase = Object.assign(anterior, datos);
-            datosBase.tipo = "Producto";
-            productoActualizado = await this.articuloRepository.actualizar(datosBase);
+            datos.tipo = unidad ? "ProductoUnidad" : "ProductoPeso";
+            productoActualizado = await this.productoRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
             throw error;
@@ -55,7 +55,7 @@ export class ProductoService {
     }
 
     async eliminarProducto(id) {
-        const eliminado = await this.articuloRepository.eliminar(id);
+        const eliminado = await this.productoRepository.eliminar(id);
 
         if (!eliminado) {
             const error = new Error("producto no encontrado");
