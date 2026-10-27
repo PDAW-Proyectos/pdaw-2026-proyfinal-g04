@@ -29,22 +29,28 @@ body {
   overflow-x: hidden;
 }
 
-/* Header superior con la marca */
+/* Header superior anclado arriba a la izquierda */
 .brand-header {
   position: absolute;
-  top: 32px;
+  top: 40px;
   left: 40px;
   display: flex;
   align-items: center;
-  gap: 10px;
   font-weight: 800;
-  letter-spacing: 2px;
-  color: #ffffff;
-  font-size: 1.35rem;
+  color: var(--text-cream);
+  font-size: 1.40rem;
+  z-index: 10;
+}
+
+.brand-header .logo-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
 }
 
 .brand-header .logo-symbol {
   color: var(--brand-neon);
+  font-size: 1.5rem;
 }
 
 /* Contenedor central */
@@ -109,7 +115,7 @@ h1 {
 
 p {
   color: var(--text-cream);
-  font-size: 1.05rem;
+  font-size: 1.056rem;
   margin-bottom: 2.2rem;
   opacity: 0.9;
 }
@@ -122,7 +128,7 @@ p {
   background-color: var(--brand-neon);
   color: #000000;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.99rem;
   padding: 14px 36px;
   border-radius: 9999px;
   border: none;
@@ -141,17 +147,6 @@ p {
 
 .btn-return:active {
   transform: scale(0.98);
-}
-
-/* 🔒 ANULAR EL COLOR VIOLETA DE ENLACE VISITADO O EN FOCO */
-.btn-return,
-.btn-return:visited,
-.btn-return:focus,
-.btn-return:active {
-  color: #000000 !important;
-  background-color: var(--brand-neon) !important;
-  text-decoration: none !important;
-  outline: none;
 }
 
 /* Pie de pantalla */
