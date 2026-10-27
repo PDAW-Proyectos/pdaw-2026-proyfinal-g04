@@ -39,7 +39,7 @@ export class AuthController {
 
         // 2. Guardar datos mínimos de identidad en la sesión
         req.session.userId = user.idUsuario || user.id;
-        req.session.role = user.role;
+        req.session.role = user.rol;
 
         // 3. Forzar el guardado antes de responder para asegurar la cabecera Set-Cookie
         req.session.save((saveErr) => {

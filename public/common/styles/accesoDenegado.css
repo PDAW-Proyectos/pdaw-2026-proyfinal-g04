@@ -1,0 +1,238 @@
+:root {
+  --bg-dark: #161615;
+  --brand-neon: #c7ff3e;
+  --text-cream: #f1f9e4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Century Gothic",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Header superior anclado arriba a la izquierda */
+.brand-header {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  color: var(--text-cream);
+  font-size: 1.40rem;
+  z-index: 10;
+}
+
+.brand-header .logo-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.brand-header .logo-symbol {
+  color: var(--brand-neon);
+  font-size: 1.5rem;
+}
+
+/* Contenedor central */
+.denied-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+/* Contenedor flexible para alojar la animación */
+.animation-slot {
+  width: 260px;
+  height: 190px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.animation-slot img,
+.animation-slot svg,
+.animation-slot video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Marcador de posición temporal (se reemplaza solo al sumar la animación) */
+.animation-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nono-text {
+  color: var(--brand-neon);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.logo-preview {
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: var(--brand-neon);
+  line-height: 1;
+}
+
+/* Títulos y textos */
+h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--brand-neon);
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.5px;
+}
+
+p {
+  color: var(--text-cream);
+  font-size: 1.056rem;
+  margin-bottom: 2.2rem;
+  opacity: 0.9;
+}
+
+/* Botón / Enlace 'Volver al inicio' */
+.btn-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--brand-neon);
+  color: #000000;
+  font-weight: 700;
+  font-size: 0.99rem;
+  padding: 14px 36px;
+  border-radius: 9999px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+  box-shadow: 0 4px 18px rgba(199, 255, 62, 0.25);
+}
+
+.btn-return:hover {
+  transform: scale(1.03);
+  filter: brightness(1.05);
+}
+
+.btn-return:active {
+  transform: scale(0.98);
+}
+
+/* Pie de pantalla */
+.error-meta {
+  margin-top: 3.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: var(--text-cream);
+  opacity: 0.45;
+  font-weight: 600;
+}
+
+/* 1. Permitir que el contenedor central sea más espacioso */
+.denied-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 650px;
+  width: 100%;
+}
+
+/* 2. Agrandar el área de la animación */
+.animation-slot {
+  width: 100%;
+  max-width: 520px;
+  height: 280px;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 3. Contenedor de los dos cuadros (tipo GIF) */
+.nono-gif-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 4. Escalar las imágenes para que llenen la caja */
+.nono-gif-container .frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Escala extra por si los archivos SVG traen márgenes blancos internos vacíos */
+  transform: scale(1.15);
+}
+
+/* Alternancia entre nono1.svg y nono2.svg */
+.nono-gif-container .frame-1 {
+  animation: toggleFrame1 0.6s infinite steps(1);
+}
+
+.nono-gif-container .frame-2 {
+  animation: toggleFrame2 0.6s infinite steps(1);
+}
+
+@keyframes toggleFrame1 {
+  0%,
+  49.9% {
+    opacity: 1;
+    visibility: visible;
+  }
+  50%,
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes toggleFrame2 {
+  0%,
+  49.9% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  50%,
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}

@@ -111,17 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        if (data.role === "cajero" && rolSeleccionado === "cajero") {
+        if (data.rol === "cajero" && rolSeleccionado === "cajero") {
           window.location.href = "/caja.html";
           return;
         }
 
-        if (data.role === "repositor" && rolSeleccionado === "repositor") {
+        if (data.rol === "repositor" && rolSeleccionado === "repositor") {
           window.location.href = "/index.html";
           return;
         }
 
-        if (data.role === "admin") {
+        if (data.rol === "admin") {
           // El admin va a la sección que tenía seleccionada en el formulario
           if (rolSeleccionado === "cajero") {
             window.location.href = "/caja.html";
