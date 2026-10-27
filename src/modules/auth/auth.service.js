@@ -7,7 +7,7 @@ export class AuthService {
     this.userService = userService;
   }
 
-  async login({ email, password, requestedRole }) {
+  login = async ({ email, password, requestedRole }) => {
     const credenciales = await this.userService.buscarUsuarioPorEmail(email);
 
     if (
