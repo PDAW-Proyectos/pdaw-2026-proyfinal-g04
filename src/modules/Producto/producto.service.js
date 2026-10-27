@@ -24,7 +24,6 @@ export class ProductoService {
     async crearProducto(datos) {
         let productoCreado;
         try {
-            datos.tipo = unidad ? "ProductoUnidad" : "ProductoPeso";
             productoCreado = await this.productoRepository.crear(datos);
         } catch (error) {
             error.status = 400;
@@ -44,7 +43,6 @@ export class ProductoService {
         
         try {
             const datosBase = Object.assign(anterior, datos);
-            datos.tipo = unidad ? "ProductoUnidad" : "ProductoPeso";
             productoActualizado = await this.productoRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;

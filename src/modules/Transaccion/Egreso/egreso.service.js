@@ -22,7 +22,6 @@ export class EgresoService {
     };
 
     crearEgreso = async (datos) => {
-        datos.tipo = "Egreso";
         return await this.transaccionRepository.crear(datos);
     };
 
@@ -37,8 +36,6 @@ export class EgresoService {
 
         try {
             const datosBase = Object.assign(anterior, datos);
-            datosBase.tipo = "Egreso";
-
             return await this.transaccionRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
