@@ -7,7 +7,7 @@ export class ProductoController {
         this.productoService = productoService;
     }
 
-    async listarProductos(req, res, next) {
+    listarProductos = async (req, res, next) => {
         try {
             const producto = await this.productoService.listarProductos();
             res.status(200).json(producto);
@@ -16,7 +16,7 @@ export class ProductoController {
         }
     }
 
-    async buscarProducto(req, res, next) {
+    buscarProducto = async (req, res, next) => {
         try {
             const producto = await this.productoService.buscarProducto(req.params.id);
             res.status(200).json(producto);
@@ -25,7 +25,7 @@ export class ProductoController {
         }
     }
 
-    async crearProducto(req, res, next) {
+    crearProducto = async (req, res, next) => {
         try {
             const producto = await this.productoService.crearProducto(req.body);
             res.status(201).json(producto);
@@ -34,7 +34,7 @@ export class ProductoController {
         }
     }
 
-    async actualizarProducto(req, res, next) {
+    actualizarProducto = async (req, res, next) => {
         try {
             const producto = await this.productoService.actualizarProducto(req.params.id, req.body);
             res.status(200).json(producto);
@@ -43,7 +43,7 @@ export class ProductoController {
         }
     }
 
-    async eliminarProducto(req, res, next) {
+    eliminarProducto = async (req, res, next) => {
         try {
             await this.productoService.eliminarProducto(req.params.id);
             res.status(204).send();
