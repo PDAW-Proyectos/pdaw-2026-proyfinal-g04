@@ -23,6 +23,14 @@ import crearRouterInsumos from "./src/modules/Articulo/Insumo/insumo.routes.js";
 import { InsumoService } from "./src/modules/Articulo/Insumo/insumo.service.js";
 import { InsumoController } from "./src/modules/Articulo/Insumo/insumo.controller.js";
 
+import crearRouterIngreso from "./src/modules/Transaccion/Ingreso/ingreso.routes.js";
+import { IngresoController } from "./src/modules/Transaccion/Ingreso/ingreso.controller.js";
+import { IngresoService } from "./src/modules/Transaccion/Ingreso/ingreso.service.js";
+
+import crearRouterEgreso from "./src/modules/Transaccion/Egreso/egreso.routes.js";
+import { EgresoController } from "./src/modules/Transaccion/Egreso/egreso.controller.js";
+import { EgresoService } from "./src/modules/Transaccion/Egreso/egreso.service.js";
+
 const app = express();
 export const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -60,6 +68,10 @@ dependencyInjector.registerSingleton("insumoRepository", () =>
   Repository.inicializar(path.join(__dirname, "data", "Insumos.json")),
 );
 
+dependencyInjector.registerSingleton("transaccionRepository", () =>
+  Repository.inicializar(path.join(__dirname, "data", "Transaccion.json")),
+);
+
 dependencyInjector.registerSingleton("userService", async () => {
   const userRepository = await dependencyInjector.resolve("userRepository");
   return new UserService(userRepository);
@@ -80,6 +92,24 @@ dependencyInjector.registerSingleton("authController", async () => {
   return new AuthController(authService);
 });
 
+dependencyInjector.registerSingleton("ingresoService", async () => {
+  const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
+  return new IngresoService(transaccionRepository);
+});
+
+dependencyInjector.registerSingleton("ingresoController", async () => {
+  const ingresoService = await dependencyInjector.resolve("ingresoService");
+  return new IngresoController(ingresoService);
+});
+
+dependencyInjector.registerSingleton("egresoService", async () => {
+  const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
+  return new EgresoService(transaccionRepository);
+});
+
+dependencyInjector.registerSingleton("egresoController", async () => {
+  const egresoService = await dependencyInjector.resolve("egresoService");
+  return new EgresoController(egresoService);
 dependencyInjector.registerSingleton("productoService", async () => {
   const productoRepository = await dependencyInjector.resolve("productoRepository");
   return new ProductoService(productoRepository);
@@ -102,12 +132,17 @@ dependencyInjector.registerSingleton("insumoController", async () => {
 
 const userController = await dependencyInjector.resolve("userController");
 const authController = await dependencyInjector.resolve("authController");
+const egresoController = await dependencyInjector.resolve("egresoController");
+const ingresoController = await dependencyInjector.resolve("ingresoController");
+
 const productoController = await dependencyInjector.resolve("productoController");
 const insumoController = await dependencyInjector.resolve("insumoController");
 
 // 4. Rutas de la API
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
+app.use("/api/egreso", crearRouterEgreso(egresoController));
+app.use("/api/Ingreso", crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));
 app.use("/api/insumos", crearRouterInsumos(insumoController));
 

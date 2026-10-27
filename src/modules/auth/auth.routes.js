@@ -1,9 +1,10 @@
 import { Router } from "express";
+import { allowRoles } from "../../common/middlewares/auth.guard.js";
 
 export default function crearRouterAuth(authController) {
 	const router = Router();
 	router.post("/login", authController.login);
-	router.post("/signup", authController.signup);
+	router.post("/signup", allowRoles, authController.signup);
 	
 	if (typeof authController.logout === "function") {
 		router.post("/logout", authController.logout);

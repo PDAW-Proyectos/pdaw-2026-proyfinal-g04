@@ -25,5 +25,14 @@
     "apellido": "Gomez",
     "rol": "repositor",
     "tipo": "Usuario"
+  },
+  {
+    "id": 4,
+    "email": "nacoh@kchin.com",
+    "contraseña": "$2b$12$NMWt1GPM/XgqULNYxDvHuu9BQXfdYcqhs.zZUL3KGv4KJKSH4BFHW",
+    "nombre": "nacho",
+    "apellido": "mendez",
+    "rol": "admin",
+    "tipo": "Usuario"
   }
 ]
