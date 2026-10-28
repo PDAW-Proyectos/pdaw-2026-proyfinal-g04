@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="common/styles/sidebar.css" rel="stylesheet" />
+    <link href="common/styles/repositor.css" rel="stylesheet" />
+    <title>KCHIN | Gestor de Stock</title>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a class="sidebar-logo">
+        <img src="img/Logo-reducido-negro.svg" alt="KCHIN" />
+      </a>
+      <a class="sidebar-perfil">
+        <i data-lucide="user-round" aria-hidden="true"></i>
+        <span>Perfil</span>
+      </a>
+      <nav class="sidebar-nav" aria-label="Navegación principal">
+        <a href="#" class="nav-enlace active" data-nav="inicio">
+          <i data-lucide="house" aria-hidden="true"></i>
+          <span>Inicio</span>
+        </a>
+
+        <a href="#" class="nav-enlace" data-nav="inventario">
+          <i data-lucide="box" aria-hidden="true"></i>
+          <span>Inventario</span>
+        </a>
+
+        <a href="#" class="nav-enlace" data-nav="proveedores">
+          <i data-lucide="contact" aria-hidden="true"></i>
+          <span>Proveedores</span>
+        </a>
+
+        <a href="#" class="nav-enlace" data-nav="movimientos">
+          <i data-lucide="history" aria-hidden="true"></i>
+          <span>Movimientos</span>
+        </a>
+      </nav>
+
+      <button type="button" class="sidebar-boton" id="boton-reponer">
+        <i data-lucide="package-plus" aria-hidden="true"></i>
+        <span>Reponer</span>
+      </button>
+    </aside>
+
+    <main class="repositor-main">
+      <header class="rol-header">
+        <div>
+          <p class="rol-eyebrow">KCHIN / GESTIÓN DE STOCK</p>
+          <h1 id="nombre-rol">Repositor 1</h1>
+          <p class="rol-descripcion">¡Todo listo para reponer!</p>
+        </div>
+      </header>
+
+      <!-- Vistas navbar -->
+      <div class="vistas-contenedor">
+        <section id="inicio" class="vista active">
+          <h2>Inicio</h2>
+        </section>
+
+        <section id="inventario" class="vista">
+          <header class="vista-header">
+            <h2>Catálogo Completo</h2>
+          </header>
+
+          <!-- Barra de búsqueda y filtros -->
+          <section class="catalogo-controles" aria-label="Buscar productos">
+            <label class="buscador">
+              <i data-lucide="search" aria-hidden="true"></i>
+              <input
+                type="search"
+                id="buscar-producto"
+                placeholder="Buscar por nombre, ID o categoría..."
+                autocomplete="off"
+              />
+            </label>
+
+            <button
+              type="button"
+              class="boton-filtros"
+              id="boton-filtros"
+              aria-label="Filtrar productos"
+            >
+              <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
+              <span>Filtros</span>
+            </button>
+          </section>
+
+          <!-- Contenedor de la tabla -->
+          <div class="tabla-contenedor">
+            <table class="tabla-inventario">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Descripción</th>
+                  <th>Precio</th>
+                  <th>Stock</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-inventario-body">
+                <!-- JS inyectará las filas acá -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginado -->
+          <nav class="paginacion" aria-label="Navegación de páginas">
+            <button class="btn-paginacion" id="btn-anterior">
+              <i data-lucide="chevron-left" aria-hidden="true"></i>
+              <span>Anterior</span>
+            </button>
+
+            <div class="numeros-paginacion" id="numeros-paginacion"></div>
+
+            <button class="btn-paginacion" id="btn-siguiente">
+              <span>Siguiente</span>
+              <i data-lucide="chevron-right" aria-hidden="true"></i>
+            </button>
+          </nav>
+        </section>
+
+        <section id="proveedores" class="vista">
+          <h2>Directorio de Proveedores</h2>
+        </section>
+
+        <section id="movimientos" class="vista">
+          <h2>Historial de Movimientos</h2>
+        </section>
+      </div>
+    </main>
+
+    <dialog id="modal-stock" class="modal">
+  <div class="modal-contenido">
+    <header class="modal-header">
+      <h2>Actualizar Producto</h2>
+      <button type="button" id="cerrar-modal" aria-label="Cerrar modal">
+        <i data-lucide="x" aria-hidden="true"></i>
+      </button>
+    </header>
+    
+    <form id="form-stock" class="modal-form">
+      <p class="modal-subtitle">Modificando: <strong id="modal-nombre-producto">Nombre del producto</strong></p>
+      
+      <!-- Sección de Foto -->
+      <div class="modal-foto-container">
+        <img id="modal-preview-foto" src="" alt="Vista previa" class="modal-preview-foto">
+        <div class="modal-foto-acciones">
+          <label for="nueva-foto" class="btn-subir-foto">
+            <i data-lucide="upload" aria-hidden="true"></i> Cambiar Foto
+          </label>
+          <input type="file" id="nueva-foto" name="foto" accept="image/*" class="input-file-oculto">
+        </div>
+      </div>
+
+      <!-- Sección de Stock -->
+      <div class="modal-input-group">
+        <label for="nuevo-stock">Stock físico en góndola:</label>
+        <input type="number" id="nuevo-stock" name="stock" min="0" required>
+      </div>
+      
+      <div class="modal-acciones">
+        <button type="button" class="btn-cancelar" id="btn-cancelar-modal">Cancelar</button>
+        <button type="submit" class="btn-guardar">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="module" src="./js/repositor.js"></script>
+  </body>
+</html>
