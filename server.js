@@ -127,7 +127,9 @@ dependencyInjector.registerSingleton("ingresoController", async () => {
 
 dependencyInjector.registerSingleton("egresoService", async () => {
   const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
-  return new EgresoService(transaccionRepository);
+  const productoService = await dependencyInjector.resolve("productoService");
+  const insumoService = await dependencyInjector.resolve("insumoService");
+  return new EgresoService(transaccionRepository, productoService, insumoService);
 });
 
 dependencyInjector.registerSingleton("egresoController", async () => {
@@ -146,8 +148,8 @@ const insumoController = await dependencyInjector.resolve("insumoController");
 // 4. Rutas de la API
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
-app.use("/api/egreso", crearRouterEgreso(egresoController));
-app.use("/api/Ingreso", crearRouterIngreso(ingresoController));
+app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
+app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));
 app.use("/api/insumos", crearRouterInsumos(insumoController));
 

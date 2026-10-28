@@ -63,4 +63,16 @@ export class ProductoService {
 
         return eliminado;
     }
+
+    async aumentarStock(id, cantidad) {
+        const producto = await this.buscarProducto(id);
+        producto.unidad ? producto.unidad += cantidad : producto.peso += cantidad;
+        return await this.productoRepository.actualizar(producto);
+    }
+
+    async disminuirStock(id, cantidad) {
+        const producto = await this.buscarProducto(id);
+        producto.unidad ? producto.unidad -= cantidad : producto.peso -= cantidad;
+        return await this.productoRepository.actualizar(producto);
+    }
 }
