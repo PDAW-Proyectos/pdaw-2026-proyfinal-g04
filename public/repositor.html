@@ -3,8 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="common/styles/layout.css" rel="stylesheet" />
     <link href="common/styles/sidebar.css" rel="stylesheet" />
-    <link href="common/styles/repositor.css" rel="stylesheet" />
+    <link href="common/styles/tablas.css" rel="stylesheet" />
+    <link href="common/styles/componentes.css" rel="stylesheet" />
+    
     <title>KCHIN | Gestor de Stock</title>
   </head>
   <body>
@@ -45,7 +48,7 @@
       </button>
     </aside>
 
-    <main class="repositor-main">
+    <main class="main-layout">
       <header class="rol-header">
         <div>
           <p class="rol-eyebrow">KCHIN / GESTIÓN DE STOCK</p>
@@ -66,58 +69,76 @@
           </header>
 
           <!-- Barra de búsqueda y filtros -->
+
           <section class="catalogo-controles" aria-label="Buscar productos">
             <label class="buscador">
               <i data-lucide="search" aria-hidden="true"></i>
               <input
                 type="search"
                 id="buscar-producto"
-                placeholder="Buscar por nombre, ID o categoría..."
+                placeholder="Buscar por nombre, ID o categoría"
                 autocomplete="off"
               />
             </label>
 
-            <button
-              type="button"
-              class="boton-filtros"
-              id="boton-filtros"
-              aria-label="Filtrar productos"
-            >
+            <!-- Nuevo Filtro por Semáforo -->
+            <div class="select-base">
               <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
-              <span>Filtros</span>
-            </button>
+              <select
+                id="select-semaforo"
+                aria-label="Filtrar por estado de stock"
+              >
+                <option value="" selected disabled hidden>
+                  Filtrar por estado
+                </option>
+
+                <option value="todos">Todos los estados</option>
+                <option value="critico">🔴 Stock Crítico (0 - 5)</option>
+                <option value="advertencia">🟡 Advertencia (6 - 10)</option>
+                <option value="normal">🟢 Stock Normal (+11)</option>
+              </select>
+            </div>
           </section>
 
           <!-- Contenedor de la tabla -->
           <div class="tabla-contenedor">
-            <table class="tabla-inventario">
+            <table class="tabla-base">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
+                  <th class="sortable" data-sort="id">
+                    ID
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="nombre">
+                    Nombre
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
                   <th>Categoría</th>
                   <th>Descripción</th>
-                  <th>Precio</th>
-                  <th>Stock</th>
+                  <th class="sortable" data-sort="precio">
+                    Precio
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="stock">
+                    Stock <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
                   <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody id="tabla-inventario-body">
-                <!-- JS inyectará las filas acá -->
-              </tbody>
+              <tbody id="tabla-base-body"></tbody>
             </table>
           </div>
 
           <!-- Paginado -->
           <nav class="paginacion" aria-label="Navegación de páginas">
-            <button class="btn-paginacion" id="btn-anterior">
+            <button class="btn-secundario" id="btn-anterior">
               <i data-lucide="chevron-left" aria-hidden="true"></i>
               <span>Anterior</span>
             </button>
 
             <div class="numeros-paginacion" id="numeros-paginacion"></div>
 
-            <button class="btn-paginacion" id="btn-siguiente">
+            <button class="btn-secundario" id="btn-siguiente">
               <span>Siguiente</span>
               <i data-lucide="chevron-right" aria-hidden="true"></i>
             </button>
@@ -134,42 +155,77 @@
       </div>
     </main>
 
-    <dialog id="modal-stock" class="modal">
-  <div class="modal-contenido">
-    <header class="modal-header">
-      <h2>Actualizar Producto</h2>
-      <button type="button" id="cerrar-modal" aria-label="Cerrar modal">
-        <i data-lucide="x" aria-hidden="true"></i>
-      </button>
-    </header>
-    
-    <form id="form-stock" class="modal-form">
-      <p class="modal-subtitle">Modificando: <strong id="modal-nombre-producto">Nombre del producto</strong></p>
-      
-      <!-- Sección de Foto -->
-      <div class="modal-foto-container">
-        <img id="modal-preview-foto" src="" alt="Vista previa" class="modal-preview-foto">
-        <div class="modal-foto-acciones">
-          <label for="nueva-foto" class="btn-subir-foto">
-            <i data-lucide="upload" aria-hidden="true"></i> Cambiar Foto
-          </label>
-          <input type="file" id="nueva-foto" name="foto" accept="image/*" class="input-file-oculto">
-        </div>
-      </div>
+    <!-- Modal Actualizar -->
+    <dialog id="modal-stock" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h2>Actualizar Producto</h2>
+          <button type="button" id="cerrar-modal" aria-label="Cerrar modal">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
 
-      <!-- Sección de Stock -->
-      <div class="modal-input-group">
-        <label for="nuevo-stock">Stock físico en góndola:</label>
-        <input type="number" id="nuevo-stock" name="stock" min="0" required>
+        <form id="form-stock" class="modal-form">
+          <p class="modal-subtitle">
+            Modificando:
+            <strong id="modal-nombre-producto">Nombre del producto</strong>
+          </p>
+
+          <div class="modal-foto-container">
+            <img
+              id="modal-preview-foto"
+              src=""
+              alt="Vista previa"
+              class="modal-preview-foto"
+            />
+            <div class="modal-foto-acciones">
+              <label for="nueva-foto" class="btn-secundario">
+                <i data-lucide="upload" aria-hidden="true"></i> Cambiar Foto
+              </label>
+              <input
+                type="file"
+                id="nueva-foto"
+                name="foto"
+                accept="image/*"
+                class="input-file-oculto"
+              />
+            </div>
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nueva-descripcion">Descripción del producto:</label>
+            <textarea
+              id="nueva-descripcion"
+              name="descripcion"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nuevo-stock">Stock físico en góndola:</label>
+            <input
+              type="number"
+              id="nuevo-stock"
+              name="stock"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="modal-acciones">
+            <button
+              type="button"
+              class="btn-terciario"
+              id="btn-cancelar-modal"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primario">Guardar Cambios</button>
+          </div>
+        </form>
       </div>
-      
-      <div class="modal-acciones">
-        <button type="button" class="btn-cancelar" id="btn-cancelar-modal">Cancelar</button>
-        <button type="submit" class="btn-guardar">Guardar Cambios</button>
-      </div>
-    </form>
-  </div>
-</dialog>
+    </dialog>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module" src="./js/repositor.js"></script>
