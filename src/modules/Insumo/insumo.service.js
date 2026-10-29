@@ -65,4 +65,16 @@ export class InsumoService {
 
         return eliminado;
     }
+
+    async aumentarStock(id, cantidad) {
+        const insumo = await this.buscarInsumo(id);
+        insumo.unidad += cantidad;
+        return await this.insumoRepository.actualizar(insumo);
+    }
+
+    async disminuirStock(id, cantidad) {
+        const insumo = await this.buscarInsumo(id);
+        insumo.unidad -= cantidad;
+        return await this.insumoRepository.actualizar(insumo);
+    }
 }
