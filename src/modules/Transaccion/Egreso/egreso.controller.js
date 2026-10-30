@@ -18,8 +18,8 @@ export class EgresoController {
 
     buscarEgreso = async (req, res, next) => {
         try { 
-            const egresos = await this.egresoService.buscarEgreso(req.params.id);
-            res.status(200).json(egresos);
+            const egreso = await this.egresoService.buscarEgreso(req.params.id);
+            res.status(200).json(egreso);
         } catch (error) {
             next(error);
         }
@@ -27,8 +27,17 @@ export class EgresoController {
 
     crearEgreso = async (req, res, next) => {
         try {
-            const egresos = await this.egresoService.crearEgreso(req.body);
-            res.status(201).json(egresos);
+            const egreso = await this.egresoService.crearEgreso(req.body);
+            res.status(201).json(egreso);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    crearCompra = async (req, res, next) => {
+        try {
+            const egreso = await this.egresoService.crearCompra(req.session.userId, req.body);
+            res.status(201).json(egreso);
         } catch (error) {
             next(error);
         }
@@ -36,12 +45,12 @@ export class EgresoController {
 
     actualizarEgreso = async (req, res, next) => {
         try {
-            const egresos = await this.egresoService.actualizarEgreso(
+            const egreso = await this.egresoService.actualizarEgreso(
                 req.params.id,
                 req.body
             );
 
-            res.status(200).json(egresos);
+            res.status(200).json(egreso);
         } catch (error) {
             next(error);
         }

@@ -6,6 +6,8 @@ export class Repository {
     #entidades;
     #proximoId;
     #factory;
+    #enTransaccion
+    #estadoAnterior
 
     constructor(ruta, factory) {
         if (!ruta) throw new TypeError('ruta no puede ser nulo');
@@ -13,6 +15,8 @@ export class Repository {
         this.#entidades = [];
         this.#proximoId = 1;
         this.#factory = factory;
+        this.#enTransaccion = false;
+        this.#estadoAnterior = null;
     }
 
     static async inicializar(ruta, factory) {
@@ -52,7 +56,7 @@ export class Repository {
         return true;
     }
 
-    async actualizar(entidad) {
+    async actualizar(entidad, ) {
         const entidadEncontrada = this.buscarPorId(entidad.id);
         const entidadIndex = this.#entidades.indexOf(entidadEncontrada)
         const entidadActualizada = this.#factory(entidad);
@@ -63,8 +67,10 @@ export class Repository {
     }
 
     async #guardar() {
-        const mapeo = this.#entidades.map((e) => ({ ...e, tipo: e.constructor.name }));
-        await writeFile(this.#ruta, JSON.stringify(mapeo, null, 2), "utf8");
+        if (this.#enTransaccion) {
+            return;
+        }
+        await writeFile(this.#ruta, JSON.stringify(this.#entidades, null, 2), "utf8");
     }
 
     async cargar() {
@@ -81,5 +87,42 @@ export class Repository {
 
     #cargarDesdeJson(datos) { 
         this.#entidades = datos.map((e) => this.#factory(e));
+    }
+
+    iniciarTransaccion() {
+        if (this.#enTransaccion) {
+            throw new Error("Ya existe una transacción activa");
+        }
+
+        // Copia independiente de las entidades y del próximo ID.
+        this.#estadoAnterior = {
+            entidades: [...this.#entidades],
+            proximoId: this.#proximoId
+        };
+
+        this.#enTransaccion = true;
+    }
+
+    async confirmarTransaccion() {
+        if (!this.#enTransaccion) {
+            throw new Error("No existe una transacción activa");
+        }
+        
+        this.#enTransaccion = false;
+        this.#estadoAnterior = null;
+
+        await this.#guardar();
+    }
+
+    async rollback() {
+        if (!this.#enTransaccion) {
+            return;
+        }
+
+        this.#entidades = [...this.#estadoAnterior.entidades];
+        this.#proximoId = this.#estadoAnterior.proximoId;
+
+        this.#enTransaccion = false;
+        this.#estadoAnterior = null;
     }
 }
