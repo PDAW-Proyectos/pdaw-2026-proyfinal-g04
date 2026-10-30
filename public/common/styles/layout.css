@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f4f5f0;
+  color: #171914;
+}
+
+/* =========================
+   Contenedor Main
+========================= */
+
+.main-layout { 
+  min-height: 100vh;
+  margin-left: 200px;
+  padding: 38px 34px 48px;
+  overflow: hidden;
+}
+
+.rol-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.rol-eyebrow {
+  margin: 0 0 9px;
+  color: #777b70;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.rol-header h1 {
+  margin: 0;
+  color: #171914;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1.05;
+}
+
+.rol-descripcion {
+  margin-top: 12px;
+  color: #777b70;
+  font-size: 14px;
+}

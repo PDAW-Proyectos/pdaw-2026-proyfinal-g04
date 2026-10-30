@@ -1,0 +1,95 @@
+/* =========================================
+ TABLA
+========================================= */
+.tabla-contenedor {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.tabla-base {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+  text-align: left;
+}
+
+/* Cabeceras */
+.tabla-base th {
+  padding: 10px 14px;
+  background-color: transparent;
+  color: #777b70;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  vertical-align: middle;
+}
+
+/* Celdas */
+.tabla-base td {
+  padding: 10px 14px;
+  color: #171914;
+  font-size: 13px;
+  border: none;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Bordes redondeados para la primera y última celda de cada fila */
+.tabla-base td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.tabla-base td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Filas (Estilo tarjeta) */
+.tabla-base tbody tr {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.tabla-base tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================
+  FUNCIONALIDADES DE TABLA
+========================================= */
+
+/* Ordenamiento (Sort) */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.sortable:hover {
+  opacity: 0.7;
+}
+
+.icono-sort {
+  width: 14px;
+  height: 14px;
+  margin-left: 6px;
+  vertical-align: middle;
+  color: #777b70;
+}
+
+/* Truncar descripciones largas */
+.truncar-texto {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

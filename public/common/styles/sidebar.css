@@ -3,9 +3,24 @@
    CONFIGURACIÓN GENERAL
 ========================= */
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
 body {
-    font-family: "Century Gothic", sans-serif;
-    background-color: #f1f9e4;
+    margin: 0;
+    min-height: 100vh;
+    background: #f4f5f0;
+    color: #171914;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    
 }
 
 /* =========================
@@ -170,7 +185,7 @@ body {
 /* Íconos */
 
 .sidebar .nav-enlace svg,
-.sidebar-cerrar-caja svg {
+.sidebar-boton svg {
     width: 26px;
     height: 26px;
     flex-shrink: 0;
@@ -181,8 +196,6 @@ body {
         transform 500ms cubic-bezier(.22, .8, .25, 1),
         color 350ms ease;
 }
-
-/* Hover */
 
 .sidebar .nav-enlace:hover,
 .sidebar .nav-enlace:focus-visible {
@@ -226,14 +239,11 @@ body {
     display: none;
 }
 
-/* =========================
-   ETIQUETAS FLOTANTES
-   Perfil, menú y Cerrar caja
-========================= */
+/* Etiquetas flotantes */
 
 .sidebar-perfil > span,
 .sidebar .nav-enlace > span,
-.sidebar-cerrar-caja > span {
+.sidebar-boton > span {
     position: absolute;
     left: calc(100% + 14px);
     top: 50%;
@@ -271,16 +281,13 @@ body {
 .sidebar-perfil:focus-visible > span,
 .sidebar .nav-enlace:hover > span,
 .sidebar .nav-enlace:focus-visible > span,
-.sidebar-cerrar-caja:hover > span,
-.sidebar-cerrar-caja:focus-visible > span {
+.sidebar-boton:hover > span,
+.sidebar-boton:focus-visible > span {
     opacity: 1;
     visibility: visible;
     transform: translate(0, -50%);
 }
 
-/* =========================
-   SUBMENÚ DE PRODUCTOS
-========================= */
 
 .nav-submenu {
     display: flex;
@@ -314,11 +321,8 @@ body {
     color: #c2ff38;
 }
 
-/* =========================
-   CERRAR CAJA
-========================= */
 
-.sidebar-cerrar-caja {
+.sidebar-boton {
     position: relative;
     isolation: isolate;
 
@@ -350,14 +354,14 @@ body {
         box-shadow 400ms ease;
 }
 
-.sidebar-cerrar-caja:hover,
-.sidebar-cerrar-caja:focus-visible {
+.sidebar-boton:hover,
+.sidebar-boton:focus-visible {
     background: #050505;
     color: #c2ff38;
     transform: scale(1.20);
     box-shadow: 0 8px 20px #00000030;
 }
 
-.sidebar-cerrar-caja:hover svg {
+.sidebar-boton:hover svg {
     transform: scale(1.08);
 }
