@@ -7,7 +7,7 @@
     <link href="common/styles/sidebar.css" rel="stylesheet" />
     <link href="common/styles/tablas.css" rel="stylesheet" />
     <link href="common/styles/componentes.css" rel="stylesheet" />
-    
+
     <title>KCHIN | Gestor de Stock</title>
   </head>
   <body>
@@ -42,9 +42,9 @@
         </a>
       </nav>
 
-      <button type="button" class="sidebar-boton" id="boton-reponer">
-        <i data-lucide="package-plus" aria-hidden="true"></i>
-        <span>Reponer</span>
+      <button type="button" class="sidebar-boton" id="btn-escanear">
+        <i data-lucide="scan-barcode" aria-hidden="true"></i>
+        <span>Escanear</span>
       </button>
     </aside>
 
@@ -146,7 +146,64 @@
         </section>
 
         <section id="proveedores" class="vista">
-          <h2>Directorio de Proveedores</h2>
+          <header class="vista-header">
+            <h2>Directorio de Proveedores</h2>
+          </header>
+
+          <!-- Buscador de Proveedores -->
+          <section class="catalogo-controles" aria-label="Buscar proveedores">
+            <label class="buscador">
+              <i data-lucide="search" aria-hidden="true"></i>
+              <input
+                type="search"
+                id="buscar-proveedor"
+                placeholder="Buscar por empresa o rubro"
+                autocomplete="off"
+              />
+            </label>
+          </section>
+
+          <!-- Contenedor de la tabla genérica -->
+          <div class="tabla-contenedor">
+            <table class="tabla-base">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="id">
+                    ID <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="empresa">
+                    Empresa
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="rubro">
+                    Rubro <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th>Contacto</th>
+                  <th>Teléfono</th>
+                  <th class="sortable" data-sort="estado">
+                    Estado
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="tabla-proveedores-body"></tbody>
+            </table>
+          </div>
+
+          <!-- Paginado Proveedores -->
+          <nav class="paginacion" aria-label="Navegación de páginas">
+            <button class="btn-secundario" id="btn-anterior-prov">
+              <i data-lucide="chevron-left" aria-hidden="true"></i>
+              <span>Anterior</span>
+            </button>
+
+            <div class="numeros-paginacion" id="numeros-paginacion-prov"></div>
+
+            <button class="btn-secundario" id="btn-siguiente-prov">
+              <span>Siguiente</span>
+              <i data-lucide="chevron-right" aria-hidden="true"></i>
+            </button>
+          </nav>
         </section>
 
         <section id="movimientos" class="vista">
@@ -214,14 +271,55 @@
           </div>
 
           <div class="modal-acciones">
-            <button
-              type="button"
-              class="btn-terciario"
-              id="btn-cancelar-modal"
-            >
+            <button type="button" class="btn-terciario" id="btn-cancelar-modal">
               Cancelar
             </button>
             <button type="submit" class="btn-primario">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal Escáner -->
+    <dialog id="modal-escaner" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h2>Escanear Producto</h2>
+          <button type="button" id="cerrar-escaner" aria-label="Cerrar modal">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
+
+        <div class="modal-icono-escaner">
+          <i data-lucide="barcode"></i>
+        </div>
+
+        <form id="form-escaner" class="modal-form">
+          <div class="modal-input-group">
+            <label for="input-codigo-barras"
+              >Código de barras (ID del producto)</label
+            >
+            <input
+              type="text"
+              id="input-codigo-barras"
+              placeholder="Ej: 1 (o el ID que uses)"
+              required
+              autocomplete="off"
+            />
+            <span id="error-escaner" class="mensaje-error">
+              Producto no encontrado. Verificá el código.
+            </span>
+          </div>
+
+          <div class="modal-acciones acciones-escaner">
+            <button
+              type="button"
+              class="btn-terciario"
+              id="btn-cancelar-escaner"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primario">Buscar y Editar</button>
           </div>
         </form>
       </div>

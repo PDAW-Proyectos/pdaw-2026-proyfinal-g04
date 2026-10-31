@@ -444,3 +444,27 @@
   gap: 12px;
   margin-top: 8px;
 }
+
+/* Modal escáner */
+.modal-icono-escaner {
+  text-align: center;
+  margin: 16px 0 24px;
+}
+
+.modal-icono-escaner svg {
+  width: 72px;
+  height: 72px;
+  color: #171914;
+}
+
+.mensaje-error {
+  color: #dc2626;
+  font-size: 12px;
+  display: none; /* El JS lo cambia a 'block' si hay error */
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.acciones-escaner {
+  margin-top: 16px;
+}

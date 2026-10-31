@@ -188,15 +188,48 @@ const inventarioMock = [
   },
 ];
 
+//Mock proveedores
+const proveedoresMock = [
+  {
+    id: "PRV001",
+    empresa: "Distribuidora del Sur",
+    rubro: "Bebidas",
+    contacto: "Juan Pérez",
+    telefono: "291-555-0123",
+    estado: "Activo",
+  },
+  {
+    id: "PRV002",
+    empresa: "Lácteos La Blanca",
+    rubro: "Frescos",
+    contacto: "María Gómez",
+    telefono: "291-555-0456",
+    estado: "Activo",
+  },
+  {
+    id: "PRV003",
+    empresa: "Panificadora El Trigo",
+    rubro: "Panadería",
+    contacto: "Carlos Ruiz",
+    telefono: "291-555-0789",
+    estado: "Inactivo",
+  },
+];
+
 // array filtros
 let productosFiltrados = [...inventarioMock];
+let proveedoresFiltrados = [...proveedoresMock];
 
-// Variables paginacion
+// Variables paginacion inventario
 let paginaActual = 1;
 const itemsPorPagina = 12;
+let paginaProvActual = 1;
+const itemsPorPaginaProv = 10;
 //Variables ordenamiento
 let columnaOrdenActual = null;
 let ordenAscendente = true;
+let columnaOrdenProvActual = null;
+let ordenProvAscendente = true;
 
 // Renderizar los productos en tabla con paginado
 function renderizarInventario() {
@@ -213,7 +246,7 @@ function renderizarInventario() {
   productosPagina.forEach((producto) => {
     const fila = document.createElement("tr");
 
-    // Lógica del Semáforo 
+    // Lógica del Semáforo
     let claseStock = "stock-normal"; // Por defecto no tiene fondo
     if (producto.stock <= 5) {
       claseStock = "stock-critico";
@@ -239,6 +272,39 @@ function renderizarInventario() {
     tbody.appendChild(fila);
   });
   actualizarControlesPaginacion();
+}
+
+//Reenderizar proveedores
+function renderizarProveedores() {
+  const tbody = document.getElementById("tabla-proveedores-body");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  // Matemática del paginado
+  const inicio = (paginaProvActual - 1) * itemsPorPaginaProv;
+  const fin = inicio + itemsPorPaginaProv;
+  const provPagina = proveedoresFiltrados.slice(inicio, fin);
+
+  provPagina.forEach((prov) => {
+    const fila = document.createElement("tr");
+    const claseEstado =
+      prov.estado === "Activo" ? "stock-normal" : "stock-critico";
+
+    fila.innerHTML = `
+      <td>${prov.id}</td>
+      <td><strong>${prov.empresa}</strong></td>
+      <td>${prov.rubro}</td>
+      <td>${prov.contacto}</td>
+      <td>${prov.telefono}</td>
+      <td>
+        <span class="badge-stock ${claseEstado}">${prov.estado}</span>
+      </td>
+    `;
+    tbody.appendChild(fila);
+  });
+
+  actualizarControlesPaginacionProv();
 }
 
 // Generar los controles de paginación
@@ -270,15 +336,52 @@ function actualizarControlesPaginacion() {
   }
 }
 
+function actualizarControlesPaginacionProv() {
+  const contenedorNumeros = document.getElementById("numeros-paginacion-prov");
+  const btnAnterior = document.getElementById("btn-anterior-prov");
+  const btnSiguiente = document.getElementById("btn-siguiente-prov");
+
+  if (!contenedorNumeros) return;
+
+  const totalPaginas = Math.ceil(
+    proveedoresFiltrados.length / itemsPorPaginaProv,
+  );
+
+  if (btnAnterior)
+    btnAnterior.disabled = paginaProvActual === 1 || totalPaginas === 0;
+  if (btnSiguiente)
+    btnSiguiente.disabled =
+      paginaProvActual === totalPaginas || totalPaginas === 0;
+
+  contenedorNumeros.innerHTML = "";
+
+  for (let i = 1; i <= totalPaginas; i++) {
+    const btnNumero = document.createElement("button");
+    btnNumero.className = `btn-fantasma ${i === paginaProvActual ? "active" : ""}`;
+    btnNumero.textContent = i;
+
+    btnNumero.addEventListener("click", () => {
+      paginaProvActual = i;
+      renderizarProveedores();
+    });
+
+    contenedorNumeros.appendChild(btnNumero);
+  }
+}
+
 // Inicialización y Eventos (DOM Cargado)
 document.addEventListener("DOMContentLoaded", () => {
   lucide.createIcons();
 
   renderizarInventario();
+  renderizarProveedores();
 
+  // =======================================================================
+  // INVENTARIO: Lógica de filtros y paginación
+
+  // Lógica Ordenar por ...
   const cabecerasOrdenables = document.querySelectorAll(".sortable");
 
-  // Lógica Ordenar por ... 
   cabecerasOrdenables.forEach((cabecera) => {
     cabecera.addEventListener("click", () => {
       const columna = cabecera.getAttribute("data-sort");
@@ -301,15 +404,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (valorA > valorB) return ordenAscendente ? 1 : -1;
         return 0;
       });
-      
+
       paginaActual = 1;
       renderizarInventario();
     });
-  }); 
-
-  // ---  Lógica de Filtros ---
+  });
   const inputBuscador = document.getElementById("buscar-producto");
   const selectSemaforo = document.getElementById("select-semaforo");
+  const btnAnterior = document.getElementById("btn-anterior");
+  const btnSiguiente = document.getElementById("btn-siguiente");
 
   function aplicarFiltros() {
     const termino = inputBuscador.value.toLowerCase();
@@ -341,9 +444,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (inputBuscador) inputBuscador.addEventListener("input", aplicarFiltros);
   if (selectSemaforo) selectSemaforo.addEventListener("change", aplicarFiltros);
 
-  const btnAnterior = document.getElementById("btn-anterior");
-  const btnSiguiente = document.getElementById("btn-siguiente");
-
   if (btnAnterior && btnSiguiente) {
     btnAnterior.addEventListener("click", () => {
       if (paginaActual > 1) {
@@ -353,7 +453,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     btnSiguiente.addEventListener("click", () => {
-      const totalPaginas = Math.ceil(productosFiltrados.length / itemsPorPagina);
+      const totalPaginas = Math.ceil(
+        productosFiltrados.length / itemsPorPagina,
+      );
       if (paginaActual < totalPaginas) {
         paginaActual++;
         renderizarInventario();
@@ -361,7 +463,86 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Lógica de las pestañas ---
+  // =======================================================================
+  // PROVEEDORES: Lógica de filtros y paginación
+
+  const cabecerasOrdenablesProv = document.querySelectorAll(
+    "#proveedores .sortable",
+  );
+
+  cabecerasOrdenablesProv.forEach((cabecera) => {
+    cabecera.addEventListener("click", () => {
+      const columna = cabecera.getAttribute("data-sort");
+
+      if (columnaOrdenProvActual === columna) {
+        ordenProvAscendente = !ordenProvAscendente;
+      } else {
+        columnaOrdenProvActual = columna;
+        ordenProvAscendente = true;
+      }
+
+      proveedoresFiltrados.sort((a, b) => {
+        let valorA = a[columna];
+        let valorB = b[columna];
+
+        if (typeof valorA === "string") valorA = valorA.toLowerCase();
+        if (typeof valorB === "string") valorB = valorB.toLowerCase();
+
+        if (valorA < valorB) return ordenProvAscendente ? -1 : 1;
+        if (valorA > valorB) return ordenProvAscendente ? 1 : -1;
+        return 0;
+      });
+
+      paginaProvActual = 1;
+      renderizarProveedores();
+    });
+  });
+  const inputBuscadorProv = document.getElementById("buscar-proveedor");
+  const btnAnteriorProv = document.getElementById("btn-anterior-prov");
+  const btnSiguienteProv = document.getElementById("btn-siguiente-prov");
+
+  function aplicarFiltroProv() {
+    const termino = inputBuscadorProv.value.toLowerCase();
+
+    proveedoresFiltrados = proveedoresMock.filter((prov) => {
+      return (
+        prov.empresa.toLowerCase().includes(termino) ||
+        prov.rubro.toLowerCase().includes(termino) ||
+        prov.id.toLowerCase().includes(termino) ||
+        prov.contacto.toLowerCase().includes(termino)
+      );
+    });
+
+    paginaProvActual = 1;
+    renderizarProveedores();
+  }
+
+  if (inputBuscadorProv)
+    inputBuscadorProv.addEventListener("input", aplicarFiltroProv);
+
+  if (btnAnteriorProv && btnSiguienteProv) {
+    btnAnteriorProv.addEventListener("click", () => {
+      if (paginaProvActual > 1) {
+        paginaProvActual--;
+        renderizarProveedores();
+      }
+    });
+
+    btnSiguienteProv.addEventListener("click", () => {
+      const totalPaginas = Math.ceil(
+        proveedoresFiltrados.length / itemsPorPaginaProv,
+      );
+      if (paginaProvActual < totalPaginas) {
+        paginaProvActual++;
+        renderizarProveedores();
+      }
+    });
+  }
+
+  // =======================================================================
+  // LÓGICA GENERAL
+
+  // --- Pestañas ---
   const enlaces = document.querySelectorAll(".nav-enlace");
   const vistas = document.querySelectorAll(".vista");
 
@@ -380,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Lógica del Modal 
+  // --- Modal Stock ---
   const modalStock = document.getElementById("modal-stock");
   const btnCerrarModal = document.getElementById("cerrar-modal");
   const btnCancelarModal = document.getElementById("btn-cancelar-modal");
@@ -393,14 +574,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Abrir modal
   document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("btn-primario")) {
-      const id = e.target.getAttribute("data-id");
-      const nombre = e.target.getAttribute("data-nombre");
-      const stockActual = e.target.getAttribute("data-stock");
-      const descripcionActual = e.target.getAttribute("data-descripcion");
+    const btnActualizar = e.target.closest(".btn-primario[data-id]");
 
+    if (btnActualizar) {
+      const id = btnActualizar.getAttribute("data-id");
+      const nombre = btnActualizar.getAttribute("data-nombre");
+      const stockActual = btnActualizar.getAttribute("data-stock");
+      const descripcionActual = btnActualizar.getAttribute("data-descripcion");
       const fotoActual =
-        e.target.getAttribute("data-foto") ||
+        btnActualizar.getAttribute("data-foto") ||
         "https://via.placeholder.com/150?text=Sin+Foto";
 
       spanNombreProducto.textContent = nombre;
@@ -424,8 +606,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Funciones para cerrar
   const cerrarModal = () => modalStock.close();
-  btnCerrarModal.addEventListener("click", cerrarModal);
-  btnCancelarModal.addEventListener("click", cerrarModal);
+  if (btnCerrarModal) btnCerrarModal.addEventListener("click", cerrarModal);
+  if (btnCancelarModal) btnCancelarModal.addEventListener("click", cerrarModal);
 
   // Enviar modal
   formStock.addEventListener("submit", (e) => {
@@ -435,7 +617,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const nuevaDescripcion = inputNuevaDescripcion.value;
     const archivoFoto = inputNuevaFoto.files[0];
 
-    const productoIndex = inventarioMock.findIndex((p) => p.id === idProducto);
+    const productoIndex = inventarioMock.findIndex(
+      (p) => p.id.toString() === idProducto.toString(),
+    );
 
     if (productoIndex !== -1) {
       inventarioMock[productoIndex].stock = nuevoStock;
@@ -443,10 +627,64 @@ document.addEventListener("DOMContentLoaded", () => {
       if (archivoFoto) {
         inventarioMock[productoIndex].foto = URL.createObjectURL(archivoFoto);
       }
-
       aplicarFiltros();
     }
-
     modalStock.close();
   });
+
+  // --- Modal Escáner ---
+  const btnEscanear = document.getElementById("btn-escanear");
+  const modalEscaner = document.getElementById("modal-escaner");
+  const btnCerrarEscaner = document.getElementById("cerrar-escaner");
+  const btnCancelarEscaner = document.getElementById("btn-cancelar-escaner");
+  const formEscaner = document.getElementById("form-escaner");
+  const inputCodigoBarras = document.getElementById("input-codigo-barras");
+  const errorEscaner = document.getElementById("error-escaner");
+
+  if (btnEscanear && modalEscaner) {
+    btnEscanear.addEventListener("click", () => {
+      inputCodigoBarras.value = "";
+      errorEscaner.style.display = "none";
+      modalEscaner.showModal();
+      //el cursor aparece titilando en el input
+      setTimeout(() => inputCodigoBarras.focus(), 100);
+    });
+
+    // Cerrar modal
+    const cerrarEscaner = () => modalEscaner.close();
+    if (btnCerrarEscaner)
+      btnCerrarEscaner.addEventListener("click", cerrarEscaner);
+    if (btnCancelarEscaner)
+      btnCancelarEscaner.addEventListener("click", cerrarEscaner);
+
+    // Simular el escaneo (Submit)
+    if (formEscaner) {
+      formEscaner.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const codigoBuscado = inputCodigoBarras.value.trim().toLowerCase();
+        const productoEncontrado = inventarioMock.find(
+          (p) => p.id.toString().toLowerCase() === codigoBuscado,
+        );
+
+        if (productoEncontrado) {
+          errorEscaner.style.display = "none";
+          modalEscaner.close();
+
+          // Pasa los datos al modal stock y lo abre
+          spanNombreProducto.textContent = productoEncontrado.nombre;
+          inputNuevoStock.value = productoEncontrado.stock;
+          inputNuevaDescripcion.value = productoEncontrado.descripcion;
+          imgPreview.src =
+            productoEncontrado.foto ||
+            "https://via.placeholder.com/150?text=Sin+Foto";
+          inputNuevaFoto.value = "";
+
+          formStock.setAttribute("data-producto-id", productoEncontrado.id);
+          modalStock.showModal();
+        } else {
+          errorEscaner.style.display = "block";
+        }
+      });
+    }
+  }
 });
