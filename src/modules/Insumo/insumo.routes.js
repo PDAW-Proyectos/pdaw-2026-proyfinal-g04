@@ -1,6 +1,5 @@
 
 import { Router } from "express";
-import { InsumoController } from "./insumo.controller.js";
 
 export default function crearRouterProductos(insumoController) {
     const router = Router();

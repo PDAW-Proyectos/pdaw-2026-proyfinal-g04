@@ -1,8 +1,4 @@
-import { InsumoService } from "./insumo.service.js";
-
 export class InsumoController {
-    insumoService;
-
     constructor(insumoService) {
         this.insumoService = insumoService;
     }

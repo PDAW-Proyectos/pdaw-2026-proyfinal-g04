@@ -1,5 +1,4 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { Factory } from "./factory.js";
 
 export class Repository {
     #ruta;

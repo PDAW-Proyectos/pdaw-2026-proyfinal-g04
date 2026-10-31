@@ -1,10 +1,4 @@
-
-import { Repository } from "../../common/config/repository.js";
-import { Usuario } from "./usuario.entity.js";
-
 export class UserService {
-    userRepository;
-
     constructor(userRepository) {
         this.userRepository = userRepository;
     }

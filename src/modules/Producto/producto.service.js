@@ -1,6 +1,4 @@
 export class ProductoService {
-    productoRepository;
-
     constructor(productoRepository) {
         this.productoRepository = productoRepository
     }

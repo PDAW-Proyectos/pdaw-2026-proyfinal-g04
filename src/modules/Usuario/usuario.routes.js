@@ -1,6 +1,5 @@
 
 import { Router } from "express";
-import { UserController } from "./usuario.controller.js";
 
 export default function crearRouterUsuarios(
     userController

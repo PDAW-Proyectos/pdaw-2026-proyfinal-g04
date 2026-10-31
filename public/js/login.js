@@ -132,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       } catch (err) {
+        console.error(err);
         if (mensajeError) {
           mensajeError.textContent = "Error al conectar con el servidor";
         }

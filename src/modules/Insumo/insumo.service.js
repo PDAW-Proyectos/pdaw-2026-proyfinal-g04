@@ -1,6 +1,4 @@
 export class InsumoService {
-    insumoRepository;
-
     constructor(insumoRepository) {
         this.insumoRepository = insumoRepository
     }
