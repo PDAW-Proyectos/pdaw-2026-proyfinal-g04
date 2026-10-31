@@ -7,7 +7,7 @@
     <link href="common/styles/sidebar.css" rel="stylesheet" />
     <link href="common/styles/tablas.css" rel="stylesheet" />
     <link href="common/styles/componentes.css" rel="stylesheet" />
-    
+
     <title>KCHIN | Gestor de Stock</title>
   </head>
   <body>
@@ -146,7 +146,64 @@
         </section>
 
         <section id="proveedores" class="vista">
-          <h2>Directorio de Proveedores</h2>
+          <header class="vista-header">
+            <h2>Directorio de Proveedores</h2>
+          </header>
+
+          <!-- Buscador de Proveedores -->
+          <section class="catalogo-controles" aria-label="Buscar proveedores">
+            <label class="buscador">
+              <i data-lucide="search" aria-hidden="true"></i>
+              <input
+                type="search"
+                id="buscar-proveedor"
+                placeholder="Buscar por empresa o rubro"
+                autocomplete="off"
+              />
+            </label>
+          </section>
+
+          <!-- Contenedor de la tabla genérica -->
+          <div class="tabla-contenedor">
+            <table class="tabla-base">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="id">
+                    ID <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="empresa">
+                    Empresa
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="rubro">
+                    Rubro <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th>Contacto</th>
+                  <th>Teléfono</th>
+                  <th class="sortable" data-sort="estado">
+                    Estado
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="tabla-proveedores-body"></tbody>
+            </table>
+          </div>
+
+          <!-- Paginado Proveedores -->
+          <nav class="paginacion" aria-label="Navegación de páginas">
+            <button class="btn-secundario" id="btn-anterior-prov">
+              <i data-lucide="chevron-left" aria-hidden="true"></i>
+              <span>Anterior</span>
+            </button>
+
+            <div class="numeros-paginacion" id="numeros-paginacion-prov"></div>
+
+            <button class="btn-secundario" id="btn-siguiente-prov">
+              <span>Siguiente</span>
+              <i data-lucide="chevron-right" aria-hidden="true"></i>
+            </button>
+          </nav>
         </section>
 
         <section id="movimientos" class="vista">
@@ -214,11 +271,7 @@
           </div>
 
           <div class="modal-acciones">
-            <button
-              type="button"
-              class="btn-terciario"
-              id="btn-cancelar-modal"
-            >
+            <button type="button" class="btn-terciario" id="btn-cancelar-modal">
               Cancelar
             </button>
             <button type="submit" class="btn-primario">Guardar Cambios</button>
