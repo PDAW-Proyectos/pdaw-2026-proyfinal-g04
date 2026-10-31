@@ -17,7 +17,9 @@
     "express-session": "^1.19.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "eslint": "^10.14.0",
+    "globals": "^17.13.0",
     "jest": "^25.1.0"
   }
 }
