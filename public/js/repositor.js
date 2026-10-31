@@ -376,11 +376,10 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarInventario();
   renderizarProveedores();
 
-  
   // =======================================================================
   // INVENTARIO: Lógica de filtros y paginación
 
- // Lógica Ordenar por ...
+  // Lógica Ordenar por ...
   const cabecerasOrdenables = document.querySelectorAll(".sortable");
 
   cabecerasOrdenables.forEach((cabecera) => {
@@ -410,7 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
       renderizarInventario();
     });
   });
-const inputBuscador = document.getElementById("buscar-producto");
+  const inputBuscador = document.getElementById("buscar-producto");
   const selectSemaforo = document.getElementById("select-semaforo");
   const btnAnterior = document.getElementById("btn-anterior");
   const btnSiguiente = document.getElementById("btn-siguiente");
@@ -575,14 +574,15 @@ const inputBuscador = document.getElementById("buscar-producto");
 
   // Abrir modal
   document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("btn-primario")) {
-      const id = e.target.getAttribute("data-id");
-      const nombre = e.target.getAttribute("data-nombre");
-      const stockActual = e.target.getAttribute("data-stock");
-      const descripcionActual = e.target.getAttribute("data-descripcion");
+    const btnActualizar = e.target.closest(".btn-primario[data-id]");
 
+    if (btnActualizar) {
+      const id = btnActualizar.getAttribute("data-id");
+      const nombre = btnActualizar.getAttribute("data-nombre");
+      const stockActual = btnActualizar.getAttribute("data-stock");
+      const descripcionActual = btnActualizar.getAttribute("data-descripcion");
       const fotoActual =
-        e.target.getAttribute("data-foto") ||
+        btnActualizar.getAttribute("data-foto") ||
         "https://via.placeholder.com/150?text=Sin+Foto";
 
       spanNombreProducto.textContent = nombre;
@@ -617,7 +617,9 @@ const inputBuscador = document.getElementById("buscar-producto");
     const nuevaDescripcion = inputNuevaDescripcion.value;
     const archivoFoto = inputNuevaFoto.files[0];
 
-    const productoIndex = inventarioMock.findIndex((p) => p.id === idProducto);
+    const productoIndex = inventarioMock.findIndex(
+      (p) => p.id.toString() === idProducto.toString(),
+    );
 
     if (productoIndex !== -1) {
       inventarioMock[productoIndex].stock = nuevoStock;
@@ -629,4 +631,60 @@ const inputBuscador = document.getElementById("buscar-producto");
     }
     modalStock.close();
   });
+
+  // --- Modal Escáner ---
+  const btnEscanear = document.getElementById("btn-escanear");
+  const modalEscaner = document.getElementById("modal-escaner");
+  const btnCerrarEscaner = document.getElementById("cerrar-escaner");
+  const btnCancelarEscaner = document.getElementById("btn-cancelar-escaner");
+  const formEscaner = document.getElementById("form-escaner");
+  const inputCodigoBarras = document.getElementById("input-codigo-barras");
+  const errorEscaner = document.getElementById("error-escaner");
+
+  if (btnEscanear && modalEscaner) {
+    btnEscanear.addEventListener("click", () => {
+      inputCodigoBarras.value = "";
+      errorEscaner.style.display = "none";
+      modalEscaner.showModal();
+      //el cursor aparece titilando en el input
+      setTimeout(() => inputCodigoBarras.focus(), 100);
+    });
+
+    // Cerrar modal
+    const cerrarEscaner = () => modalEscaner.close();
+    if (btnCerrarEscaner)
+      btnCerrarEscaner.addEventListener("click", cerrarEscaner);
+    if (btnCancelarEscaner)
+      btnCancelarEscaner.addEventListener("click", cerrarEscaner);
+
+    // Simular el escaneo (Submit)
+    if (formEscaner) {
+      formEscaner.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const codigoBuscado = inputCodigoBarras.value.trim().toLowerCase();
+        const productoEncontrado = inventarioMock.find(
+          (p) => p.id.toString().toLowerCase() === codigoBuscado,
+        );
+
+        if (productoEncontrado) {
+          errorEscaner.style.display = "none";
+          modalEscaner.close();
+
+          // Pasa los datos al modal stock y lo abre
+          spanNombreProducto.textContent = productoEncontrado.nombre;
+          inputNuevoStock.value = productoEncontrado.stock;
+          inputNuevaDescripcion.value = productoEncontrado.descripcion;
+          imgPreview.src =
+            productoEncontrado.foto ||
+            "https://via.placeholder.com/150?text=Sin+Foto";
+          inputNuevaFoto.value = "";
+
+          formStock.setAttribute("data-producto-id", productoEncontrado.id);
+          modalStock.showModal();
+        } else {
+          errorEscaner.style.display = "block";
+        }
+      });
+    }
+  }
 });

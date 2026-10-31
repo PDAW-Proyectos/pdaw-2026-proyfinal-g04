@@ -42,9 +42,9 @@
         </a>
       </nav>
 
-      <button type="button" class="sidebar-boton" id="boton-reponer">
-        <i data-lucide="package-plus" aria-hidden="true"></i>
-        <span>Reponer</span>
+      <button type="button" class="sidebar-boton" id="btn-escanear">
+        <i data-lucide="scan-barcode" aria-hidden="true"></i>
+        <span>Escanear</span>
       </button>
     </aside>
 
@@ -275,6 +275,51 @@
               Cancelar
             </button>
             <button type="submit" class="btn-primario">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal Escáner -->
+    <dialog id="modal-escaner" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h2>Escanear Producto</h2>
+          <button type="button" id="cerrar-escaner" aria-label="Cerrar modal">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
+
+        <div class="modal-icono-escaner">
+          <i data-lucide="barcode"></i>
+        </div>
+
+        <form id="form-escaner" class="modal-form">
+          <div class="modal-input-group">
+            <label for="input-codigo-barras"
+              >Código de barras (ID del producto)</label
+            >
+            <input
+              type="text"
+              id="input-codigo-barras"
+              placeholder="Ej: 1 (o el ID que uses)"
+              required
+              autocomplete="off"
+            />
+            <span id="error-escaner" class="mensaje-error">
+              Producto no encontrado. Verificá el código.
+            </span>
+          </div>
+
+          <div class="modal-acciones acciones-escaner">
+            <button
+              type="button"
+              class="btn-terciario"
+              id="btn-cancelar-escaner"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primario">Buscar y Editar</button>
           </div>
         </form>
       </div>
