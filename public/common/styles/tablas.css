@@ -63,6 +63,41 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
+
+/* Precios */
+
+.td-codigo {
+  font-weight: 500;
+  color: #777b70;
+}
+
+.td-nombre {
+  font-weight: 600;
+  color: #171914;
+}
+
+.td-usd {
+  color: #059669; /* Verde KCHIN */
+  font-weight: 500;
+}
+
+.td-ars {
+  font-weight: 700;
+  font-size: 15px;
+  color: #171914; /* Color negro normal */
+  transition: color 0.2s ease; /* Efecto suave cuando cambia a azul */
+}
+
+/* Modificador cuando hay cambios sin guardar */
+.precio-borrador {
+  color: #2563eb; /* Azul eléctrico */
+}
+
+/* Ajuste para el ícono de los botones chicos */
+.icono-chico {
+  width: 16px;
+  height: 16px;
+}
 /* =========================================
   FUNCIONALIDADES DE TABLA
 ========================================= */
