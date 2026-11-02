@@ -1,5 +1,5 @@
-import { Repository } from "../../common/config/repository.js";
 import { readFile, writeFile } from "node:fs/promises";
+import { Repository } from "../../common/config/repository.js";
 
 export class CotizacionRepository extends Repository {
 	#ultimaConsulta;
@@ -37,8 +37,6 @@ export class CotizacionRepository extends Repository {
 			this.#ultimaConsulta = datos?.ultimaConsulta ? new Date(datos.ultimaConsulta) : null;
 			this.proximoId =
 				Math.max(0, ...this.entidades.map((e) => e.id)) + 1;
-			console.log(this.proximoId);
-			console.log();
 		} catch (error) {
 			if (error.code !== "ENOENT") {
 				throw error;
