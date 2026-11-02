@@ -166,7 +166,7 @@ function guardarEnHistorial() {
 
 async function consultarDolarEnVivo() {
   try {
-    const respuesta = await fetch("https://dolarapi.com/v1/dolares/blue");
+    const respuesta = await fetch("api/cotizacion/");
     const data = await respuesta.json();
     dolarApiEnVivo = data.venta;
     spanDolarVivo.textContent = `$ ${dolarApiEnVivo}`;
