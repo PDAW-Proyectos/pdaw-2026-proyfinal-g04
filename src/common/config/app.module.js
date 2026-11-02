@@ -15,6 +15,9 @@ import { IngresoController } from "../../modules/Transaccion/Ingreso/ingreso.con
 import { IngresoService } from "../../modules/Transaccion/Ingreso/ingreso.service.js";
 import { EgresoController } from "../../modules/Transaccion/Egreso/egreso.controller.js";
 import { EgresoService } from "../../modules/Transaccion/Egreso/egreso.service.js";
+import { CotizacionController } from "../../modules/cotizacion/cotizacion.controller.js";
+import { CotizacionService } from "../../modules/cotizacion/cotizacion.service.js";
+import { CotizacionRepository } from "../../modules/cotizacion/cotizacion.repository.js";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -34,7 +37,11 @@ dependencyInjector.registerSingleton("insumoRepository", () =>
 );
 
 dependencyInjector.registerSingleton("transaccionRepository", () =>
-  Repository.inicializar(path.join(__dirname, "../../../data", "Transaccion.json"), factory.crearTransaccion),
+  Repository.inicializar(path.join(__dirname, "../../../data", "Transacciones.json"), factory.crearTransaccion),
+);
+
+dependencyInjector.registerSingleton("cotizacionRepository", () =>
+  CotizacionRepository.inicializar(path.join(__dirname, "../../../data", "Cotizaciones.json"), factory.crearCotizacion),
 );
 
 dependencyInjector.registerSingleton("userService", async () => {
@@ -95,4 +102,14 @@ dependencyInjector.registerSingleton("egresoService", async () => {
 dependencyInjector.registerSingleton("egresoController", async () => {
   const egresoService = await dependencyInjector.resolve("egresoService");
   return new EgresoController(egresoService);
+});
+
+dependencyInjector.registerSingleton("cotizacionService", async () => {
+  const cotizacionRepository = await dependencyInjector.resolve("cotizacionRepository");
+  return new CotizacionService(cotizacionRepository);
+});
+
+dependencyInjector.registerSingleton("cotizacionController", async () => {
+  const cotizacionService = await dependencyInjector.resolve("cotizacionService");
+  return new CotizacionController(cotizacionService);
 });

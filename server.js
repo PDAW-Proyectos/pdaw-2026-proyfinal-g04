@@ -10,6 +10,7 @@ import crearRouterProductos from "./src/modules/Producto/producto.routes.js";
 import crearRouterInsumos from "./src/modules/Insumo/insumo.routes.js";
 import crearRouterIngreso from "./src/modules/Transaccion/Ingreso/ingreso.routes.js";
 import crearRouterEgreso from "./src/modules/Transaccion/Egreso/egreso.routes.js";
+import crearRouterCotizacion from "./src/modules/cotizacion/cotizacion.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -40,6 +41,7 @@ const egresoController = await dependencyInjector.resolve("egresoController");
 const ingresoController = await dependencyInjector.resolve("ingresoController");
 const productoController = await dependencyInjector.resolve("productoController");
 const insumoController = await dependencyInjector.resolve("insumoController");
+const cotizacionController = await dependencyInjector.resolve("cotizacionController");
 
 // 4. Rutas de la API
 app.use("/api/usuarios", crearRouterUsuarios(userController));
@@ -48,6 +50,7 @@ app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoControl
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));
 app.use("/api/insumos", crearRouterInsumos(insumoController));
+app.use("/api/cotizacion", crearRouterCotizacion(cotizacionController));
 
 // 5. Redirección de la raíz
 app.get("/", (req, res) => {
