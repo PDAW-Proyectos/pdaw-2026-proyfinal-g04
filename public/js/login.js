@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (data.rol === "repositor" && rolSeleccionado === "repositor") {
-          window.location.href = "/index.html";
+          window.location.href = "/repositor.html";
           return;
         }
 
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (rolSeleccionado === "cajero") {
             window.location.href = "/caja.html";
           } else if (rolSeleccionado === "repositor") {
-            window.location.href = "/index.html";
+            window.location.href = "/repositor.html";
           } else {
             window.location.href = "/admin.html";
           }
