@@ -2,19 +2,19 @@ import { readFile, writeFile } from "node:fs/promises";
 import { Factory } from "./factory.js";
 
 export class Repository {
-    #ruta;
-    #entidades;
-    #proximoId;
-    #factory;
+    ruta;
+    entidades;
+    proximoId;
+    factory;
     #enTransaccion
     #estadoAnterior
 
     constructor(ruta, factory) {
         if (!ruta) throw new TypeError('ruta no puede ser nulo');
-        this.#ruta = ruta;
-        this.#entidades = [];
-        this.#proximoId = 1;
-        this.#factory = factory;
+        this.ruta = ruta;
+        this.entidades = [];
+        this.proximoId = 1;
+        this.factory = factory;
         this.#enTransaccion = false;
         this.#estadoAnterior = null;
     }
@@ -26,24 +26,24 @@ export class Repository {
     }
 
     buscarPorId(id) {
-        return this.#entidades.find((e) => e.id === Number(id));
+        return this.entidades.find((e) => e.id === Number(id));
     }
 
     buscarPorPropiedad(propiedad) {
         const [key, value] = Object.entries(propiedad)[0];
-        return this.#entidades.find((e) => e[key] === value);
+        return this.entidades.find((e) => e[key] === value);
     }
 
     listar() {
-        return [...this.#entidades];
+        return [...this.entidades];
     }
 
     async crear(entidad) {
-        entidad.id = this.#proximoId++;
-        const entidadCreada = this.#factory(entidad);
-        this.#entidades.push(entidadCreada);
-        await this.#guardar();
-        return this.#entidades[this.#entidades.length - 1];
+        entidad.id = this.proximoId++;
+        const entidadCreada = this.factory(entidad);
+        this.entidades.push(entidadCreada);
+        await this.guardar();
+        return this.entidades[this.entidades.length - 1];
     }
 
     async eliminar(id) {
@@ -51,33 +51,33 @@ export class Repository {
         if (!entidad) {
             return false;
         }
-        this.#entidades.splice(this.#entidades.indexOf(entidad), 1);
-        await this.#guardar();
+        this.entidades.splice(this.entidades.indexOf(entidad), 1);
+        await this.guardar();
         return true;
     }
 
-    async actualizar(entidad, ) {
+    async actualizar(entidad) {
         const entidadEncontrada = this.buscarPorId(entidad.id);
-        const entidadIndex = this.#entidades.indexOf(entidadEncontrada)
-        const entidadActualizada = this.#factory(entidad);
+        const entidadIndex = this.entidades.indexOf(entidadEncontrada)
+        const entidadActualizada = this.factory(entidad);
         Object.assign(entidadActualizada, entidad);
-        this.#entidades[entidadIndex] = entidadActualizada;
-        await this.#guardar();
-        return this.#entidades[entidadIndex];
+        this.entidades[entidadIndex] = entidadActualizada;
+        await this.guardar();
+        return this.entidades[entidadIndex];
     }
 
-    async #guardar() {
+    async guardar() {
         if (this.#enTransaccion) {
             return;
         }
-        await writeFile(this.#ruta, JSON.stringify(this.#entidades, null, 2), "utf8");
+        await writeFile(this.ruta, JSON.stringify(this.entidades, null, 2), "utf8");
     }
 
     async cargar() {
         try {
-            const datos = JSON.parse(await readFile(this.#ruta, "utf8"));
-            this.#cargarDesdeJson(datos);
-            this.#proximoId = Math.max(0, ...this.#entidades.map((e) => e.id)) + 1;
+            const datos = JSON.parse(await readFile(this.ruta, "utf8"));
+            this.cargarDesdeJson(datos);
+            this.proximoId = Math.max(0, ...this.entidades.map((e) => e.id)) + 1;
         } catch (error) {
             if (error.code !== "ENOENT") {
                 throw error;
@@ -85,8 +85,8 @@ export class Repository {
         }
     }
 
-    #cargarDesdeJson(datos) { 
-        this.#entidades = datos.map((e) => this.#factory(e));
+    cargarDesdeJson(datos) { 
+        this.entidades = datos?.map((e) => this.factory(e)) || [];
     }
 
     iniciarTransaccion() {
@@ -96,8 +96,8 @@ export class Repository {
 
         // Copia independiente de las entidades y del próximo ID.
         this.#estadoAnterior = {
-            entidades: [...this.#entidades],
-            proximoId: this.#proximoId
+            entidades: [...this.entidades],
+            proximoId: this.proximoId
         };
 
         this.#enTransaccion = true;
@@ -111,7 +111,7 @@ export class Repository {
         this.#enTransaccion = false;
         this.#estadoAnterior = null;
 
-        await this.#guardar();
+        await this.guardar();
     }
 
     async rollback() {
@@ -119,8 +119,8 @@ export class Repository {
             return;
         }
 
-        this.#entidades = [...this.#estadoAnterior.entidades];
-        this.#proximoId = this.#estadoAnterior.proximoId;
+        this.entidades = [...this.#estadoAnterior.entidades];
+        this.proximoId = this.#estadoAnterior.proximoId;
 
         this.#enTransaccion = false;
         this.#estadoAnterior = null;

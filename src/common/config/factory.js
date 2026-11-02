@@ -4,6 +4,7 @@ import { ProductoUnidad } from "../../modules/Producto/productoUnidad.entity.js"
 import { Insumo } from "../../modules/Insumo/insumo.entity.js";
 import { Ingreso } from "../../modules/Transaccion/Ingreso/ingreso.entity.js";
 import { Egreso } from "../../modules/Transaccion/Egreso/egreso.entity.js";
+import { Cotizacion } from "../../modules/cotizacion/cotizacion.entity.js";
 
 export class Factory {
     crearUsuario(entidad) {
@@ -22,5 +23,9 @@ export class Factory {
     crearTransaccion(entidad) {
         const transaccion = entidad.monto > 0 ? new Ingreso(entidad) : new Egreso(entidad);
         return transaccion;
+    }
+
+    crearCotizacion(entidad) {
+        return new Cotizacion(entidad)
     }
 }
