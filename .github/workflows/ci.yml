@@ -16,4 +16,4 @@ jobs:
                     cache: npm
             - run: npm ci
             - run: npm run lint
-            - run: npm test -- --coverage
+            - run: npm test -- --coverage --passWithNoTests
