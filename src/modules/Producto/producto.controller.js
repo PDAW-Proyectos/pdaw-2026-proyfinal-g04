@@ -5,7 +5,7 @@ export class ProductoController {
 
     listarProductos = async (req, res, next) => {
         try {
-            const producto = await this.productoService.listarProductos();
+            const producto = await this.productoService.listarProductos(req, res, next);
             res.status(200).json(producto);
         } catch (error) {
             next(error);

@@ -18,6 +18,7 @@ import { EgresoService } from "../../modules/Transaccion/Egreso/egreso.service.j
 import { CotizacionController } from "../../modules/cotizacion/cotizacion.controller.js";
 import { CotizacionService } from "../../modules/cotizacion/cotizacion.service.js";
 import { CotizacionRepository } from "../../modules/cotizacion/cotizacion.repository.js";
+import { log } from "node:console";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -96,7 +97,9 @@ dependencyInjector.registerSingleton("ingresoController", async () => {
 
 dependencyInjector.registerSingleton("egresoService", async () => {
   const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
-  return new EgresoService(transaccionRepository);
+  const productoService = await dependencyInjector.resolve("productoService");
+  const insumoService = await dependencyInjector.resolve("insumoService");
+  return new EgresoService(transaccionRepository, productoService, insumoService);
 });
 
 dependencyInjector.registerSingleton("egresoController", async () => {

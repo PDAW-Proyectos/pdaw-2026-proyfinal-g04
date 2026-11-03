@@ -3,7 +3,7 @@ export class ProductoService {
         this.productoRepository = productoRepository
     }
 
-    async listarProductos() {
+    async listarProductos(req, res, next) {
         return this.productoRepository.listar();
     }
 
