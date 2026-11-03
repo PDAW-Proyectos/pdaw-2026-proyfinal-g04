@@ -3,8 +3,20 @@ export class UserService {
         this.userRepository = userRepository;
     }
 
-    listarUsuarios = async () => {
-        return await this.userRepository.listar();
+    listarUsuarios = async (pagina, limite) => {
+        const { datos, ...paginacion } = await this.userRepository.listarPorPropiedad(filtros, pagina, limite);
+        return {
+            usuarios: datos,
+            ...paginacion
+        };
+    };
+
+    filtrarUsuarios = async (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = await this.userRepository.listarPorPropiedad(filtros, pagina, limite);
+        return {
+            usuarios: datos,
+            ...paginacion
+        };
     };
 
     buscarUsuario = async (id) => {

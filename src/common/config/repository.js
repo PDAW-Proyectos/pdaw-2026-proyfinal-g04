@@ -10,6 +10,7 @@ export class Repository {
 
     constructor(ruta, factory) {
         if (!ruta) throw new TypeError('ruta no puede ser nulo');
+        if (!factory) throw new TypeError('factory no puede ser nulo');
         this.ruta = ruta;
         this.entidades = [];
         this.proximoId = 1;
@@ -33,14 +34,32 @@ export class Repository {
         return this.entidades.find((e) => e[key] === value);
     }
 
-    listarPorPropiedad(propiedades) {
-    return this.entidades.filter((e) =>
-        Object.entries(propiedades).every(([key, value]) => e[key] === value)
-    );
-}
+    listar( pagina, limite ) {
+        const total = this.entidades.length;
+        const inicio = (pagina - 1) * limite;
+        return {
+            datos: [...this.entidades].slice(inicio, inicio + limite),
+            total,
+            pagina,
+            limite,
+            totalPaginas: Math.ceil(total / limite)
+        };
+    }
 
-    listar() {
-        return [...this.entidades];
+    listarPorPropiedad( propiedades, pagina, limite ) {
+        if(!propiedades) throw new Error("Filtros inexistentes") 
+        const entidadesFiltradas = this.entidades.filter((e) =>
+            Object.entries(propiedades).every(([key, value]) => e[key] === value)
+        );
+        const total = entidadesFiltradas.length;
+        const inicio = (pagina - 1) * limite;
+        return {
+            datos: entidadesFiltradas.slice(inicio, inicio + limite),
+            total,
+            pagina,
+            limite,
+            totalPaginas: Math.ceil(total / limite)
+        };
     }
 
     async crear(entidad) {
