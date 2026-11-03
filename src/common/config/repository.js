@@ -33,6 +33,12 @@ export class Repository {
         return this.entidades.find((e) => e[key] === value);
     }
 
+    listarPorPropiedad(propiedades) {
+    return this.entidades.filter((e) =>
+        Object.entries(propiedades).every(([key, value]) => e[key] === value)
+    );
+}
+
     listar() {
         return [...this.entidades];
     }
