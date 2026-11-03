@@ -18,7 +18,6 @@ import { EgresoService } from "../../modules/Transaccion/Egreso/egreso.service.j
 import { CotizacionController } from "../../modules/cotizacion/cotizacion.controller.js";
 import { CotizacionService } from "../../modules/cotizacion/cotizacion.service.js";
 import { CotizacionRepository } from "../../modules/cotizacion/cotizacion.repository.js";
-import { log } from "node:console";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
