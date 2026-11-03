@@ -13,6 +13,11 @@ export default defineConfig([
         ...globals.node,
         lucide: "readonly"
       } 
+    },
+    rules: {
+      "no-unused-vars": ["error", {
+        args: "none"
+      }]
     } 
   },
 ]);
