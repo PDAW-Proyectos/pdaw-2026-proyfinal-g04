@@ -50,7 +50,7 @@ app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoControl
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));
 app.use("/api/insumos", crearRouterInsumos(insumoController));
-app.use("/api/cotizacion", crearRouterCotizacion(cotizacionController));
+app.use("/api/cotizacion", requireAuth, allowRoles("admin"), crearRouterCotizacion(cotizacionController));
 
 // 5. Redirección de la raíz
 app.get("/", (req, res) => {

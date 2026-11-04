@@ -72,11 +72,8 @@
         <header class="vista-header">
           <h2>Control de Precios y Catálogo</h2>
         </header>
-        
-        <div class="vista-cuerpo">
-          
-          
 
+        <div class="vista-cuerpo">
           <!-- 2. Mini-Dashboard (Tarjetas comparativas) -->
           <div class="dashboard-precios">
             <!-- Tarjeta 1: Dólar -->
@@ -84,7 +81,12 @@
               <div class="tarjeta-header">
                 <i data-lucide="dollar-sign"></i>
                 <h3>Estado del Dólar</h3>
-                <span id="alerta-dolar" class="badge-alerta" style="display: none;">¡Diferencia Detectada!</span>
+                <span
+                  id="alerta-dolar"
+                  class="badge-alerta"
+                  style="display: none"
+                  >¡Diferencia Detectada!</span
+                >
               </div>
               <div class="tarjeta-body">
                 <div class="dato-dolar">
@@ -97,7 +99,7 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- Tarjeta 2: Impacto Estimado -->
             <div class="tarjeta-precio">
               <div class="tarjeta-header">
@@ -105,7 +107,12 @@
                 <h3>Impacto Estimado</h3>
               </div>
               <div class="tarjeta-body">
-                <p class="impacto-texto">Ej: <strong id="ejemplo-nombre">Alfajor Capitán del Espacio</strong></p>
+                <p class="impacto-texto">
+                  Ej:
+                  <strong id="ejemplo-nombre"
+                    >Alfajor Capitán del Espacio</strong
+                  >
+                </p>
                 <div class="dato-impacto">
                   <span class="precio-viejo" id="ejemplo-viejo">$800</span>
                   <i data-lucide="arrow-right"></i>
@@ -117,36 +124,59 @@
 
           <!-- 3. Barra de Herramientas -->
           <div class="toolbar-precios">
-            
             <!-- Izquierda: Aumento Manual y Deshacer -->
             <div class="herramientas-manuales">
-              <button type="button" class="btn-secundario" id="btn-deshacer" disabled title="Deshacer último cambio">
+              <button
+                type="button"
+                class="btn-secundario"
+                id="btn-deshacer"
+                disabled
+                title="Deshacer último cambio"
+              >
                 <i data-lucide="undo-2"></i>
               </button>
-              
+
               <div class="separador-vertical"></div>
 
               <div class="input-porcentaje">
-                <input type="number" id="input-porcentaje" placeholder="Ej: 10" min="-100" max="100">
+                <input
+                  type="number"
+                  id="input-porcentaje"
+                  placeholder="Ej: 10"
+                  min="-100"
+                  max="100"
+                />
                 <span>%</span>
               </div>
-              <button type="button" class="btn-secundario" id="btn-aplicar-porcentaje">
+              <button
+                type="button"
+                class="btn-secundario"
+                id="btn-aplicar-porcentaje"
+              >
                 <i data-lucide="percent"></i> Probar Ajuste
               </button>
             </div>
 
             <!-- Derecha: API Dólar y GUARDAR -->
-            <div class="herramientas-api" style="display: flex; gap: 12px;">
-              <button type="button" class="btn-secundario" id="btn-aplicar-dolar">
+            <div class="herramientas-api" style="display: flex; gap: 12px">
+              <button
+                type="button"
+                class="btn-secundario"
+                id="btn-aplicar-dolar"
+              >
                 <i data-lucide="calculator"></i> Probar Dólar Mercado
               </button>
-              
+
               <!-- EL BOTÓN MAESTRO -->
-              <button type="button" class="btn-primario btn-con-icono btn-guardar-maestro" id="btn-guardar-cambios" disabled>
+              <button
+                type="button"
+                class="btn-primario btn-con-icono btn-guardar-maestro"
+                id="btn-guardar-cambios"
+                disabled
+              >
                 <i data-lucide="save"></i> Guardar Cambios
               </button>
             </div>
-
           </div>
 
           <!-- 1. Buscador (Ancho completo arriba) -->
@@ -172,27 +202,24 @@
                   <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody id="tabla-body-precios">
-                
-              </tbody>
+              <tbody id="tabla-body-precios"></tbody>
             </table>
           </div>
-
         </div>
 
         <nav class="paginacion" aria-label="Navegación de páginas">
-            <button class="btn-secundario" id="btn-anterior-precios">
-              <i data-lucide="chevron-left" aria-hidden="true"></i>
-              <span>Anterior</span>
-            </button>
+          <button class="btn-secundario" id="btn-anterior-precios">
+            <i data-lucide="chevron-left" aria-hidden="true"></i>
+            <span>Anterior</span>
+          </button>
 
-            <div class="numeros-paginacion" id="numeros-paginacion-precios"></div>
+          <div class="numeros-paginacion" id="numeros-paginacion-precios"></div>
 
-            <button class="btn-secundario" id="btn-siguiente-precios">
-              <span>Siguiente</span>
-              <i data-lucide="chevron-right" aria-hidden="true"></i>
-            </button>
-          </nav>
+          <button class="btn-secundario" id="btn-siguiente-precios">
+            <span>Siguiente</span>
+            <i data-lucide="chevron-right" aria-hidden="true"></i>
+          </button>
+        </nav>
       </section>
 
       <section id="caja" class="vista">
@@ -213,6 +240,169 @@
         </header>
       </section>
     </main>
+
+    <!-- Modal Actualizar Precio / Producto -->
+    <dialog id="modal-stock" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h2>Modificar Producto</h2>
+          <button type="button" id="cerrar-modal" aria-label="Cerrar modal">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
+
+        <form id="form-stock" class="modal-form">
+          <input type="hidden" id="modal-producto-id" />
+          <p class="modal-subtitle">
+            Editando:
+            <strong id="modal-nombre-producto">Nombre del producto</strong>
+          </p>
+
+          <div class="modal-input-group">
+            <label for="modal-precio-usd">Precio en Dólares (U$D):</label>
+            <input
+              type="number"
+              id="modal-precio-usd"
+              step="0.01"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="modal-input-group">
+            <label for="modal-precio-ars">Precio en Pesos ($):</label>
+            <input
+              type="number"
+              id="modal-precio-ars"
+              step="10"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nueva-descripcion">Descripción del producto:</label>
+            <textarea
+              id="nueva-descripcion"
+              name="descripcion"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div class="modal-acciones">
+            <button type="button" class="btn-fantasma" id="btn-cancelar-modal">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primario">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal Crear Producto Nuevo -->
+    <dialog id="modal-crear-producto" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h2>Nuevo Producto</h2>
+          <button
+            type="button"
+            id="cerrar-modal-crear"
+            aria-label="Cerrar modal"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
+
+        <form id="form-crear-producto" class="modal-form">
+          <p class="modal-subtitle">
+            Agregá un nuevo ítem al catálogo general.
+          </p>
+
+          <div class="modal-input-group">
+            <label for="nuevo-prod-nombre">Nombre del producto:</label>
+            <input
+              type="text"
+              id="nuevo-prod-nombre"
+              name="nombre"
+              placeholder="Ej: Yerba Mate 500g"
+              required
+            />
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nuevo-prod-categoria">Categoría:</label>
+            <input
+              type="text"
+              id="nuevo-prod-categoria"
+              name="categoria"
+              placeholder="Ej: Almacén, Bebidas..."
+              required
+            />
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nuevo-prod-usd">Precio en Dólares (U$D):</label>
+            <input
+              type="number"
+              id="nuevo-prod-usd"
+              name="precioUsd"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              required
+            />
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nuevo-prod-ars">Precio en Pesos ($):</label>
+            <input
+              type="number"
+              id="nuevo-prod-ars"
+              name="precio"
+              step="10"
+              min="0"
+              placeholder="0"
+              required
+            />
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nuevo-prod-stock">Stock inicial (Unidades):</label>
+            <input
+              type="number"
+              id="nuevo-prod-stock"
+              name="unidad"
+              min="0"
+              value="0"
+              required
+            />
+          </div>
+
+          <div class="modal-input-group">
+            <label for="nuevo-prod-descripcion">Descripción:</label>
+            <textarea
+              id="nuevo-prod-descripcion"
+              name="descripcion"
+              rows="2"
+              placeholder="Detalles del producto..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="modal-acciones">
+            <button type="button" class="btn-fantasma" id="btn-cancelar-crear">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn-primario"
+            >
+              Crear Producto
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module" src="./js/admin.js"></script>

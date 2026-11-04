@@ -1,15 +1,16 @@
 let catalogoBase = [];
-let catalogoEdicion = []; 
-let productosFiltrados = []; 
+let catalogoEdicion = [];
+let productosFiltrados = [];
 
-// Paginación 
+// Paginación
 let paginaActual = 1;
 const itemsPorPagina = 12;
 
 // Lógica de Dólar y Borrador
-let ultimoDolarGuardado = 1000;
+let ultimoDolarGuardado = null;
 let dolarApiEnVivo = null;
 let historialCambios = [];
+let fechaCotizacionActual = null;
 let hayCambiosSinGuardar = false;
 
 const tablaBodyPrecios = document.getElementById("tabla-body-precios");
@@ -63,11 +64,59 @@ function actualizarControlesPaginacion() {
   }
 }
 
+let htmlOriginalBotonGuardar = "";
+
+function mostrarToast(mensaje, esError = false) {
+  const toast = document.createElement("div");
+  toast.textContent = mensaje;
+
+  toast.className = `toast-notificacion ${esError ? "toast-error" : "toast-exito"}`;
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add("toast-visible"));
+
+  setTimeout(() => {
+    toast.classList.remove("toast-visible");
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+function confirmarPublicacion(accionConfirmada) {
+  const dialog = document.createElement("dialog");
+  dialog.className = "modal-base";
+  dialog.innerHTML = `
+   <div class="modal-contenido">
+      <div class="modal-header">
+        <h2>Confirmar publicación</h2>
+      </div>
+      <p class="modal-subtitle">Estás a punto de actualizar los precios de todo el catálogo en el sistema.</p>
+      
+      <div class="modal-acciones" style="margin-top: 24px;">
+        <button type="button" class="btn-fantasma" id="btn-cancelar-pub">Cancelar</button>
+        <button type="button" class="btn-primario" id="btn-confirmar-pub" style="background-color: #c7ff3e; border-color: #c7ff3e; color: #161615;">Sí, publicar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(dialog);
+  dialog.showModal();
+
+  dialog.querySelector("#btn-cancelar-pub").addEventListener("click", () => {
+    dialog.close();
+    dialog.remove();
+  });
+
+  dialog.querySelector("#btn-confirmar-pub").addEventListener("click", () => {
+    dialog.close();
+    dialog.remove();
+    accionConfirmada();
+  });
+}
+
 // Render tabla
 function renderizarTablaPrecios() {
   if (!tablaBodyPrecios) return;
 
-  // Matemática del paginado 
+  // Matemática del paginado
   const totalPaginas =
     Math.ceil(productosFiltrados.length / itemsPorPagina) || 1;
   if (paginaActual > totalPaginas) paginaActual = totalPaginas;
@@ -105,12 +154,15 @@ function renderizarTablaPrecios() {
 // Filtros
 function aplicarFiltros() {
   const inputBuscador = document.getElementById("buscar-producto");
-  const termino = inputBuscador ? inputBuscador.value.toLowerCase() : "";
+  const termino = inputBuscador ? inputBuscador.value.toLowerCase().trim() : "";
 
   productosFiltrados = catalogoEdicion.filter((prod) => {
+    const idTexto = prod.id ? prod.id.toString().toLowerCase() : "";
+    const nombreTexto = prod.nombre ? prod.nombre.toLowerCase() : "";
+
     return (
-      prod.nombre.toLowerCase().includes(termino) ||
-      prod.id.toLowerCase().includes(termino)
+      nombreTexto.includes(termino) ||
+      idTexto.includes(termino)
     );
   });
 
@@ -152,7 +204,17 @@ function actualizarDashboard(simulacionMonto = null) {
   }
 
   const btnGuardarCambios = document.getElementById("btn-guardar-cambios");
-  if (btnGuardarCambios) btnGuardarCambios.disabled = !hayCambiosSinGuardar;
+  if (btnGuardarCambios) {
+    btnGuardarCambios.disabled = !hayCambiosSinGuardar;
+
+    if (hayCambiosSinGuardar && htmlOriginalBotonGuardar) {
+      btnGuardarCambios.innerHTML = htmlOriginalBotonGuardar;
+      btnGuardarCambios.style.backgroundColor = "";
+      btnGuardarCambios.style.borderColor = "";
+      btnGuardarCambios.style.color = "";
+      if (typeof lucide !== "undefined") lucide.createIcons();
+    }
+  }
 }
 
 function guardarEnHistorial() {
@@ -166,19 +228,27 @@ function guardarEnHistorial() {
 
 async function consultarDolarEnVivo() {
   try {
-    const respuesta = await fetch("api/cotizacion/");
+    const respuesta = await fetch("/api/cotizacion");
+    if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
     const data = await respuesta.json();
     dolarApiEnVivo = data.venta;
+    fechaCotizacionActual = data.fechaActualizacion || new Date().toISOString();
+
+    if (!ultimoDolarGuardado) ultimoDolarGuardado = dolarApiEnVivo;
+
     spanDolarVivo.textContent = `$ ${dolarApiEnVivo}`;
     actualizarDashboard();
   } catch (error) {
-    console.error("Error al consultar DolarAPI:", error);
+    console.error("Error al consultar DolarAPI desde el backend:", error);
     spanDolarVivo.textContent = "Error de red";
   }
 }
 
 // Inicialización y eventos del DOM
 document.addEventListener("DOMContentLoaded", async () => {
+  const btnGuardarCambios = document.getElementById("btn-guardar-cambios");
+  if (btnGuardarCambios) htmlOriginalBotonGuardar = btnGuardarCambios.innerHTML;
+
   if (typeof lucide !== "undefined") lucide.createIcons();
 
   try {
@@ -189,21 +259,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         id: p.id,
         nombre: p.nombre,
         categoria: p.categoria || "General",
-        precioUsd: p.precioUsd ?? p.precio / 1000, // Si en la base de datos está en pesos, estimamos USD o usamos su campo real
+        precioUsd: p.precioUsd ?? p.precio / 1000,
         precioArs: p.precio ?? p.precioArs,
-        stock: p.stock ?? 0,
+        stock: p.stock ?? p.unidad ?? p.peso ?? 0,
       }));
       catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
     }
   } catch (error) {
     console.error("Error al conectar con el backend de productos:", error);
   }
-  // Arranque
+
   aplicarFiltros();
   actualizarDashboard();
   consultarDolarEnVivo();
 
-  // --- Vistas --- 
+  // --- Vistas ---
   const enlaces = document.querySelectorAll(".nav-enlace");
   const vistas = document.querySelectorAll(".vista");
 
@@ -256,7 +326,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
   const inputPorcentaje = document.getElementById("input-porcentaje");
   const btnDeshacer = document.getElementById("btn-deshacer");
-  const btnGuardarCambios = document.getElementById("btn-guardar-cambios");
 
   if (btnAplicarDolar) {
     btnAplicarDolar.addEventListener("click", () => {
@@ -266,7 +335,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ...prod,
         precioArs: redondearPrecio(prod.precioUsd * dolarApiEnVivo),
       }));
-      aplicarFiltros(); 
+      aplicarFiltros();
       actualizarDashboard();
     });
   }
@@ -318,43 +387,252 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (btnGuardarCambios) {
-    btnGuardarCambios.addEventListener("click", async () => {
-      try {
-        // Mandamos el catálogo editado al servidor
-        const respuesta = await fetch("/api/productos/actualizar-precios", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(catalogoEdicion),
-        });
+    btnGuardarCambios.addEventListener("click", () => {
+      // Usamos el modal de confirmación
+      confirmarPublicacion(async () => {
+        try {
+          const payload = {
+            cotizacion: Number(dolarApiEnVivo),
+            fechaCotizacion: fechaCotizacionActual,
+            productos: catalogoEdicion.map((p) => ({
+              id: p.id,
+              precioUsd: p.precioUsd,
+              precio: p.precioArs,
+            })),
+          };
 
-        if (!respuesta.ok) throw new Error("Error al guardar en el servidor");
+          const respuesta = await fetch("/api/productos/actualizar-precios", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
 
-        catalogoBase = JSON.parse(JSON.stringify(catalogoEdicion));
-        if (dolarApiEnVivo) ultimoDolarGuardado = dolarApiEnVivo;
+          if (!respuesta.ok) throw new Error("Error al guardar en el servidor");
 
-        historialCambios = [];
-        hayCambiosSinGuardar = false;
-        btnDeshacer.disabled = true;
+          catalogoBase = JSON.parse(JSON.stringify(catalogoEdicion));
+          if (dolarApiEnVivo) ultimoDolarGuardado = dolarApiEnVivo;
 
-        const iconoOriginal = btnGuardarCambios.innerHTML;
-        btnGuardarCambios.innerHTML = `<i data-lucide="check-circle"></i> ¡Precios Publicados!`;
-        btnGuardarCambios.style.backgroundColor = "#15803d";
-        btnGuardarCambios.style.borderColor = "#15803d";
+          historialCambios = [];
+          hayCambiosSinGuardar = false;
+          btnDeshacer.disabled = true;
 
-        aplicarFiltros();
-        actualizarDashboard();
+          btnGuardarCambios.innerHTML = `<i data-lucide="check-circle"></i> ¡Precios Publicados!`;
+          btnGuardarCambios.style.backgroundColor = "#c7ff3e";
+          btnGuardarCambios.style.borderColor = "#c7ff3e";
+          btnGuardarCambios.style.color = "#161615";
 
-        setTimeout(() => {
-          btnGuardarCambios.innerHTML = iconoOriginal;
-          btnGuardarCambios.style.backgroundColor = "#2563eb";
-          btnGuardarCambios.style.borderColor = "#2563eb";
-          btnGuardarCambios.disabled = true;
-          if (typeof lucide !== "undefined") lucide.createIcons();
-        }, 2500);
-      } catch (error) {
-        console.error(error);
-        alert("Hubo un error al guardar los cambios en la base de datos.");
-      }
+          aplicarFiltros();
+          actualizarDashboard();
+          mostrarToast("¡Los precios se actualizaron correctamente!");
+
+          setTimeout(() => {
+            if (!hayCambiosSinGuardar && htmlOriginalBotonGuardar) {
+              btnGuardarCambios.innerHTML = htmlOriginalBotonGuardar;
+              btnGuardarCambios.style.backgroundColor = "";
+              btnGuardarCambios.style.borderColor = "";
+              btnGuardarCambios.style.color = "";
+              btnGuardarCambios.disabled = true;
+              if (typeof lucide !== "undefined") lucide.createIcons();
+            }
+          }, 2500);
+        } catch (error) {
+          console.error(error);
+          mostrarToast(
+            "Hubo un error al guardar los cambios en la base de datos.",
+            true,
+          );
+        }
+      });
     });
   }
 });
+
+// --- Modal Actualizar Precio / Producto ---
+  const modalStock = document.getElementById("modal-stock");
+  const formStock = document.getElementById("form-stock");
+  const btnCerrarModal = document.getElementById("cerrar-modal");
+  const btnCancelarModal = document.getElementById("btn-cancelar-modal");
+  
+  let productoEnEdicionId = null;
+
+  if (tablaBodyPrecios) {
+    tablaBodyPrecios.addEventListener("click", (e) => {
+      const btnEditar = e.target.closest("button");
+      if (!btnEditar) return;
+
+      const idProd = btnEditar.getAttribute("data-id");
+
+      const producto = catalogoEdicion.find(p => String(p.id) === String(idProd));
+
+      if (producto) {
+        productoEnEdicionId = producto.id;
+        document.getElementById("modal-producto-id").value = producto.id;
+        document.getElementById("modal-nombre-producto").textContent = producto.nombre;
+        document.getElementById("modal-precio-usd").value = producto.precioUsd;
+        document.getElementById("modal-precio-ars").value = producto.precioArs;
+        document.getElementById("nueva-descripcion").value = producto.descripcion || "";
+
+        if (modalStock && typeof modalStock.showModal === "function") {
+          modalStock.showModal();
+        }
+      }
+    });
+  }
+
+  [btnCerrarModal, btnCancelarModal].forEach(btn => {
+    if (btn) {
+      btn.addEventListener("click", () => {
+        if (modalStock) modalStock.close();
+      });
+    }
+  });
+
+  const inputUsdModal = document.getElementById("modal-precio-usd");
+  const inputArsModal = document.getElementById("modal-precio-ars");
+
+  if (inputUsdModal && dolarApiEnVivo) {
+    inputUsdModal.addEventListener("input", (e) => {
+      const valUsd = parseFloat(e.target.value) || 0;
+      inputArsModal.value = redondearPrecio(valUsd * dolarApiEnVivo);
+    });
+  }
+
+  if (formStock) {
+    formStock.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!productoEnEdicionId) return;
+
+      const nuevoPrecioUsd = parseFloat(document.getElementById("modal-precio-usd").value);
+      const nuevoPrecioArs = parseFloat(document.getElementById("modal-precio-ars").value);
+      const nuevaDescripcion = document.getElementById("nueva-descripcion").value;
+
+      try {
+        const payload = {
+          precioUsd: nuevoPrecioUsd,
+          precio: nuevoPrecioArs, 
+          descripcion: nuevaDescripcion
+        };
+
+        const respuesta = await fetch(`/api/productos/${productoEnEdicionId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!respuesta.ok) throw new Error("Error al actualizar el producto");
+
+        const productoActualizadoServidor = await respuesta.json();
+
+        catalogoEdicion = catalogoEdicion.map(p => {
+          if (String(p.id) === String(productoEnEdicionId)) {
+            return {
+              ...p,
+              precioUsd: productoActualizadoServidor.precioUsd ?? nuevoPrecioUsd,
+              precioArs: productoActualizadoServidor.precio ?? nuevoPrecioArs,
+              descripcion: productoActualizadoServidor.descripcion ?? nuevaDescripcion
+            };
+          }
+          return p;
+        });
+
+        catalogoBase = JSON.parse(JSON.stringify(catalogoEdicion));
+
+        modalStock.close();
+        aplicarFiltros();
+        actualizarDashboard();
+        mostrarToast("¡Producto actualizado con éxito!");
+
+      } catch (error) {
+        console.error(error);
+        mostrarToast("Hubo un error al actualizar el producto.", true);
+      }
+    });
+  }
+
+  // --- Modal Crear Producto Nuevo ---
+  const modalCrear = document.getElementById("modal-crear-producto");
+  const formCrear = document.getElementById("form-crear-producto");
+  const btnCerrarCrear = document.getElementById("cerrar-modal-crear");
+  const btnCancelarCrear = document.getElementById("btn-cancelar-crear");
+  const btnAbrirModalCrear = document.querySelector('[data-nav="vista-crear"]') || document.getElementById("btn-nuevo-producto");
+
+  if (btnAbrirModalCrear) {
+    btnAbrirModalCrear.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (formCrear) formCrear.reset();
+      if (modalCrear && typeof modalCrear.showModal === "function") {
+        modalCrear.showModal();
+      }
+    });
+  }
+
+  [btnCerrarCrear, btnCancelarCrear].forEach(btn => {
+    if (btn) {
+      btn.addEventListener("click", () => {
+        if (modalCrear) modalCrear.close();
+      });
+    }
+  });
+
+  // Auto-calcular pesos en el formulario de creación si hay dólar en vivo
+  const inputUsdCrear = document.getElementById("nuevo-prod-usd");
+  const inputArsCrear = document.getElementById("nuevo-prod-ars");
+
+  if (inputUsdCrear && inputArsCrear) {
+    inputUsdCrear.addEventListener("input", (e) => {
+      const valUsd = parseFloat(e.target.value) || 0;
+      if (dolarApiEnVivo) {
+        inputArsCrear.value = redondearPrecio(valUsd * dolarApiEnVivo);
+      }
+    });
+  }
+
+  if (formCrear) {
+    formCrear.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const nuevoProducto = {
+        nombre: document.getElementById("nuevo-prod-nombre").value,
+        categoria: document.getElementById("nuevo-prod-categoria").value,
+        precioUsd: parseFloat(inputUsdCrear.value),
+        precio: parseFloat(inputArsCrear.value),
+        unidad: parseInt(document.getElementById("nuevo-prod-stock").value) || 0,
+        descripcion: document.getElementById("nuevo-prod-descripcion").value
+      };
+
+      try {
+        const respuesta = await fetch("/api/productos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevoProducto),
+        });
+
+        if (!respuesta.ok) throw new Error("Error al crear el producto en el servidor");
+
+        const productoCreadoServidor = await respuesta.json();
+
+        const productoFormateado = {
+          id: productoCreadoServidor.id,
+          nombre: productoCreadoServidor.nombre,
+          categoria: productoCreadoServidor.categoria || "General",
+          precioUsd: productoCreadoServidor.precioUsd ?? nuevoProducto.precioUsd,
+          precioArs: productoCreadoServidor.precio ?? nuevoProducto.precio,
+          stock: productoCreadoServidor.stock ?? (productoCreadoServidor.unidad ?? productoCreadoServidor.peso ?? 0),
+          descripcion: productoCreadoServidor.descripcion
+        };
+
+        catalogoBase.push(productoFormateado);
+        catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
+
+        modalCrear.close();
+        aplicarFiltros();
+        actualizarDashboard();
+        mostrarToast("¡Producto creado y guardado con éxito!");
+        if (typeof lucide !== "undefined") lucide.createIcons();
+
+      } catch (error) {
+        console.error(error);
+        mostrarToast("Hubo un error al crear el producto.", true);
+      }
+    });
+  }
