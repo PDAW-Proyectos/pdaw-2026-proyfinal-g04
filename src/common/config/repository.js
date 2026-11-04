@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { coincidePropiedad } from "../utils/repository.utils.js";
 
 export class Repository {
     ruta;
@@ -29,9 +30,8 @@ export class Repository {
         return this.entidades.find((e) => e.id === Number(id));
     }
 
-    buscarPorPropiedad(propiedad) {
-        const [key, value] = Object.entries(propiedad)[0];
-        return this.entidades.find((e) => e[key] === value);
+    buscarPorPropiedades(propiedades) {
+        return this.entidades.find((e) => coincidePropiedad(e, propiedades));
     }
 
     listar( pagina, limite ) {
@@ -46,10 +46,10 @@ export class Repository {
         };
     }
 
-    listarPorPropiedad( propiedades, pagina, limite ) {
-        if(!propiedades) throw new Error("Filtros inexistentes") 
+    listarPorPropiedades( propiedades, pagina, limite ) {
+        if(!propiedades) throw new Error("Filtros inexistentes");
         const entidadesFiltradas = this.entidades.filter((e) =>
-            Object.entries(propiedades).every(([key, value]) => e[key] === value)
+            coincidePropiedad(e, propiedades)
         );
         const total = entidadesFiltradas.length;
         const inicio = (pagina - 1) * limite;
