@@ -1,3 +1,4 @@
+import { validarPaginacion } from "../../../common/utils/validarPaginacion.util.js";
 
 
 export class EgresoController {
@@ -9,7 +10,18 @@ export class EgresoController {
 
     listarEgresos = async (req, res, next) => {
         try {
-            const egresos = await this.egresoService.listarEgresos();
+            const { pagina, limite } = validarPaginacion(req.query) 
+            const egresos = await this.egresoService.listarEgresos(pagina, limite);
+            res.status(200).json(egresos);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    filtrarUsuarios = async (req, res, next) => {
+        try {
+            const { pagina, limite } = validarPaginacion(req.query) 
+            const egresos = await this.egresoService.filtrarEgresos(req.body, pagina, limite);
             res.status(200).json(egresos);
         } catch (error) {
             next(error);

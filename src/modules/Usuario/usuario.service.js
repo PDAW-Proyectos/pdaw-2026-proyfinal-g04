@@ -4,7 +4,7 @@ export class UserService {
     }
 
     listarUsuarios = async (pagina, limite) => {
-        const { datos, ...paginacion } = await this.userRepository.listarPorPropiedad(filtros, pagina, limite);
+        const { datos, ...paginacion } = await this.userRepository.listar(pagina, limite);
         return {
             usuarios: datos,
             ...paginacion
@@ -12,7 +12,7 @@ export class UserService {
     };
 
     filtrarUsuarios = async (filtros, pagina, limite) => {
-        const { datos, ...paginacion } = await this.userRepository.listarPorPropiedad(filtros, pagina, limite);
+        const { datos, ...paginacion } = await this.userRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             usuarios: datos,
             ...paginacion
@@ -32,7 +32,7 @@ export class UserService {
     };
 
     buscarUsuarioPorEmail = async (email) => {
-        return await this.userRepository.buscarPorPropiedad({ email: email });
+        return await this.userRepository.buscarPorPropiedades({ email: email });
     };
 
     crearUsuario = async (datos) => {
