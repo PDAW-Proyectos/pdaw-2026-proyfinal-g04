@@ -50,7 +50,7 @@ export class ProductoService {
         return productoActualizado;
     }
 
-    async actualizarPreciosMasivo(productosActualizados, cotizacion, fechaCotizacion) {
+    async actualizarPreciosMasivo(productosActualizados) {
         try {
             this.productoRepository.iniciarTransaccion();
             for (const prodModificado of productosActualizados) {

@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { allowRoles } from "../../common/middlewares/auth.guard.js";
 
 export default function crearRouterCotizacion(cotizacionController) {
     const router = Router();

@@ -44,7 +44,7 @@ export class ProductoController {
 
   actualizarPreciosMasivo = async (req, res, next) => {
     try {
-      const { cotizacion, fechaCotizacion, productos } = req.body;
+      const { productos } = req.body;
 
       if (!productos || !Array.isArray(productos)) {
         const error = new Error("El formato de productos es inválido");
@@ -52,11 +52,7 @@ export class ProductoController {
         throw error;
       }
 
-      await this.productoService.actualizarPreciosMasivo(
-        productos,
-        cotizacion,
-        fechaCotizacion,
-      );
+      await this.productoService.actualizarPreciosMasivo(productos);
       res
         .status(200)
         .json({ message: "Precios y cotización actualizados correctamente" });
