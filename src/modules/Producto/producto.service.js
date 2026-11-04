@@ -3,8 +3,20 @@ export class ProductoService {
         this.productoRepository = productoRepository
     }
 
-    async listarProductos(req, res, next) {
-        return this.productoRepository.listar();
+    async listarProductos(pagina, limite) {
+        const { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
+        return {
+            productos: datos,
+            ...paginacion
+        };
+    }
+
+    async filtrarProductos(filtros, pagina, limite) {
+        const { datos, ...paginacion } = this.productoRepository.listarPorPropiedades(filtros, pagina, limite);
+        return {
+            productos: datos,
+            ...paginacion
+        };
     }
 
     async buscarProducto(id) {
