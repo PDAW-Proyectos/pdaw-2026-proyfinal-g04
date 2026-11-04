@@ -37,8 +37,8 @@ export class CotizacionService {
         return this.cotizacionRepository.listar();
     }
 
-    async buscarCotizacion(id) {
-        const cotizacion = await this.cotizacionRepository.buscarPorId(id);
+    buscarCotizacion(id) {
+        const cotizacion = this.cotizacionRepository.buscarPorId(id);
 
         if (!cotizacion) {
             const error = new Error("cotizacion no encontrada");

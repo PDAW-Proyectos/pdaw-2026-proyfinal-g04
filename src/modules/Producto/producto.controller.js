@@ -5,7 +5,7 @@ export class ProductoController {
 
   listarProductos = async (req, res, next) => {
     try {
-      const producto = await this.productoService.listarProductos();
+      const producto = this.productoService.listarProductos();
       res.status(200).json(producto);
     } catch (error) {
       next(error);
@@ -14,7 +14,7 @@ export class ProductoController {
 
   buscarProducto = async (req, res, next) => {
     try {
-      const producto = await this.productoService.buscarProducto(req.params.id);
+      const producto = this.productoService.buscarProducto(req.params.id);
       res.status(200).json(producto);
     } catch (error) {
       next(error);

@@ -1,14 +1,19 @@
 export class ProductoService {
-    constructor(productoRepository) {
-        this.productoRepository = productoRepository
+    constructor(productoRepository, cotizacionService) {
+        this.productoRepository = productoRepository;
+        this.cotizacionService = cotizacionService;
     }
 
-    async listarProductos() {
-        return this.productoRepository.listar();
+    listarProductos() {
+        return this.productoRepository.listar().map(producto => {
+            const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
+            const { idCotizacion, ...productoSinCotizacion } = producto;
+            return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
+        });
     }
 
-    async buscarProducto(id) {
-        const producto = await this.productoRepository.buscarPorId(id);
+    buscarProducto(id) {
+        const producto = this.productoRepository.buscarPorId(id);
 
         if (!producto) {
             const error = new Error("producto no encontrado");
@@ -16,7 +21,13 @@ export class ProductoService {
             throw error;
         }
 
-        return producto;
+        const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
+
+        const { idCotizacion, ...productoSinCotizacion } = producto;
+        console.log("Producto encontrado:", productoSinCotizacion);
+        console.log("Cotización encontrada:", cotizacion);
+
+        return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
     }
 
     async crearProducto(datos) {
