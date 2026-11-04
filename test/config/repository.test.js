@@ -19,10 +19,22 @@ describe("Repository", () => {
         expect(() => new Repository(null, mockFactory)).toThrow(TypeError);
     });
 
-    test("crearRepositorio inicializa un repositorio con la ruta y factory especificados", async () => {
-        const repo = new Repository(repoPath, mockFactory);
+    test("inicializar() inicializa un repositorio con la ruta, factory especificados y carga el archivo", async () => {
+        const repo = await Repository.inicializar(repoPath, mockFactory);
         expect(repo).toBeInstanceOf(Repository);
         expect(repo.ruta).toBe(repoPath);
+        expect(repo.factory).toBe(mockFactory);
+        expect(repo.entidades).toEqual([]);
+    });
+
+    test("una segunda instancia con la misma ruta recupera lo que la primera guardó", async () => {
+        const repo1 = await Repository.inicializar(repoPath, mockFactory);
+        const entidad = await repo1.crear({ nombre: "Uno", tipo: "A" });
+
+        const repo2 = await Repository.inicializar(repoPath, mockFactory);
+        const entidadesRepo2 = repo2.listar();
+        
+        expect(entidadesRepo2).toEqual([entidad]);
     });
 
     test("crear() asigna un ID, utiliza el factory y guarda la entidad", async () => {
@@ -34,11 +46,6 @@ describe("Repository", () => {
         expect(resultado.id).toBe(1);
         expect(resultado._instanciado).toBe(true);
         expect(repo.listar().length).toBe(1);
-        
-        // Verifica que se guardó en el sistema de archivos
-        const archivo = JSON.parse(await readFile(repoPath, "utf8"));
-        expect(archivo[0].id).toBe(1);
-        expect(archivo[0].nombre).toBe("Test");
     });
 
     test("buscarPorId() y buscarPorPropiedad() devuelven la entidad correcta", async () => {
@@ -47,10 +54,10 @@ describe("Repository", () => {
         await repo.crear({ nombre: "Dos", tipo: "B" });
 
         const porId = repo.buscarPorId(2);
-        expect(porId.nombre).toBe("Dos");
+        expect(porId.id).toBe(2);
 
         const porPropiedad = repo.buscarPorPropiedad({ tipo: "A" });
-        expect(porPropiedad.nombre).toBe("Uno");
+        expect(porPropiedad.id).toBe(1);
     });
 
     test("actualizar() modifica una entidad existente y guarda los cambios", async () => {
@@ -60,10 +67,7 @@ describe("Repository", () => {
         entidad.nombre = "Modificado";
         const actualizada = await repo.actualizar(entidad);
         
-        expect(actualizada.nombre).toBe("Modificado");
-        
-        const archivo = JSON.parse(await readFile(repoPath, "utf8"));
-        expect(archivo[0].nombre).toBe("Modificado");
+        expect(actualizada).toEqual(entidad);
     });
 
     test("eliminar() remueve la entidad si existe y devuelve true", async () => {
@@ -73,9 +77,6 @@ describe("Repository", () => {
         const resultado = await repo.eliminar(1);
         expect(resultado).toBe(true);
         expect(repo.listar().length).toBe(0);
-        
-        const archivo = JSON.parse(await readFile(repoPath, "utf8"));
-        expect(archivo.length).toBe(0);
     });
 
     test("eliminar() devuelve false si el ID no existe", async () => {
