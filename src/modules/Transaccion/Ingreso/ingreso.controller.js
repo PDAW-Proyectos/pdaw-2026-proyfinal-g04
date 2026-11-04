@@ -1,3 +1,5 @@
+import { validarPaginacion } from "../../../common/utils/validarPaginacion.util.js";
+
 export class IngresoController {
     ingresoService;
 
@@ -7,12 +9,23 @@ export class IngresoController {
 
     listarIngresos = async (req, res, next) => {
         try {
-            const ingresos = await this.ingresoService.listarIngresos();
+            const { pagina, limite } = validarPaginacion(req.query)  
+            const ingresos = await this.ingresoService.listarIngresos(pagina, limite);
             res.status(200).json(ingresos);
         } catch (error) {
             next(error);
         }
     }
+
+    filtrarIngresos = async (req, res, next) => {
+            try {
+                const { pagina, limite } = validarPaginacion(req.query) 
+                const ingresos = await this.ingresoService.filtrarIngresos(req.body, pagina, limite);
+                res.status(200).json(ingresos);
+            } catch (error) {
+                next(error);
+            }
+        }
 
     buscarIngreso = async (req, res, next) => {
         try { 
