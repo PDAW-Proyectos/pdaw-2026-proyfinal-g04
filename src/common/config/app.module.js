@@ -66,7 +66,8 @@ dependencyInjector.registerSingleton("authController", async () => {
 
 dependencyInjector.registerSingleton("productoService", async () => {
   const productoRepository = await dependencyInjector.resolve("productoRepository");
-  return new ProductoService(productoRepository);
+  const cotizacionService = await dependencyInjector.resolve("cotizacionService");
+  return new ProductoService(productoRepository, cotizacionService);
 });
 
 dependencyInjector.registerSingleton("productoController", async () => {

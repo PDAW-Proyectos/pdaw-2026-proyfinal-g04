@@ -1,17 +1,23 @@
 export class ProductoService {
-    constructor(productoRepository) {
-        this.productoRepository = productoRepository
+    constructor(productoRepository, cotizacionService) {
+        this.productoRepository = productoRepository;
+        this.cotizacionService = cotizacionService;
     }
 
-    async listarProductos(pagina, limite) {
+    listarProductos(pagina, limite) {
         const { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
+        const datosConCotizacion = datos.map(producto => {
+            const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
+            const { idCotizacion, ...productoSinCotizacion } = producto;
+            return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
+        });
         return {
-            productos: datos,
+            productos: datosConCotizacion,
             ...paginacion
         };
     }
 
-    async filtrarProductos(filtros, pagina, limite) {
+    filtrarProductos(filtros, pagina, limite) {
         const { datos, ...paginacion } = this.productoRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             productos: datos,
@@ -19,8 +25,8 @@ export class ProductoService {
         };
     }
 
-    async buscarProducto(id) {
-        const producto = await this.productoRepository.buscarPorId(id);
+    buscarProducto(id) {
+        const producto = this.productoRepository.buscarPorId(id);
 
         if (!producto) {
             const error = new Error("producto no encontrado");
@@ -28,7 +34,13 @@ export class ProductoService {
             throw error;
         }
 
-        return producto;
+        const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
+
+        const { idCotizacion, ...productoSinCotizacion } = producto;
+        console.log("Producto encontrado:", productoSinCotizacion);
+        console.log("Cotización encontrada:", cotizacion);
+
+        return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
     }
 
     async crearProducto(datos) {
@@ -65,24 +77,23 @@ export class ProductoService {
     async actualizarPreciosMasivo(productosActualizados) {
         try {
             this.productoRepository.iniciarTransaccion();
-            for (const prodModificado of productosActualizados) {
-                const anterior = await this.productoRepository.buscarPorId(prodModificado.id);
+            const cotizacionActual = await this.cotizacionService.consultarCotizacion();
+            for (const idProdModificado of productosActualizados) {
+                const anterior = await this.productoRepository.buscarPorId(idProdModificado);
                 
                 if (anterior) {
-                    const datosBase = Object.assign(anterior, {
-                        precio: prodModificado.precio,
-                        precioUsd: prodModificado.precioUsd
-                    });
+                    const datosBase = {
+                        ...anterior,
+                        idCotizacion: cotizacionActual.id
+                    };
                     await this.productoRepository.actualizar(datosBase);
                 }
             }
-
             await this.productoRepository.confirmarTransaccion();
-
         } catch (error) {
             await this.productoRepository.rollback();
             error.status = 500;
-            error.message = "Falló la actualización masiva de precios.";
+            error.message = `Falló la actualización masiva de precios. Motivo: ${error.message}`;
             throw error;
         }
     }
