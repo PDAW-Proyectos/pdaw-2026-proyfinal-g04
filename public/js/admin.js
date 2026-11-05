@@ -10,7 +10,7 @@ const itemsPorPagina = 12;
 let ultimoDolarGuardado = null;
 let dolarApiEnVivo = null;
 let historialCambios = [];
-let fechaCotizacionActual = null;
+// let fechaCotizacionActual = null;
 let hayCambiosSinGuardar = false;
 
 const tablaBodyPrecios = document.getElementById("tabla-body-precios");
@@ -232,7 +232,7 @@ async function consultarDolarEnVivo() {
     if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
     const data = await respuesta.json();
     dolarApiEnVivo = data.venta;
-    fechaCotizacionActual = data.fechaActualizacion || new Date().toISOString();
+    // fechaCotizacionActual = data.fechaActualizacion || new Date().toISOString();
 
     if (!ultimoDolarGuardado) ultimoDolarGuardado = dolarApiEnVivo;
 
