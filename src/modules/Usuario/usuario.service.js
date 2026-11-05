@@ -3,8 +3,20 @@ export class UserService {
         this.userRepository = userRepository;
     }
 
-    listarUsuarios = async () => {
-        return await this.userRepository.listar();
+    listarUsuarios = async (pagina, limite) => {
+        const { datos, ...paginacion } = await this.userRepository.listar(pagina, limite);
+        return {
+            usuarios: datos,
+            ...paginacion
+        };
+    };
+
+    filtrarUsuarios = async (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = await this.userRepository.listarPorPropiedades(filtros, pagina, limite);
+        return {
+            usuarios: datos,
+            ...paginacion
+        };
     };
 
     buscarUsuario = async (id) => {
@@ -20,7 +32,7 @@ export class UserService {
     };
 
     buscarUsuarioPorEmail = async (email) => {
-        return await this.userRepository.buscarPorPropiedad({ email: email });
+        return await this.userRepository.buscarPorPropiedades({ email: email });
     };
 
     crearUsuario = async (datos) => {
@@ -37,7 +49,7 @@ export class UserService {
         }
 
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             return await this.userRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;

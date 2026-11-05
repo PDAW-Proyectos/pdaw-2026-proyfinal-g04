@@ -4,12 +4,25 @@ export class ProductoService {
         this.cotizacionService = cotizacionService;
     }
 
-    listarProductos() {
-        return this.productoRepository.listar().map(producto => {
+    listarProductos(pagina, limite) {
+        const { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
+        const datosConCotizacion = datos.map(producto => {
             const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
             const { idCotizacion, ...productoSinCotizacion } = producto;
             return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
         });
+        return {
+            productos: datosConCotizacion,
+            ...paginacion
+        };
+    }
+
+    filtrarProductos(filtros, pagina, limite) {
+        const { datos, ...paginacion } = this.productoRepository.listarPorPropiedades(filtros, pagina, limite);
+        return {
+            productos: datos,
+            ...paginacion
+        };
     }
 
     buscarProducto(id) {

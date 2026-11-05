@@ -1,3 +1,4 @@
+import { validarPaginacion } from "../../common/utils/validarPaginacion.util.js"
 
 export class UserController {
     constructor(userService) {
@@ -6,7 +7,18 @@ export class UserController {
 
     listarUsuarios = async (req, res, next) => {
         try {
-            const usuarios = await this.userService.listarUsuarios();
+            const { pagina, limite } = validarPaginacion(req.query)  
+            const usuarios = await this.userService.listarUsuarios(pagina, limite);
+            res.status(200).json(usuarios);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    filtrarUsuarios = async (req, res, next) => {
+        try {
+            const { pagina, limite } = validarPaginacion(req.query) 
+            const usuarios = await this.userService.filtrarUsuarios(req.body, pagina, limite);
             res.status(200).json(usuarios);
         } catch (error) {
             next(error);

@@ -3,10 +3,20 @@ export class InsumoService {
         this.insumoRepository = insumoRepository
     }
 
-    async listarInsumos() {
-        return this.insumoRepository.listar();
+    async listarInsumos(pagina, limite) {
+        const { datos, ...paginacion } = this.insumoRepository.listar(pagina, limite);
+        return {
+            insumos: datos,
+            ...paginacion
+        };
     }
-
+    filtrarInsumos = async (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = await this.insumoRepository.listarPorPropiedades(filtros, pagina, limite);
+        return {
+            insumos: datos,
+            ...paginacion
+        };
+    };
     async buscarInsumo(id) {
         const insumo = await this.insumoRepository.buscarPorId(id);
 
@@ -41,7 +51,7 @@ export class InsumoService {
         }
         
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             datos.tipo = "Insumo";
             insumoActualizado = await this.insumoRepository.actualizar(datosBase);
         } catch (error) {

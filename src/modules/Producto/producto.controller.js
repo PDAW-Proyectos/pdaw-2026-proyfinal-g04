@@ -1,17 +1,30 @@
+import { validarPaginacion } from "../../common/utils/validarPaginacion.util.js";
+
 export class ProductoController {
   constructor(productoService) {
     this.productoService = productoService;
   }
 
   listarProductos = async (req, res, next) => {
-    try {
-      const producto = this.productoService.listarProductos();
-      res.status(200).json(producto);
-    } catch (error) {
-      next(error);
-    }
-  };
+      try {
+          const { pagina, limite } = validarPaginacion(req.query) 
+          const producto = await this.productoService.listarProductos(pagina, limite);
+          res.status(200).json(producto);
+      } catch (error) {
+          next(error);
+      }
+  }
 
+  filtrarProductos = async (req, res, next) => {
+      try {
+          const { pagina, limite } = validarPaginacion(req.query) 
+          const producto = await this.productoService.filtrarProductos(req.body, pagina, limite);
+          res.status(200).json(producto);
+      } catch (error) {
+          next(error);
+      }
+  }
+      
   buscarProducto = async (req, res, next) => {
     try {
       const producto = this.productoService.buscarProducto(req.params.id);
