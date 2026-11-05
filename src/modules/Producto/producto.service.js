@@ -51,7 +51,7 @@ export class ProductoService {
         }
         
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             productoActualizado = await this.productoRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
@@ -64,24 +64,23 @@ export class ProductoService {
     async actualizarPreciosMasivo(productosActualizados) {
         try {
             this.productoRepository.iniciarTransaccion();
-            for (const prodModificado of productosActualizados) {
-                const anterior = await this.productoRepository.buscarPorId(prodModificado.id);
+            const cotizacionActual = await this.cotizacionService.consultarCotizacion();
+            for (const idProdModificado of productosActualizados) {
+                const anterior = await this.productoRepository.buscarPorId(idProdModificado);
                 
                 if (anterior) {
-                    const datosBase = Object.assign(anterior, {
-                        precio: prodModificado.precio,
-                        precioUsd: prodModificado.precioUsd
-                    });
+                    const datosBase = {
+                        ...anterior,
+                        idCotizacion: cotizacionActual.id
+                    };
                     await this.productoRepository.actualizar(datosBase);
                 }
             }
-
             await this.productoRepository.confirmarTransaccion();
-
         } catch (error) {
             await this.productoRepository.rollback();
             error.status = 500;
-            error.message = "Falló la actualización masiva de precios.";
+            error.message = `Falló la actualización masiva de precios. Motivo: ${error.message}`;
             throw error;
         }
     }

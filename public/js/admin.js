@@ -392,13 +392,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       confirmarPublicacion(async () => {
         try {
           const payload = {
-            cotizacion: Number(dolarApiEnVivo),
-            fechaCotizacion: fechaCotizacionActual,
-            productos: catalogoEdicion.map((p) => ({
-              id: p.id,
-              precioUsd: p.precioUsd,
-              precio: p.precioArs,
-            })),
+            productos: catalogoEdicion.map(p => p.id),
           };
 
           const respuesta = await fetch("/api/productos/actualizar-precios", {
