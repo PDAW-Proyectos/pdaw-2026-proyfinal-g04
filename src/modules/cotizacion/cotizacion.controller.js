@@ -17,7 +17,7 @@ export class CotizacionController {
 
     listarCotizaciones = async (req, res, next) => {
         try {
-            const cotizaciones = await this.cotizacionService.listarCotizaciones();
+            const cotizaciones = this.cotizacionService.listarCotizaciones();
             res.status(200).json(cotizaciones);
         } catch (error) {
             next(error);
@@ -26,7 +26,7 @@ export class CotizacionController {
 
     buscarCotizacion = async (req, res, next) => {
         try { 
-            const cotizacion = await this.cotizacionService.buscarCotizacion(req.params.id);
+            const cotizacion = this.cotizacionService.buscarCotizacion(req.params.id);
             res.status(200).json(cotizacion);
         } catch (error) {
             next(error);

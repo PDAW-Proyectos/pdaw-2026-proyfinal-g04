@@ -11,7 +11,7 @@ export class EgresoController {
     listarEgresos = async (req, res, next) => {
         try {
             const { pagina, limite } = validarPaginacion(req.query) 
-            const egresos = await this.egresoService.listarEgresos(pagina, limite);
+            const egresos = this.egresoService.listarEgresos(pagina, limite);
             res.status(200).json(egresos);
         } catch (error) {
             next(error);
@@ -21,7 +21,7 @@ export class EgresoController {
     filtrarUsuarios = async (req, res, next) => {
         try {
             const { pagina, limite } = validarPaginacion(req.query) 
-            const egresos = await this.egresoService.filtrarEgresos(req.body, pagina, limite);
+            const egresos = this.egresoService.filtrarEgresos(req.body, pagina, limite);
             res.status(200).json(egresos);
         } catch (error) {
             next(error);
@@ -30,7 +30,7 @@ export class EgresoController {
 
     buscarEgreso = async (req, res, next) => {
         try { 
-            const egreso = await this.egresoService.buscarEgreso(req.params.id);
+            const egreso = this.egresoService.buscarEgreso(req.params.id);
             res.status(200).json(egreso);
         } catch (error) {
             next(error);

@@ -8,7 +8,7 @@ export class UserController {
     listarUsuarios = async (req, res, next) => {
         try {
             const { pagina, limite } = validarPaginacion(req.query)  
-            const usuarios = await this.userService.listarUsuarios(pagina, limite);
+            const usuarios = this.userService.listarUsuarios(pagina, limite);
             res.status(200).json(usuarios);
         } catch (error) {
             next(error);
@@ -18,7 +18,7 @@ export class UserController {
     filtrarUsuarios = async (req, res, next) => {
         try {
             const { pagina, limite } = validarPaginacion(req.query) 
-            const usuarios = await this.userService.filtrarUsuarios(req.body, pagina, limite);
+            const usuarios = this.userService.filtrarUsuarios(req.body, pagina, limite);
             res.status(200).json(usuarios);
         } catch (error) {
             next(error);
@@ -27,7 +27,7 @@ export class UserController {
 
     buscarUsuario = async (req, res, next) => {
         try { 
-            const usuario = await this.userService.buscarUsuario(req.params.id);
+            const usuario = this.userService.buscarUsuario(req.params.id);
             res.status(200).json(usuario);
         } catch (error) {
             next(error);
