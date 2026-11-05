@@ -96,7 +96,9 @@ dependencyInjector.registerSingleton("ingresoController", async () => {
 
 dependencyInjector.registerSingleton("egresoService", async () => {
   const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
-  return new EgresoService(transaccionRepository);
+  const productoService = await dependencyInjector.resolve("productoService");
+  const insumoService = await dependencyInjector.resolve("insumoService");
+  return new EgresoService(transaccionRepository, productoService, insumoService);
 });
 
 dependencyInjector.registerSingleton("egresoController", async () => {

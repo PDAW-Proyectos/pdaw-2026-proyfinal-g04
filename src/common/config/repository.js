@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { coincidePropiedad } from "../utils/repository.utils.js";
 
 export class Repository {
     ruta;
@@ -10,6 +11,7 @@ export class Repository {
 
     constructor(ruta, factory) {
         if (!ruta) throw new TypeError('ruta no puede ser nulo');
+        if (!factory) throw new TypeError('factory no puede ser nulo');
         this.ruta = ruta;
         this.entidades = [];
         this.proximoId = 1;
@@ -28,13 +30,36 @@ export class Repository {
         return this.entidades.find((e) => e.id === Number(id));
     }
 
-    buscarPorPropiedad(propiedad) {
-        const [key, value] = Object.entries(propiedad)[0];
-        return this.entidades.find((e) => e[key] === value);
+    buscarPorPropiedades(propiedades) {
+        return this.entidades.find((e) => coincidePropiedad(e, propiedades));
     }
 
-    listar() {
-        return [...this.entidades];
+    listar( pagina, limite ) {
+        const total = this.entidades.length;
+        const inicio = (pagina - 1) * limite;
+        return {
+            datos: [...this.entidades].slice(inicio, inicio + limite),
+            total,
+            pagina,
+            limite,
+            totalPaginas: Math.ceil(total / limite)
+        };
+    }
+
+    listarPorPropiedades( propiedades, pagina, limite ) {
+        if(!propiedades) throw new Error("Filtros inexistentes");
+        const entidadesFiltradas = this.entidades.filter((e) =>
+            coincidePropiedad(e, propiedades)
+        );
+        const total = entidadesFiltradas.length;
+        const inicio = (pagina - 1) * limite;
+        return {
+            datos: entidadesFiltradas.slice(inicio, inicio + limite),
+            total,
+            pagina,
+            limite,
+            totalPaginas: Math.ceil(total / limite)
+        };
     }
 
     async crear(entidad) {

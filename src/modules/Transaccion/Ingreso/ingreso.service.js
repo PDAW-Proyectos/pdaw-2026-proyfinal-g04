@@ -5,8 +5,20 @@ export class IngresoService {
         this.transaccionRepository = transaccionRepository;
     }
 
-    listarIngreso = async () => {
-        return await this.transaccionRepository.listar();
+    listarIngresos = async (pagina, limite) => {
+        const { datos, ...paginacion } = await this.transaccionRepository.listar(pagina, limite);
+        return {
+            ingresos: datos,
+            ...paginacion
+        };
+    };
+
+    filtrarIngresos = async (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = await this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
+        return {
+            ingresos: datos,
+            ...paginacion
+        };
     };
 
     buscarIngreso = async (id) => {
@@ -35,7 +47,7 @@ export class IngresoService {
         }
 
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
 
             return await this.transaccionRepository.actualizar(datosBase);
         } catch (error) {

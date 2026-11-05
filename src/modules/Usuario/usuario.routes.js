@@ -8,6 +8,7 @@ export default function crearRouterUsuarios(
 
     router.get("/", userController.listarUsuarios);
     router.get("/:id", userController.buscarUsuario);
+    router.query("/", userController.filtrarUsuarios);
     router.post("/", userController.crearUsuario);
     router.put("/:id", userController.actualizarUsuario);
     router.delete("/:id", userController.eliminarUsuario);

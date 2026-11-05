@@ -1,3 +1,5 @@
+import { validarPaginacion } from "../../common/utils/validarPaginacion.util.js";
+
 export class InsumoController {
     constructor(insumoService) {
         this.insumoService = insumoService;
@@ -5,8 +7,19 @@ export class InsumoController {
 
     listarInsumos = async (req, res, next) => {
         try {
-            const insumo = await this.insumoService.listarInsumos();
-            res.status(200).json(insumo);
+            const { pagina, limite } = validarPaginacion(req.query)
+            const insumos = await this.insumoService.listarInsumos(pagina, limite);
+            res.status(200).json(insumos);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    filtrarInsumos = async (req, res, next) => {
+        try {
+            const { pagina, limite } = validarPaginacion(req.query) 
+            const insumos = await this.insumoService.filtrarInsumos(req.body, pagina, limite);
+            res.status(200).json(insumos);
         } catch (error) {
             next(error);
         }

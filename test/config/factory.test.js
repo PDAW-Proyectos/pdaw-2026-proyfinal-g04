@@ -23,7 +23,7 @@ describe("factory", () => {
     });
 
     test("crearProducto devuelve un objeto de tipo ProductoPeso al pasarle el peso", async () => {
-        const producto = factory.crearProducto({ id: 1, nombre: "Yerba", categoria: "Hierbas", descripcion: "Yerba playadito", precio: 100, peso: 1000 });
+        const producto = factory.crearProducto({ id: 1, nombre: "Yerba", categoria: "Hierbas", descripcion: "Yerba playadito", precio: 100, peso: 1000, unidadMedida: "g" });
         expect(producto).toBeInstanceOf(ProductoPeso);
     });
 

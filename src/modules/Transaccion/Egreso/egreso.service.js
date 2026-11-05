@@ -5,8 +5,20 @@ export class EgresoService {
         this.insumoService = insumoService
     }
 
-    listarEgresos = async () => {
-        return await this.transaccionRepository.listar();
+    listarEgresos = async (pagina, limite) => {
+        const { datos, ...paginacion } = await this.transaccionRepository.listar(pagina, limite);
+        return {
+            egresos: datos,
+            ...paginacion
+        };
+    };
+
+    filtrarEgresos = async (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = await this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
+        return {
+            egresos: datos,
+            ...paginacion
+        };
     };
 
     buscarEgreso = async (id) => {
@@ -43,7 +55,7 @@ export class EgresoService {
 
             const articulos = [];
 
-            for (const articulo of datos.listaArticulos) {
+            for (const articulo of datos.articulos) {
                 let resultado;
 
                 if (articulo.tipo === "producto") {
@@ -101,7 +113,7 @@ export class EgresoService {
         }
 
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             return await this.transaccionRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;

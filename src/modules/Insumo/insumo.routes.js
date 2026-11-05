@@ -6,6 +6,7 @@ export default function crearRouterProductos(insumoController) {
 
     router.get("/", insumoController.listarInsumos);
     router.get("/:id", insumoController.buscarInsumo);
+    router.query("/", insumoController.filtrarInsumos);
     router.post("/", insumoController.crearInsumo);
     router.put("/:id", insumoController.actualizarInsumo);
     router.delete("/:id", insumoController.eliminarInsumo);

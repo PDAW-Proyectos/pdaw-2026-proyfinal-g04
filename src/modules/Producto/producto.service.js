@@ -3,8 +3,20 @@ export class ProductoService {
         this.productoRepository = productoRepository
     }
 
-    async listarProductos() {
-        return this.productoRepository.listar();
+    async listarProductos(pagina, limite) {
+        const { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
+        return {
+            productos: datos,
+            ...paginacion
+        };
+    }
+
+    async filtrarProductos(filtros, pagina, limite) {
+        const { datos, ...paginacion } = this.productoRepository.listarPorPropiedades(filtros, pagina, limite);
+        return {
+            productos: datos,
+            ...paginacion
+        };
     }
 
     async buscarProducto(id) {
@@ -40,7 +52,7 @@ export class ProductoService {
         }
         
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             productoActualizado = await this.productoRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
