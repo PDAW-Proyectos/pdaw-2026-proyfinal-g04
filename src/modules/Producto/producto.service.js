@@ -62,6 +62,31 @@ export class ProductoService {
         return productoActualizado;
     }
 
+    async actualizarPreciosMasivo(productosActualizados) {
+        try {
+            this.productoRepository.iniciarTransaccion();
+            for (const prodModificado of productosActualizados) {
+                const anterior = await this.productoRepository.buscarPorId(prodModificado.id);
+                
+                if (anterior) {
+                    const datosBase = Object.assign(anterior, {
+                        precio: prodModificado.precio,
+                        precioUsd: prodModificado.precioUsd
+                    });
+                    await this.productoRepository.actualizar(datosBase);
+                }
+            }
+
+            await this.productoRepository.confirmarTransaccion();
+
+        } catch (error) {
+            await this.productoRepository.rollback();
+            error.status = 500;
+            error.message = "Falló la actualización masiva de precios.";
+            throw error;
+        }
+    }
+    
     async eliminarProducto(id) {
         const eliminado = await this.productoRepository.eliminar(id);
 
