@@ -51,7 +51,7 @@ export class InsumoService {
         }
         
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             datos.tipo = "Insumo";
             insumoActualizado = await this.insumoRepository.actualizar(datosBase);
         } catch (error) {

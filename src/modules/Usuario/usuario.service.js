@@ -49,7 +49,7 @@ export class UserService {
         }
 
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             return await this.userRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;

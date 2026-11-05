@@ -113,7 +113,7 @@ export class EgresoService {
         }
 
         try {
-            const datosBase = Object.assign(anterior, datos);
+            const datosBase = { ...anterior, ...datos };
             return await this.transaccionRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
