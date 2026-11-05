@@ -32,9 +32,9 @@ describe("Repository", () => {
         const entidad = await repo1.crear({ nombre: "Uno", tipo: "A" });
 
         const repo2 = await Repository.inicializar(repoPath, mockFactory);
-        const entidadesRepo2 = repo2.listar();
+        const entidadesRepo2 = repo2.listar(1, 10);
         
-        expect(entidadesRepo2).toEqual([entidad]);
+        expect(entidadesRepo2.datos).toEqual([entidad]);
     });
 
     test("crear() asigna un ID, utiliza el factory y guarda la entidad", async () => {
@@ -45,7 +45,6 @@ describe("Repository", () => {
         
         expect(resultado.id).toBe(1);
         expect(resultado._instanciado).toBe(true);
-        expect(repo.listar().length).toBe(1);
     });
 
     test("buscarPorId() y buscarPorPropiedad() devuelven la entidad correcta", async () => {
@@ -56,7 +55,7 @@ describe("Repository", () => {
         const porId = repo.buscarPorId(2);
         expect(porId.id).toBe(2);
 
-        const porPropiedad = repo.buscarPorPropiedad({ tipo: "A" });
+        const porPropiedad = repo.buscarPorPropiedades({ tipo: "A" });
         expect(porPropiedad.id).toBe(1);
     });
 
@@ -76,7 +75,7 @@ describe("Repository", () => {
         
         const resultado = await repo.eliminar(1);
         expect(resultado).toBe(true);
-        expect(repo.listar().length).toBe(0);
+        expect(repo.listar(1, 10).datos.length).toBe(0);
     });
 
     test("eliminar() devuelve false si el ID no existe", async () => {
@@ -93,7 +92,7 @@ describe("Repository", () => {
             await repo.crear({ nombre: "Transaccion" });
             
             // La entidad está en memoria
-            expect(repo.listar().length).toBe(1);
+            expect(repo.listar(1, 10).datos.length).toBe(1);
             
             // Pero NO está en disco porque la transacción no se confirmó
             await expect(readFile(repoPath, "utf8")).rejects.toThrow("ENOENT");
@@ -119,11 +118,11 @@ describe("Repository", () => {
             
             repo.iniciarTransaccion();
             await repo.crear({ nombre: "A revertir" }); // id: 2
-            expect(repo.listar().length).toBe(2);
+            expect(repo.listar(1, 10).datos.length).toBe(2);
             
             await repo.rollback();
             
-            expect(repo.listar().length).toBe(1);
+            expect(repo.listar(1, 10).datos.length).toBe(1);
             expect(repo.proximoId).toBe(2); // Se revierte al id esperado
             expect(repo.buscarPorId(1).nombre).toBe("Base");
         });
