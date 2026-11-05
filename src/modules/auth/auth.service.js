@@ -8,7 +8,7 @@ export class AuthService {
   }
 
   login = async ({ email, password, requestedRole }) => {
-    const credenciales = await this.userService.buscarUsuarioPorEmail(email);
+    const credenciales = this.userService.buscarUsuarioPorEmail(email);
 
     if (
       !credenciales ||
@@ -40,7 +40,7 @@ export class AuthService {
   }
 	
 	signup = async ({ nombre, apellido, email, password, rol }) => {
-		const exists = await this.userService.buscarUsuarioPorEmail(email);
+		const exists = this.userService.buscarUsuarioPorEmail(email);
 		if(exists) throw new Error("El email está en uso")
 		const contraseña = await bcrypt.hash(password, 12);
 

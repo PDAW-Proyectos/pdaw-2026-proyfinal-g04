@@ -8,7 +8,7 @@ export class InsumoController {
     listarInsumos = async (req, res, next) => {
         try {
             const { pagina, limite } = validarPaginacion(req.query)
-            const insumos = await this.insumoService.listarInsumos(pagina, limite);
+            const insumos = this.insumoService.listarInsumos(pagina, limite);
             res.status(200).json(insumos);
         } catch (error) {
             next(error);
@@ -18,7 +18,7 @@ export class InsumoController {
     filtrarInsumos = async (req, res, next) => {
         try {
             const { pagina, limite } = validarPaginacion(req.query) 
-            const insumos = await this.insumoService.filtrarInsumos(req.body, pagina, limite);
+            const insumos = this.insumoService.filtrarInsumos(req.body, pagina, limite);
             res.status(200).json(insumos);
         } catch (error) {
             next(error);
@@ -27,7 +27,7 @@ export class InsumoController {
 
     buscarInsumo = async (req, res, next) => {
         try {
-            const insumo = await this.insumoService.buscarInsumo(req.params.id);
+            const insumo = this.insumoService.buscarInsumo(req.params.id);
             res.status(200).json(insumo);
         } catch (error) {
             next(error);

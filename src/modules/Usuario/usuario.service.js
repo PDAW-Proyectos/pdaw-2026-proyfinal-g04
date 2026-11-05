@@ -3,24 +3,24 @@ export class UserService {
         this.userRepository = userRepository;
     }
 
-    listarUsuarios = async (pagina, limite) => {
-        const { datos, ...paginacion } = await this.userRepository.listar(pagina, limite);
+    listarUsuarios = (pagina, limite) => {
+        const { datos, ...paginacion } = this.userRepository.listar(pagina, limite);
         return {
             usuarios: datos,
             ...paginacion
         };
     };
 
-    filtrarUsuarios = async (filtros, pagina, limite) => {
-        const { datos, ...paginacion } = await this.userRepository.listarPorPropiedades(filtros, pagina, limite);
+    filtrarUsuarios = (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = this.userRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             usuarios: datos,
             ...paginacion
         };
     };
 
-    buscarUsuario = async (id) => {
-        const usuario = await this.userRepository.buscarPorId(id);
+    buscarUsuario = (id) => {
+        const usuario = this.userRepository.buscarPorId(id);
 
         if (!usuario) {
             const error = new Error("Usuario no encontrado");
@@ -31,8 +31,8 @@ export class UserService {
         return usuario;
     };
 
-    buscarUsuarioPorEmail = async (email) => {
-        return await this.userRepository.buscarPorPropiedades({ email: email });
+    buscarUsuarioPorEmail = (email) => {
+        return this.userRepository.buscarPorPropiedades({ email: email });
     };
 
     crearUsuario = async (datos) => {

@@ -33,7 +33,7 @@ export class CotizacionService {
         return this.cotizacionRepository.listar().at(-1);
     }
 
-    async listarCotizaciones() {
+    listarCotizaciones() {
         return this.cotizacionRepository.listar();
     }
 

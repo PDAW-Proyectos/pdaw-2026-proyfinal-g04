@@ -10,7 +10,7 @@ export class IngresoController {
     listarIngresos = async (req, res, next) => {
         try {
             const { pagina, limite } = validarPaginacion(req.query)  
-            const ingresos = await this.ingresoService.listarIngresos(pagina, limite);
+            const ingresos = this.ingresoService.listarIngresos(pagina, limite);
             res.status(200).json(ingresos);
         } catch (error) {
             next(error);
@@ -20,7 +20,7 @@ export class IngresoController {
     filtrarIngresos = async (req, res, next) => {
             try {
                 const { pagina, limite } = validarPaginacion(req.query) 
-                const ingresos = await this.ingresoService.filtrarIngresos(req.body, pagina, limite);
+                const ingresos = this.ingresoService.filtrarIngresos(req.body, pagina, limite);
                 res.status(200).json(ingresos);
             } catch (error) {
                 next(error);
@@ -29,7 +29,7 @@ export class IngresoController {
 
     buscarIngreso = async (req, res, next) => {
         try { 
-            const ingresos = await this.ingresoService.buscarIngreso(req.params.id);
+            const ingresos = this.ingresoService.buscarIngreso(req.params.id);
             res.status(200).json(ingresos);
         } catch (error) {
             next(error);

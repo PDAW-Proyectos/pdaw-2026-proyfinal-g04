@@ -3,22 +3,24 @@ export class InsumoService {
         this.insumoRepository = insumoRepository
     }
 
-    async listarInsumos(pagina, limite) {
+    listarInsumos(pagina, limite) {
         const { datos, ...paginacion } = this.insumoRepository.listar(pagina, limite);
         return {
             insumos: datos,
             ...paginacion
         };
     }
-    filtrarInsumos = async (filtros, pagina, limite) => {
-        const { datos, ...paginacion } = await this.insumoRepository.listarPorPropiedades(filtros, pagina, limite);
+
+    filtrarInsumos = (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = this.insumoRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             insumos: datos,
             ...paginacion
         };
     };
-    async buscarInsumo(id) {
-        const insumo = await this.insumoRepository.buscarPorId(id);
+    
+    buscarInsumo(id) {
+        const insumo = this.insumoRepository.buscarPorId(id);
 
         if (!insumo) {
             const error = new Error("insumo no encontrado");
@@ -32,7 +34,6 @@ export class InsumoService {
     async crearInsumo(datos) {
         let insumoCreado;
         try {
-            datos.tipo = "Insumo";
             insumoCreado = await this.insumoRepository.crear(datos);
         } catch (error) {
             error.status = 400;
@@ -52,7 +53,6 @@ export class InsumoService {
         
         try {
             const datosBase = { ...anterior, ...datos };
-            datos.tipo = "Insumo";
             insumoActualizado = await this.insumoRepository.actualizar(datosBase);
         } catch (error) {
             error.status = 400;
