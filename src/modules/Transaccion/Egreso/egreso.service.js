@@ -1,3 +1,5 @@
+import { BadRequestError, NotFoundError } from "../../../common/errors/errors.classes.js";
+
 export class EgresoService {
     constructor(transaccionRepository, productoService, insumoService) {
         this.transaccionRepository = transaccionRepository;
@@ -25,19 +27,22 @@ export class EgresoService {
         const egreso = await this.transaccionRepository.buscarPorId(id);
 
         if (!egreso) {
-            const error = new Error("Egreso no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Egreso");
         }
 
         return egreso;
     };
 
     crearEgreso = async (datos) => {
+        if (datos.monto > 0) throw new BadRequestError("El monto debe ser menor o igual a cero para un egreso");
         return await this.transaccionRepository.crear(datos);
     };
 
     crearCompra = async (idUsuario, datos) => {
+        if (!Array.isArray(datos.articulos)) {
+            throw new BadRequestError("La lista de artículos debe ser un array");
+        }
+
         const repositorios = [
             this.productoService.productoRepository,
             this.insumoService.insumoRepository,
@@ -60,28 +65,20 @@ export class EgresoService {
 
                 if (articulo.tipo === "producto") {
                     resultado = articulo.id
-                        ? await this.productoService.aumentarStock(
-                            articulo.id,
-                            articulo.unidad || articulo.peso
-                        )
+                        ? await this.productoService.aumentarStock(articulo.id, articulo.unidad || articulo.peso)
                         : await this.productoService.crearProducto(articulo);
                 } else if (articulo.tipo === "insumo") {
                     resultado = articulo.id
-                        ? await this.insumoService.aumentarStock(
-                            articulo.id,
-                            articulo.unidad
-                        )
+                        ? await this.insumoService.aumentarStock(articulo.id, articulo.unidad)
                         : await this.insumoService.crearInsumo(articulo);
                 } else {
-                    throw new Error(
-                        `Tipo de artículo inválido: ${articulo.tipo}`
-                    );
+                    throw new BadRequestError(`Tipo de artículo inválido: ${articulo.tipo}`);
                 }
 
                 articulos.push(resultado);
             }
 
-            const compra = await this.transaccionRepository.crear({
+            const compra = await this.crearEgreso({
                 idUsuario,
                 metodoDePago: datos.metodoDePago,
                 articulos,
@@ -102,32 +99,27 @@ export class EgresoService {
         }
     };
 
-
     actualizarEgreso = async (id, datos) => {
         const anterior = await this.transaccionRepository.buscarPorId(id);
 
         if (!anterior) {
-            const error = new Error("Egreso no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Egreso");
         }
 
-        try {
-            const datosBase = { ...anterior, ...datos };
-            return await this.transaccionRepository.actualizar(datosBase);
-        } catch (error) {
-            error.status = 400;
-            throw error;
+        const datosBase = { ...anterior, ...datos };
+
+        if (datosBase.monto > 0) {
+            throw new BadRequestError("El monto debe ser menor o igual a cero para un egreso");
         }
+
+        return await this.transaccionRepository.actualizar(datosBase);
     };
 
     eliminarEgreso = async (id) => {
         const eliminado = await this.transaccionRepository.eliminar(id);
 
         if (!eliminado) {
-            const error = new Error("Egreso no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Egreso");
         }
 
         return eliminado;

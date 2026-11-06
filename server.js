@@ -78,12 +78,12 @@ app.get("/admin.html", requireAuth, allowRoles("admin"), (req, res) => {
 // 7. Archivos estáticos públicos (login.html, login.css, login.js, etc.)
 app.use(express.static(path.join(__dirname, "public")));
 
-// middleware errores
 app.use((req, res, next) => {
     const error = new NotFoundError("Ruta");
     next(error);
 });
 
+// middleware errores
 app.use(errorHandler(console));
 
 // 8. Inicialización del puerto

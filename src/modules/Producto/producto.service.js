@@ -41,7 +41,8 @@ export class ProductoService {
     }
 
     async crearProducto(datos) {
-            return await this.productoRepository.crear(datos);
+            const idCotizacion = await this.cotizacionService.consultarCotizacion().cotizacion.id
+            return await this.productoRepository.crear({ ...datos, idCotizacion });
     }
 
     async actualizarProducto(id, datos) {
