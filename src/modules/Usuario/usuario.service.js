@@ -1,3 +1,5 @@
+import { NotFoundError } from "../../common/errors/errors.classes.js";
+
 export class UserService {
     constructor(userRepository) {
         this.userRepository = userRepository;
@@ -23,16 +25,14 @@ export class UserService {
         const usuario = await this.userRepository.buscarPorId(id);
 
         if (!usuario) {
-            const error = new Error("Usuario no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Usuario");
         }
 
         return usuario;
     };
 
-    buscarUsuarioPorEmail = async (email) => {
-        return await this.userRepository.buscarPorPropiedades({ email: email });
+    buscarUsuarioPorEmail = (email) => {
+        return this.userRepository.buscarPorPropiedades({ email });
     };
 
     crearUsuario = async (datos) => {
@@ -40,30 +40,21 @@ export class UserService {
     };
 
     actualizarUsuario = async (id, datos) => {
-        const anterior = await this.userRepository.buscarPorId(id);
+        const anterior = this.userRepository.buscarPorId(id);
 
         if (!anterior) {
-            const error = new Error("Usuario no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Usuario");
         }
 
-        try {
-            const datosBase = { ...anterior, ...datos };
-            return await this.userRepository.actualizar(datosBase);
-        } catch (error) {
-            error.status = 400;
-            throw error;
-        }
+        const datosBase = { ...anterior, ...datos };
+        return await this.userRepository.actualizar(datosBase);
     };
 
     eliminarUsuario = async (id) => {
         const eliminado = await this.userRepository.eliminar(id);
 
         if (!eliminado) {
-            const error = new Error("Usuario no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Usuario");
         }
 
         return eliminado;
