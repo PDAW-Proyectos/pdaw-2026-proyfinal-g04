@@ -1,8 +1,11 @@
-import { AppError } from "../errors/errors.classes.js";
+import { AppError, BadRequestError } from "../errors/errors.classes.js";
 
 function normalize(error) {
     if (error instanceof AppError) {
         return error;
+    }
+    if (error.type === "entity.parse.failed") {
+        return new BadRequestError("El JSON enviado no es válido");
     }
     return null;
 }
