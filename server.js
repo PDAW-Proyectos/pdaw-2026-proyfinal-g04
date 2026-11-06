@@ -11,6 +11,8 @@ import crearRouterInsumos from "./src/modules/Insumo/insumo.routes.js";
 import crearRouterIngreso from "./src/modules/Transaccion/Ingreso/ingreso.routes.js";
 import crearRouterEgreso from "./src/modules/Transaccion/Egreso/egreso.routes.js";
 import crearRouterCotizacion from "./src/modules/cotizacion/cotizacion.routes.js";
+import { NotFoundError } from "./src/common/errors/errors.classes.js";
+import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -64,7 +66,7 @@ app.get("/caja.html", requireAuth, allowRoles("cajero"), (req, res) => {
 });
 
 // B. Reposición / Inventario: Solo pueden entrar Repositor y Admin
-app.get("/index.html", requireAuth, allowRoles("repositor"), (req, res) => {
+app.get("/repositor.html", requireAuth, allowRoles("repositor"), (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
@@ -75,6 +77,14 @@ app.get("/admin.html", requireAuth, allowRoles("admin"), (req, res) => {
 
 // 7. Archivos estáticos públicos (login.html, login.css, login.js, etc.)
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use((req, res, next) => {
+    const error = new NotFoundError("Ruta");
+    next(error);
+});
+
+// middleware errores
+app.use(errorHandler(console));
 
 // 8. Inicialización del puerto
 const port = Number(process.env.PORT ?? 3000);
