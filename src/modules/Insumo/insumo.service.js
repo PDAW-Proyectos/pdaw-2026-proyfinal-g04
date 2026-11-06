@@ -5,7 +5,7 @@ export class InsumoService {
         this.insumoRepository = insumoRepository
     }
 
-    async listarInsumos(pagina, limite) {
+    listarInsumos(pagina, limite) {
         const { datos, ...paginacion } = this.insumoRepository.listar(pagina, limite);
         return {
             insumos: datos,
@@ -13,16 +13,16 @@ export class InsumoService {
         };
     }
 
-    filtrarInsumos = async (filtros, pagina, limite) => {
-        const { datos, ...paginacion } = await this.insumoRepository.listarPorPropiedades(filtros, pagina, limite);
+    filtrarInsumos = (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = this.insumoRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             insumos: datos,
             ...paginacion
         };
     };
-
-    async buscarInsumo(id) {
-        const insumo = await this.insumoRepository.buscarPorId(id);
+    
+    buscarInsumo(id) {
+        const insumo = this.insumoRepository.buscarPorId(id);
 
         if (!insumo) {
             throw new NotFoundError("Insumo");
@@ -32,14 +32,7 @@ export class InsumoService {
     }
 
     async crearInsumo(datos) {
-        try {
-            return await this.insumoRepository.crear(datos);
-        } catch (error) {
-            if (error instanceof TypeError) {
-                throw new BadRequestError(error.message);
-            }
-            throw error;
-        }
+        return await this.insumoRepository.crear(datos);
     }
 
     async actualizarInsumo(id, datos) {
@@ -49,15 +42,8 @@ export class InsumoService {
             throw new NotFoundError("Insumo");
         }
 
-        try {
-            const datosBase = { ...anterior, ...datos };
-            return await this.insumoRepository.actualizar(datosBase);
-        } catch (error) {
-            if (error instanceof TypeError) {
-                throw new BadRequestError(error.message);
-            }
-            throw error;
-        }
+        const datosBase = { ...anterior, ...datos };
+        return await this.insumoRepository.actualizar(datosBase);
     }
 
     async eliminarInsumo(id) {

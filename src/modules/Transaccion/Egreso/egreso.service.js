@@ -7,24 +7,24 @@ export class EgresoService {
         this.insumoService = insumoService
     }
 
-    listarEgresos = async (pagina, limite) => {
-        const { datos, ...paginacion } = await this.transaccionRepository.listar(pagina, limite);
+    listarEgresos = (pagina, limite) => {
+        const { datos, ...paginacion } = this.transaccionRepository.listar(pagina, limite);
         return {
             egresos: datos,
             ...paginacion
         };
     };
 
-    filtrarEgresos = async (filtros, pagina, limite) => {
-        const { datos, ...paginacion } = await this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
+    filtrarEgresos = (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             egresos: datos,
             ...paginacion
         };
     };
 
-    buscarEgreso = async (id) => {
-        const egreso = await this.transaccionRepository.buscarPorId(id);
+    buscarEgreso = (id) => {
+        const egreso = this.transaccionRepository.buscarPorId(id);
 
         if (!egreso) {
             throw new NotFoundError("Egreso");
