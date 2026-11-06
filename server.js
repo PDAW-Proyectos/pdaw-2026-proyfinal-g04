@@ -12,6 +12,7 @@ import crearRouterIngreso from "./src/modules/Transaccion/Ingreso/ingreso.routes
 import crearRouterEgreso from "./src/modules/Transaccion/Egreso/egreso.routes.js";
 import crearRouterCotizacion from "./src/modules/cotizacion/cotizacion.routes.js";
 import { NotFoundError } from "./src/common/errors/errors.classes.js";
+import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
