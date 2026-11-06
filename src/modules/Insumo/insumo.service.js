@@ -1,3 +1,5 @@
+import { BadRequestError, NotFoundError } from "../../common/errors/errors.classes.js";
+
 export class InsumoService {
     constructor(insumoRepository) {
         this.insumoRepository = insumoRepository
@@ -10,6 +12,7 @@ export class InsumoService {
             ...paginacion
         };
     }
+
     filtrarInsumos = async (filtros, pagina, limite) => {
         const { datos, ...paginacion } = await this.insumoRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
@@ -17,71 +20,77 @@ export class InsumoService {
             ...paginacion
         };
     };
+
     async buscarInsumo(id) {
         const insumo = await this.insumoRepository.buscarPorId(id);
 
         if (!insumo) {
-            const error = new Error("insumo no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Insumo");
         }
 
         return insumo;
     }
 
     async crearInsumo(datos) {
-        let insumoCreado;
         try {
-            datos.tipo = "Insumo";
-            insumoCreado = await this.insumoRepository.crear(datos);
+            return await this.insumoRepository.crear(datos);
         } catch (error) {
-            error.status = 400;
+            if (error instanceof TypeError) {
+                throw new BadRequestError(error.message);
+            }
             throw error;
         }
-        return insumoCreado;
     }
 
     async actualizarInsumo(id, datos) {
-        let insumoActualizado;
         const anterior = await this.insumoRepository.buscarPorId(id);
+
         if (!anterior) {
-            const error = new Error("insumo no encontrado");
-            error.status = 404;
-            throw error;
-        }
-        
-        try {
-            const datosBase = { ...anterior, ...datos };
-            datos.tipo = "Insumo";
-            insumoActualizado = await this.insumoRepository.actualizar(datosBase);
-        } catch (error) {
-            error.status = 400;
-            throw error;
+            throw new NotFoundError("Insumo");
         }
 
-        return insumoActualizado;
+        try {
+            const datosBase = { ...anterior, ...datos };
+            return await this.insumoRepository.actualizar(datosBase);
+        } catch (error) {
+            if (error instanceof TypeError) {
+                throw new BadRequestError(error.message);
+            }
+            throw error;
+        }
     }
 
     async eliminarInsumo(id) {
         const eliminado = await this.insumoRepository.eliminar(id);
 
         if (!eliminado) {
-            const error = new Error("insumo no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Insumo");
         }
 
         return eliminado;
     }
 
     async aumentarStock(id, cantidad) {
+        if (!Number.isInteger(cantidad) || cantidad <= 0) {
+            throw new BadRequestError("La cantidad debe ser un número entero positivo");
+        }
+
         const insumo = await this.buscarInsumo(id);
         insumo.unidad += cantidad;
         return await this.insumoRepository.actualizar(insumo);
     }
 
     async disminuirStock(id, cantidad) {
+        if (!Number.isInteger(cantidad) || cantidad <= 0) {
+            throw new BadRequestError("La cantidad debe ser un número entero positivo");
+        }
+
         const insumo = await this.buscarInsumo(id);
+
+        if (insumo.unidad < cantidad) {
+            throw new BadRequestError("Stock insuficiente");
+        }
+
         insumo.unidad -= cantidad;
         return await this.insumoRepository.actualizar(insumo);
     }
