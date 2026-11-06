@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { UnauthorizedError, ForbiddenError, ConflictError } from "../../common/errors/app.error.js";
+import { ConflictError, ForbiddenError, UnauthorizedError } from "../../common/errors/errors.classes.js";
 
 export class AuthService {
     userService;
