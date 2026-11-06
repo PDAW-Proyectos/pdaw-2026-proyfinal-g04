@@ -13,6 +13,14 @@ export class AppError extends Error {
     }
 }
 
+// Error en validacion interna
+export class ValidationError extends Error {
+    constructor(message = "Una validación interna causó un error") {
+        super(message);
+        this.name = this.constructor.name;
+    }
+}
+
 // 400 - Solicitud incorrecta
 export class BadRequestError extends AppError {
     constructor(message = "Solicitud incorrecta", details) {
