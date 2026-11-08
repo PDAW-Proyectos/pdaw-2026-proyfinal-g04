@@ -1,4 +1,4 @@
-import { BadRequestError } from "../../common/errors/errors.classes"
+import { BadRequestError } from "../../common/errors/errors.classes.js"
 
 export class Usuario {
     id

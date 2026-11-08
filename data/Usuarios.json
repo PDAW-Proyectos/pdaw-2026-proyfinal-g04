@@ -32,7 +32,7 @@
     "contraseña": "123456",
     "nombre": "Geraldine",
     "apellido": "Lagarrigue ",
-    "habilitado": true,
+    "habilitado": false,
     "rol": "admin"
   },
   {

@@ -136,8 +136,7 @@ function renderizarTablaPrecios() {
       <td class="td-codigo">${prod.id}</td>
       <td class="td-nombre">${prod.nombre}</td>
       <td class="td-usd">U$D ${prod.precioUsd.toFixed(2)}</td>
-      <td class="${clasePrecio}">$ ${prod.precioArs.toLocaleString("es-AR")}</td>
-      <td>
+      <td class="${clasePrecio}">$ ${(prod.precioArs ?? 0).toLocaleString("es-AR")}</td>
         <button type="button" class="btn-primario btn-chico" data-id="${prod.id}">
           <i data-lucide="square-pen" class="icono-chico"></i> 
         </button>
@@ -159,10 +158,7 @@ function aplicarFiltros() {
     const idTexto = prod.id ? prod.id.toString().toLowerCase() : "";
     const nombreTexto = prod.nombre ? prod.nombre.toLowerCase() : "";
 
-    return (
-      nombreTexto.includes(termino) ||
-      idTexto.includes(termino)
-    );
+    return nombreTexto.includes(termino) || idTexto.includes(termino);
   });
 
   paginaActual = 1;
@@ -230,8 +226,12 @@ async function consultarDolarEnVivo() {
     const respuesta = await fetch("/api/cotizacion");
     if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
     const data = await respuesta.json();
-    dolarApiEnVivo = data.venta;
-    // fechaCotizacionActual = data.fechaActualizacion || new Date().toISOString();
+    dolarApiEnVivo = data.cotizacion?.venta ?? data.venta;
+    if (typeof dolarApiEnVivo !== "number") {
+      throw new Error(
+        "La respuesta de cotización no contiene una venta válida",
+      );
+    }
 
     if (!ultimoDolarGuardado) ultimoDolarGuardado = dolarApiEnVivo;
 
@@ -254,18 +254,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     const respuesta = await fetch("/api/productos");
     if (respuesta.ok) {
       const data = await respuesta.json();
-      
+
       const listaProductos = data.productos || data;
 
-      catalogoBase = listaProductos.map((p) => ({
-        id: p.id,
-        nombre: p.nombre,
-        categoria: p.categoria || "General",
-        precioUsd: p.precioUsd ?? p.precio / 1000,
-        precioArs: p.precio ?? p.precioArs,
-        stock: p.stock ?? p.unidad ?? p.peso ?? 0,
-      }));
-      
+      catalogoBase = listaProductos.map((p) => {
+        const usd = p.precioUsd ?? 0;
+        const cotizacionProducto = Number(p.cotizacion ?? 0);
+        const arsCalculado =
+          p.precio ??
+          p.precioArs ??
+          (cotizacionProducto > 0
+            ? redondearPrecio(usd * cotizacionProducto)
+            : 0);
+
+        return {
+          id: p.id,
+          nombre: p.nombre,
+          categoria: p.categoria || "General",
+          precioUsd: usd,
+          precioArs: arsCalculado,
+          stock: p.stock ?? p.unidad ?? p.peso ?? 0,
+        };
+      });
+
       catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
     }
   } catch (error) {
@@ -394,7 +405,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       confirmarPublicacion(async () => {
         try {
           const payload = {
-            productos: catalogoEdicion.map(p => p.id),
+            productos: catalogoEdicion.map((p) => p.id),
           };
 
           const respuesta = await fetch("/api/productos/actualizar-precios", {
@@ -444,190 +455,204 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // --- Modal Actualizar Precio / Producto ---
-  const modalStock = document.getElementById("modal-stock");
-  const formStock = document.getElementById("form-stock");
-  const btnCerrarModal = document.getElementById("cerrar-modal");
-  const btnCancelarModal = document.getElementById("btn-cancelar-modal");
-  
-  let productoEnEdicionId = null;
+const modalStock = document.getElementById("modal-stock");
+const formStock = document.getElementById("form-stock");
+const btnCerrarModal = document.getElementById("cerrar-modal");
+const btnCancelarModal = document.getElementById("btn-cancelar-modal");
 
-  if (tablaBodyPrecios) {
-    tablaBodyPrecios.addEventListener("click", (e) => {
-      const btnEditar = e.target.closest("button");
-      if (!btnEditar) return;
+let productoEnEdicionId = null;
 
-      const idProd = btnEditar.getAttribute("data-id");
+if (tablaBodyPrecios) {
+  tablaBodyPrecios.addEventListener("click", (e) => {
+    const btnEditar = e.target.closest("button");
+    if (!btnEditar) return;
 
-      const producto = catalogoEdicion.find(p => String(p.id) === String(idProd));
+    const idProd = btnEditar.getAttribute("data-id");
 
-      if (producto) {
-        productoEnEdicionId = producto.id;
-        document.getElementById("modal-producto-id").value = producto.id;
-        document.getElementById("modal-nombre-producto").textContent = producto.nombre;
-        document.getElementById("modal-precio-usd").value = producto.precioUsd;
-        document.getElementById("modal-precio-ars").value = producto.precioArs;
-        document.getElementById("nueva-descripcion").value = producto.descripcion || "";
+    const producto = catalogoEdicion.find(
+      (p) => String(p.id) === String(idProd),
+    );
 
-        if (modalStock && typeof modalStock.showModal === "function") {
-          modalStock.showModal();
-        }
+    if (producto) {
+      productoEnEdicionId = producto.id;
+      document.getElementById("modal-producto-id").value = producto.id;
+      document.getElementById("modal-nombre-producto").textContent =
+        producto.nombre;
+      document.getElementById("modal-precio-usd").value = producto.precioUsd;
+      document.getElementById("modal-precio-ars").value = producto.precioArs;
+      document.getElementById("nueva-descripcion").value =
+        producto.descripcion || "";
+
+      if (modalStock && typeof modalStock.showModal === "function") {
+        modalStock.showModal();
       }
-    });
-  }
-
-  [btnCerrarModal, btnCancelarModal].forEach(btn => {
-    if (btn) {
-      btn.addEventListener("click", () => {
-        if (modalStock) modalStock.close();
-      });
     }
   });
+}
 
-  const inputUsdModal = document.getElementById("modal-precio-usd");
-  const inputArsModal = document.getElementById("modal-precio-ars");
-
-  if (inputUsdModal && dolarApiEnVivo) {
-    inputUsdModal.addEventListener("input", (e) => {
-      const valUsd = parseFloat(e.target.value) || 0;
-      inputArsModal.value = redondearPrecio(valUsd * dolarApiEnVivo);
+[btnCerrarModal, btnCancelarModal].forEach((btn) => {
+  if (btn) {
+    btn.addEventListener("click", () => {
+      if (modalStock) modalStock.close();
     });
   }
+});
 
-  if (formStock) {
-    formStock.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!productoEnEdicionId) return;
+const inputUsdModal = document.getElementById("modal-precio-usd");
+const inputArsModal = document.getElementById("modal-precio-ars");
 
-      const nuevoPrecioUsd = parseFloat(document.getElementById("modal-precio-usd").value);
-      const nuevoPrecioArs = parseFloat(document.getElementById("modal-precio-ars").value);
-      const nuevaDescripcion = document.getElementById("nueva-descripcion").value;
-
-      try {
-        const payload = {
-          precioUsd: nuevoPrecioUsd,
-          precio: nuevoPrecioArs, 
-          descripcion: nuevaDescripcion
-        };
-
-        const respuesta = await fetch(`/api/productos/${productoEnEdicionId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        if (!respuesta.ok) throw new Error("Error al actualizar el producto");
-
-        const productoActualizadoServidor = await respuesta.json();
-
-        catalogoEdicion = catalogoEdicion.map(p => {
-          if (String(p.id) === String(productoEnEdicionId)) {
-            return {
-              ...p,
-              precioUsd: productoActualizadoServidor.precioUsd ?? nuevoPrecioUsd,
-              precioArs: productoActualizadoServidor.precio ?? nuevoPrecioArs,
-              descripcion: productoActualizadoServidor.descripcion ?? nuevaDescripcion
-            };
-          }
-          return p;
-        });
-
-        catalogoBase = JSON.parse(JSON.stringify(catalogoEdicion));
-
-        modalStock.close();
-        aplicarFiltros();
-        actualizarDashboard();
-        mostrarToast("¡Producto actualizado con éxito!");
-
-      } catch (error) {
-        console.error(error);
-        mostrarToast("Hubo un error al actualizar el producto.", true);
-      }
-    });
-  }
-
-  // --- Modal Crear Producto Nuevo ---
-  const modalCrear = document.getElementById("modal-crear-producto");
-  const formCrear = document.getElementById("form-crear-producto");
-  const btnCerrarCrear = document.getElementById("cerrar-modal-crear");
-  const btnCancelarCrear = document.getElementById("btn-cancelar-crear");
-  const btnAbrirModalCrear = document.querySelector('[data-nav="vista-crear"]') || document.getElementById("btn-nuevo-producto");
-
-  if (btnAbrirModalCrear) {
-    btnAbrirModalCrear.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (formCrear) formCrear.reset();
-      if (modalCrear && typeof modalCrear.showModal === "function") {
-        modalCrear.showModal();
-      }
-    });
-  }
-
-  [btnCerrarCrear, btnCancelarCrear].forEach(btn => {
-    if (btn) {
-      btn.addEventListener("click", () => {
-        if (modalCrear) modalCrear.close();
-      });
-    }
+if (inputUsdModal && dolarApiEnVivo) {
+  inputUsdModal.addEventListener("input", (e) => {
+    const valUsd = parseFloat(e.target.value) || 0;
+    inputArsModal.value = redondearPrecio(valUsd * dolarApiEnVivo);
   });
+}
 
-  const inputUsdCrear = document.getElementById("nuevo-prod-usd");
-  const inputArsCrear = document.getElementById("nuevo-prod-ars");
+if (formStock) {
+  formStock.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!productoEnEdicionId) return;
 
-  if (inputUsdCrear && inputArsCrear) {
-    inputUsdCrear.addEventListener("input", (e) => {
-      const valUsd = parseFloat(e.target.value) || 0;
-      if (dolarApiEnVivo) {
-        inputArsCrear.value = redondearPrecio(valUsd * dolarApiEnVivo);
-      }
-    });
-  }
+    const nuevoPrecioUsd = parseFloat(
+      document.getElementById("modal-precio-usd").value,
+    );
+    const nuevoPrecioArs = parseFloat(
+      document.getElementById("modal-precio-ars").value,
+    );
+    const nuevaDescripcion = document.getElementById("nueva-descripcion").value;
 
-  if (formCrear) {
-    formCrear.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const nuevoProducto = {
-        nombre: document.getElementById("nuevo-prod-nombre").value,
-        categoria: document.getElementById("nuevo-prod-categoria").value,
-        precioUsd: parseFloat(inputUsdCrear.value),
-        precio: parseFloat(inputArsCrear.value),
-        unidad: parseInt(document.getElementById("nuevo-prod-stock").value) || 0,
-        descripcion: document.getElementById("nuevo-prod-descripcion").value
+    try {
+      const payload = {
+        precioUsd: nuevoPrecioUsd,
+        precio: nuevoPrecioArs,
+        descripcion: nuevaDescripcion,
       };
 
-      try {
-        const respuesta = await fetch("/api/productos", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(nuevoProducto),
-        });
+      const respuesta = await fetch(`/api/productos/${productoEnEdicionId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-        if (!respuesta.ok) throw new Error("Error al crear el producto en el servidor");
+      if (!respuesta.ok) throw new Error("Error al actualizar el producto");
 
-        const productoCreadoServidor = await respuesta.json();
+      const productoActualizadoServidor = await respuesta.json();
 
-        const productoFormateado = {
-          id: productoCreadoServidor.id,
-          nombre: productoCreadoServidor.nombre,
-          categoria: productoCreadoServidor.categoria || "General",
-          precioUsd: productoCreadoServidor.precioUsd ?? nuevoProducto.precioUsd,
-          precioArs: productoCreadoServidor.precio ?? nuevoProducto.precio,
-          stock: productoCreadoServidor.stock ?? (productoCreadoServidor.unidad ?? productoCreadoServidor.peso ?? 0),
-          descripcion: productoCreadoServidor.descripcion
-        };
+      catalogoEdicion = catalogoEdicion.map((p) => {
+        if (String(p.id) === String(productoEnEdicionId)) {
+          return {
+            ...p,
+            precioUsd: productoActualizadoServidor.precioUsd ?? nuevoPrecioUsd,
+            precioArs: productoActualizadoServidor.precio ?? nuevoPrecioArs,
+            descripcion:
+              productoActualizadoServidor.descripcion ?? nuevaDescripcion,
+          };
+        }
+        return p;
+      });
 
-        catalogoBase.push(productoFormateado);
-        catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
+      catalogoBase = JSON.parse(JSON.stringify(catalogoEdicion));
 
-        modalCrear.close();
-        aplicarFiltros();
-        actualizarDashboard();
-        mostrarToast("¡Producto creado y guardado con éxito!");
-        if (typeof lucide !== "undefined") lucide.createIcons();
+      modalStock.close();
+      aplicarFiltros();
+      actualizarDashboard();
+      mostrarToast("¡Producto actualizado con éxito!");
+    } catch (error) {
+      console.error(error);
+      mostrarToast("Hubo un error al actualizar el producto.", true);
+    }
+  });
+}
 
-      } catch (error) {
-        console.error(error);
-        mostrarToast("Hubo un error al crear el producto.", true);
-      }
+// --- Modal Crear Producto Nuevo ---
+const modalCrear = document.getElementById("modal-crear-producto");
+const formCrear = document.getElementById("form-crear-producto");
+const btnCerrarCrear = document.getElementById("cerrar-modal-crear");
+const btnCancelarCrear = document.getElementById("btn-cancelar-crear");
+const btnAbrirModalCrear =
+  document.querySelector('[data-nav="vista-crear"]') ||
+  document.getElementById("btn-nuevo-producto");
+
+if (btnAbrirModalCrear) {
+  btnAbrirModalCrear.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (formCrear) formCrear.reset();
+    if (modalCrear && typeof modalCrear.showModal === "function") {
+      modalCrear.showModal();
+    }
+  });
+}
+
+[btnCerrarCrear, btnCancelarCrear].forEach((btn) => {
+  if (btn) {
+    btn.addEventListener("click", () => {
+      if (modalCrear) modalCrear.close();
     });
   }
+});
+
+const inputUsdCrear = document.getElementById("nuevo-prod-usd");
+const inputArsCrear = document.getElementById("nuevo-prod-ars");
+
+if (inputUsdCrear && inputArsCrear) {
+  inputUsdCrear.addEventListener("input", (e) => {
+    const valUsd = parseFloat(e.target.value) || 0;
+    if (dolarApiEnVivo) {
+      inputArsCrear.value = redondearPrecio(valUsd * dolarApiEnVivo);
+    }
+  });
+}
+
+if (formCrear) {
+  formCrear.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nuevoProducto = {
+      nombre: document.getElementById("nuevo-prod-nombre").value,
+      categoria: document.getElementById("nuevo-prod-categoria").value,
+      precioUsd: parseFloat(inputUsdCrear.value),
+      precio: parseFloat(inputArsCrear.value),
+      unidad: parseInt(document.getElementById("nuevo-prod-stock").value) || 0,
+      descripcion: document.getElementById("nuevo-prod-descripcion").value,
+    };
+
+    try {
+      const respuesta = await fetch("/api/productos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevoProducto),
+      });
+
+      if (!respuesta.ok)
+        throw new Error("Error al crear el producto en el servidor");
+
+      const productoCreadoServidor = await respuesta.json();
+
+      const productoFormateado = {
+        id: productoCreadoServidor.id,
+        nombre: productoCreadoServidor.nombre,
+        categoria: productoCreadoServidor.categoria || "General",
+        precioUsd: productoCreadoServidor.precioUsd ?? nuevoProducto.precioUsd,
+        precioArs: productoCreadoServidor.precio ?? nuevoProducto.precio,
+        stock:
+          productoCreadoServidor.stock ??
+          productoCreadoServidor.unidad ??
+          productoCreadoServidor.peso ??
+          0,
+        descripcion: productoCreadoServidor.descripcion,
+      };
+
+      catalogoBase.push(productoFormateado);
+      catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
+
+      modalCrear.close();
+      aplicarFiltros();
+      actualizarDashboard();
+      mostrarToast("¡Producto creado y guardado con éxito!");
+      if (typeof lucide !== "undefined") lucide.createIcons();
+    } catch (error) {
+      console.error(error);
+      mostrarToast("Hubo un error al crear el producto.", true);
+    }
+  });
+}
