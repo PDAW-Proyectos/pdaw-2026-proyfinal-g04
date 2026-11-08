@@ -51,7 +51,6 @@ function actualizarControlesPaginacion() {
 
   for (let i = 1; i <= totalPaginas; i++) {
     const btnNumero = document.createElement("button");
-    // Usamos tu clase btn-fantasma y le sumamos active si es la página actual
     btnNumero.className = `btn-fantasma ${i === paginaActual ? "active" : ""}`;
     btnNumero.textContent = i;
 
@@ -66,7 +65,7 @@ function actualizarControlesPaginacion() {
 
 let htmlOriginalBotonGuardar = "";
 
-function mostrarToast(mensaje, esError = false) {
+export function mostrarToast(mensaje, esError = false) {
   const toast = document.createElement("div");
   toast.textContent = mensaje;
 
@@ -255,7 +254,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const respuesta = await fetch("/api/productos");
     if (respuesta.ok) {
       const data = await respuesta.json();
-      catalogoBase = data.map((p) => ({
+      
+      const listaProductos = data.productos || data;
+
+      catalogoBase = listaProductos.map((p) => ({
         id: p.id,
         nombre: p.nombre,
         categoria: p.categoria || "General",
@@ -263,12 +265,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         precioArs: p.precio ?? p.precioArs,
         stock: p.stock ?? p.unidad ?? p.peso ?? 0,
       }));
+      
       catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
     }
   } catch (error) {
     console.error("Error al conectar con el backend de productos:", error);
   }
-
   aplicarFiltros();
   actualizarDashboard();
   consultarDolarEnVivo();
@@ -574,7 +576,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Auto-calcular pesos en el formulario de creación si hay dólar en vivo
   const inputUsdCrear = document.getElementById("nuevo-prod-usd");
   const inputArsCrear = document.getElementById("nuevo-prod-ars");
 

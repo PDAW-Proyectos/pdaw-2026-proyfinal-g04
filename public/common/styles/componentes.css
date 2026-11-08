@@ -104,6 +104,53 @@
   color: #161615;
 }
 
+.btn-alerta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #ef4444; 
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.btn-alerta:hover:not(:disabled) {
+  background-color: #dc2626; 
+}
+.btn-alerta-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.btn-alerta-secundario:hover:not(:disabled) {
+  background-color: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.btn-alerta:disabled,
+.btn-alerta-secundario:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* =========================================
  VISTAS
 ========================================= */
@@ -252,22 +299,26 @@
   align-items: center;
 }
 
-/* --- Badges / Semáforo de stock --- */
-.badge-stock {
+/* --- Badges --- */
+.badge {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 12px;
   font-weight: 700;
 }
-.badge-stock.stock-critico {
+.badge.rojo {
   color: #dc2626;
   background-color: #fef2f2;
 }
-.badge-stock.stock-advertencia {
+.badge.badge-verde {
+  color: #485b1a;
+  background-color: #caeb77db;
+}
+.badge.naranja {
   color: #d97706;
   background-color: #fffbeb;
 }
-.badge-stock.stock-normal {
+.badge.neutro {
   color: #171914;
   background-color: transparent;
 }
@@ -474,7 +525,7 @@
 .mensaje-error {
   color: #dc2626;
   font-size: 12px;
-  display: none; /* El JS lo cambia a 'block' si hay error */
+  display: none; 
   margin-top: 4px;
   font-weight: 500;
 }
@@ -511,50 +562,69 @@
   margin-bottom: 24px;
 }
 
-/* Tarjetas del Mini-Dashboard */
-.dashboard-precios {
-  display: flex;
+/* Cards dashboards */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
-  flex-wrap: wrap; /* Por si lo ven en celulares, se apilan solas */
 }
 
-.tarjeta-precio {
-  flex: 1;
-  min-width: 280px;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.tarjeta-header {
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e4dc;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  color: #171914;
+  flex-direction: column;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.tarjeta-header h3 {
-  font-size: 15px;
+.card:hover { 
+  border-color: #a4d92b;
+  box-shadow: 0 0 0 3px #c2ff382b;
+  transform: translateY(-2px);
+  
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-header h3, 
+.card-label {
+  font-size: 14px;
   font-weight: 600;
+  color: #777b70;
   margin: 0;
 }
 
-.tarjeta-header svg {
-  color: #059669; /* Verde KCHIN */
+.card-header svg {
+  color: #c2ff38; 
   width: 20px;
   height: 20px;
 }
 
-.tarjeta-body {
+.card-body {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+.card-valor {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #171914;
+}
+
+/* Control de precios */
 .dato-dolar {
   display: flex;
   justify-content: space-between;
@@ -595,7 +665,7 @@
   color: #9ca3af;
 }
 
-/* Barra de Herramientas (Toolbar) */
+/* Toolbar precios */
 .toolbar-precios {
   display: flex;
   justify-content: space-between;
@@ -634,7 +704,6 @@
   padding-right: 4px;
 }
 
-/* Sacarle las flechitas por defecto al input number */
 .input-porcentaje input::-webkit-outer-spin-button,
 .input-porcentaje input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -647,14 +716,14 @@
 }
 
 .badge-alerta {
-  background-color: #fef08a; /* Amarillo/Naranja clarito */
-  color: #a16207; /* Texto oscuro para contraste */
+  background-color: #fef08a; 
+  color: #a16207; 
   font-size: 11px;
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 999px;
   text-transform: uppercase;
-  margin-left: auto; /* Lo empuja a la derecha */
+  margin-left: auto; 
 }
 
 .separador-vertical {
@@ -670,7 +739,7 @@
   background-color: #f9fafb;
 }
 
-/* --- Toast--- */
+/* Toast notificaciones */
 .toast-notificacion {
   position: fixed;
   bottom: 24px;

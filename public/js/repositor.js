@@ -247,11 +247,11 @@ function renderizarInventario() {
     const fila = document.createElement("tr");
 
     // Lógica del Semáforo
-    let claseStock = "stock-normal"; // Por defecto no tiene fondo
+    let claseStock = "neutro"; // Por defecto no tiene fondo
     if (producto.stock <= 5) {
-      claseStock = "stock-critico";
+      claseStock = "rojo";
     } else if (producto.stock <= 10) {
-      claseStock = "stock-advertencia";
+      claseStock = "naranja";
     }
 
     fila.innerHTML = `
@@ -261,7 +261,7 @@ function renderizarInventario() {
       <td class="truncar-texto">${producto.descripcion}</td>
       <td>$${producto.precio}</td>
       <td>
-        <span class="badge-stock ${claseStock}">${producto.stock}</span>
+        <span class="badge ${claseStock}">${producto.stock}</span>
       </td>
       <td>
         <button class="btn-primario" data-id="${producto.id}" data-nombre="${producto.nombre}" data-descripcion="${producto.descripcion}" data-stock="${producto.stock}">

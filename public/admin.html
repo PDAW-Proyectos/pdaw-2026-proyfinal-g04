@@ -35,7 +35,7 @@
           <span>Caja y Transacciones</span>
         </a>
 
-        <a href="#usuarios" class="nav-enlace" data-nav="usuarios">
+        <a href="#usuarios" class="nav-enlace" data-nav="vista-usuarios">
           <i data-lucide="users" aria-hidden="true"></i>
           <span>Personal y Usuarios</span>
         </a>
@@ -74,11 +74,9 @@
         </header>
 
         <div class="vista-cuerpo">
-          <!-- 2. Mini-Dashboard (Tarjetas comparativas) -->
-          <div class="dashboard-precios">
-            <!-- Tarjeta 1: Dólar -->
-            <div class="tarjeta-precio">
-              <div class="tarjeta-header">
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
                 <i data-lucide="dollar-sign"></i>
                 <h3>Estado del Dólar</h3>
                 <span
@@ -88,7 +86,7 @@
                   >¡Diferencia Detectada!</span
                 >
               </div>
-              <div class="tarjeta-body">
+              <div class="card-body">
                 <div class="dato-dolar">
                   <span>Dólar Sistema (Tus precios):</span>
                   <strong id="dolar-sistema-actual">$1.150</strong>
@@ -100,13 +98,12 @@
               </div>
             </div>
 
-            <!-- Tarjeta 2: Impacto Estimado -->
-            <div class="tarjeta-precio">
-              <div class="tarjeta-header">
+            <div class="card">
+              <div class="card-header">
                 <i data-lucide="trending-up"></i>
                 <h3>Impacto Estimado</h3>
               </div>
-              <div class="tarjeta-body">
+              <div class="card-body">
                 <p class="impacto-texto">
                   Ej:
                   <strong id="ejemplo-nombre"
@@ -122,9 +119,7 @@
             </div>
           </div>
 
-          <!-- 3. Barra de Herramientas -->
           <div class="toolbar-precios">
-            <!-- Izquierda: Aumento Manual y Deshacer -->
             <div class="herramientas-manuales">
               <button
                 type="button"
@@ -157,7 +152,6 @@
               </button>
             </div>
 
-            <!-- Derecha: API Dólar y GUARDAR -->
             <div class="herramientas-api" style="display: flex; gap: 12px">
               <button
                 type="button"
@@ -167,7 +161,6 @@
                 <i data-lucide="calculator"></i> Probar Dólar Mercado
               </button>
 
-              <!-- EL BOTÓN MAESTRO -->
               <button
                 type="button"
                 class="btn-primario btn-con-icono btn-guardar-maestro"
@@ -179,8 +172,7 @@
             </div>
           </div>
 
-          <!-- 1. Buscador (Ancho completo arriba) -->
-          <label class="buscador buscador-margen">
+          <label class="buscador">
             <i data-lucide="search" aria-hidden="true"></i>
             <input
               type="search"
@@ -190,7 +182,6 @@
             />
           </label>
 
-          <!-- 4. Tabla de Precios -->
           <div class="tabla-contenedor">
             <table class="tabla-base">
               <thead>
@@ -228,10 +219,135 @@
         </header>
       </section>
 
-      <section id="usuarios" class="vista">
+      <section id="vista-usuarios" class="vista">
         <header class="vista-header">
           <h2>Personal y Usuarios</h2>
         </header>
+        <div class="vista-cuerpo">
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-label">Total Personal</h3>
+                <i data-lucide="users"></i>
+              </div>
+              <div class="card-body">
+                <p class="card-valor" id="stat-total-usuarios">0</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-label">Administradores</h3>
+                <i data-lucide="shield-check"></i>
+              </div>
+              <div class="card-body">
+                <p class="card-valor" id="stat-total-admins">0</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-label">Cajeros</h3>
+                <i data-lucide="calculator"></i>
+              </div>
+              <div class="card-body">
+                <p class="card-valor" id="stat-total-cajeros">0</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-label">Repositores</h3>
+                <i data-lucide="package"></i>
+              </div>
+              <div class="card-body">
+                <p class="card-valor" id="stat-total-repositores">0</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="encabezado-acciones"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 16px;
+            "
+          >
+            <h2>Usuarios del Sistema</h2>
+            <button
+              type="button"
+              class="btn-primario btn-con-icono"
+              id="btn-nuevo-usuario"
+            >
+              <i data-lucide="plus" class="icono-chico"></i> Nuevo Usuario
+            </button>
+          </div>
+
+          <section class="catalogo-controles" aria-label="Buscar usuarios">
+            <label class="buscador">
+              <i data-lucide="search" aria-hidden="true"></i>
+              <input
+                type="search"
+                id="buscar-usuario"
+                placeholder="Buscar por nombre o ID..."
+                autocomplete="off"
+              />
+            </label>
+
+            <!-- Filtro por Rol -->
+            <div class="select-base">
+              <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
+              <select id="select-filtro-rol" aria-label="Filtrar por rol">
+                <option value="todos" selected>Todos los roles</option>
+                <option value="admin">Administradores</option>
+                <option value="cajero">Cajeros</option>
+                <option value="repositor">Repositores</option>
+              </select>
+            </div>
+          </section>
+
+          <!-- Tabla de Usuarios -->
+          <div class="tabla-contenedor">
+            <table class="tabla-base">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="id">
+                    ID
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="nombre">
+                    Nombre
+                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  </th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-body-usuarios"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <nav class="paginacion" aria-label="Navegación de páginas">
+          <button class="btn-secundario" id="btn-anterior-usuarios">
+            <i data-lucide="chevron-left" aria-hidden="true"></i>
+            <span>Anterior</span>
+          </button>
+
+          <div
+            class="numeros-paginacion"
+            id="numeros-paginacion-usuarios"
+          ></div>
+
+          <button class="btn-secundario" id="btn-siguiente-usuarios">
+            <span>Siguiente</span>
+            <i data-lucide="chevron-right" aria-hidden="true"></i>
+          </button>
+        </nav>
       </section>
 
       <section id="configuracion" class="vista">
@@ -393,18 +509,125 @@
             <button type="button" class="btn-fantasma" id="btn-cancelar-crear">
               Cancelar
             </button>
-            <button
-              type="submit"
-              class="btn-primario"
+            <button type="submit" class="btn-primario">Crear Producto</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal Editar Usuario -->
+    <dialog id="modal-usuario" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h2>Editar Usuario</h2>
+          <button
+            type="button"
+            id="cerrar-modal-usuario"
+            aria-label="Cerrar modal"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
+
+        <form id="form-usuario" class="modal-form">
+          <input type="hidden" id="modal-usuario-id" />
+
+          <p class="modal-subtitle" style="margin-bottom: 16px">
+            Editando:
+            <strong id="modal-nombre-usuario">Nombre del usuario</strong>
+          </p>
+
+          <div class="modal-input-group">
+            <label for="modal-rol-usuario">Rol:</label>
+            <select class="select-base" id="modal-rol-usuario" required>
+              <option value="admin">Administrador</option>
+              <option value="cajero">Cajero</option>
+              <option value="repositor">Repositor</option>
+            </select>
+          </div>
+
+          <div class="modal-input-group">
+            <label for="modal-usuario-habilitado"
+              >Habilitado en el sistema:</label
             >
-              Crear Producto
+            <select class="select-base" id="modal-usuario-habilitado" required>
+              <option value="true">Sí (Activo)</option>
+              <option value="false">No (Suspendido)</option>
+            </select>
+          </div>
+
+          <div class="modal-acciones" style="margin-top: 24px">
+            <button
+              type="button"
+              class="btn-fantasma"
+              id="btn-cancelar-modal-usuario"
+            >
+              Cancelar
             </button>
+            <button
+              type="button"
+              class="btn-alerta-secundario"
+              id="btn-borrar-usuario"
+            >
+              Borrar Usuario
+            </button>
+            <button type="submit" class="btn-primario">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal Crear Usuario -->
+    <dialog id="modal-crear-usuario" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h2>Crear Usuario</h2>
+          <button
+            type="button"
+            id="cerrar-modal-crear-usuario"
+            aria-label="Cerrar modal"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
+        <form id="form-crear-usuario" class="modal-form">
+          <div class="modal-input-group">
+            <label for="crear-nombre">Nombre</label>
+            <input type="text" id="crear-nombre" required />
+
+            <label for="crear-apellido">Apellido</label>
+            <input type="text" id="crear-apellido" required />
+
+            <label for="crear-email">Email</label>
+            <input type="email" id="crear-email" required />
+
+            <label for="crear-contraseña">Contraseña</label>
+            <input type="password" id="crear-contraseña" required />
+
+            <label for="crear-rol">Rol</label>
+            <select id="crear-rol" class="select-base" required>
+              <option value="admin">Administrador</option>
+              <option value="cajero">Cajero</option>
+              <option value="repositor">Repositor</option>
+            </select>
+          </div>
+
+          <div class="modal-acciones" style="margin-top: 24px">
+            <button
+              type="button"
+              class="btn-fantasma"
+              id="btn-cancelar-crear-usuario"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primario">Crear Usuario</button>
           </div>
         </form>
       </div>
     </dialog>
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="module" src="./js/usuarios.js"></script>
     <script type="module" src="./js/admin.js"></script>
   </body>
 </html>
