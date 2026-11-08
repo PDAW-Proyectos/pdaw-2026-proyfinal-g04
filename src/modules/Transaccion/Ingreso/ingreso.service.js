@@ -1,3 +1,5 @@
+import { BadRequestError, NotFoundError } from "../../../common/errors/errors.classes.js";
+
 export class IngresoService {
     transaccionRepository;
 
@@ -5,64 +7,56 @@ export class IngresoService {
         this.transaccionRepository = transaccionRepository;
     }
 
-    listarIngresos = async (pagina, limite) => {
-        const { datos, ...paginacion } = await this.transaccionRepository.listar(pagina, limite);
+    listarIngresos = (pagina, limite) => {
+        const { datos, ...paginacion } = this.transaccionRepository.listar(pagina, limite);
         return {
             ingresos: datos,
             ...paginacion
         };
     };
 
-    filtrarIngresos = async (filtros, pagina, limite) => {
-        const { datos, ...paginacion } = await this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
+    filtrarIngresos = (filtros, pagina, limite) => {
+        const { datos, ...paginacion } = this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             ingresos: datos,
             ...paginacion
         };
     };
 
-    buscarIngreso = async (id) => {
-        const ingreso = await this.transaccionRepository.buscarPorId(id);
+    buscarIngreso = (id) => {
+        const ingreso = this.transaccionRepository.buscarPorId(id);
 
         if (!ingreso) {
-            const error = new Error("Ingreso no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Ingreso");
         }
 
         return ingreso;
     };
 
     crearIngreso = async (datos) => {
+        if (datos.monto < 0) throw new BadRequestError("El monto debe ser mayor o igual a cero para un ingreso");
         return await this.transaccionRepository.crear(datos);
     };
 
     actualizarIngreso = async (id, datos) => {
-        const anterior = await this.transaccionRepository.buscarPorId(id);
+        const anterior = this.transaccionRepository.buscarPorId(id);
 
         if (!anterior) {
-            const error = new Error("Ingreso no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Ingreso");
+        }
+        if (datos?.monto < 0) {
+            throw new BadRequestError("El monto debe ser mayor o igual a cero para un ingreso");
         }
 
-        try {
-            const datosBase = { ...anterior, ...datos };
-
-            return await this.transaccionRepository.actualizar(datosBase);
-        } catch (error) {
-            error.status = 400;
-            throw error;
-        }
+        const datosBase = { ...anterior, ...datos };
+        return await this.transaccionRepository.actualizar(datosBase);
     };
 
     eliminarIngreso = async (id) => {
         const eliminado = await this.transaccionRepository.eliminar(id);
 
         if (!eliminado) {
-            const error = new Error("Ingreso no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Ingreso");
         }
 
         return eliminado;

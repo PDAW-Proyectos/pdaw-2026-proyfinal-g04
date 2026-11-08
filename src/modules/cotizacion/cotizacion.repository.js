@@ -22,9 +22,25 @@ export class CotizacionRepository extends Repository {
     this.#ultimaConsulta = fecha;
   }
 
-  listar() {
-    return [...this.entidades]; // Devuelve el array plano sólo para cotizaciones
-  }
+	listar( pagina, limite ) {
+        const total = this.entidades.length;
+        const inicio = (pagina - 1) * limite;
+        return {
+            datos: pagina ? [...this.entidades].slice(inicio, inicio + limite) : [...this.entidades],
+            total,
+            pagina,
+            limite,
+            totalPaginas: Math.ceil(total / limite)
+        };
+    }
+
+	async guardar() {
+		const data = {
+			ultimaConsulta: this.#ultimaConsulta,
+			entidades: this.entidades,
+		};
+		await writeFile(this.ruta, JSON.stringify(data, null, 2), "utf8");
+	}
 
   async guardar() {
     const data = {

@@ -1,14 +1,16 @@
+import { ValidationError, BadRequestError } from "../../common/errors/errors.classes.js";
+
 export class Producto {
-    constructor({ id, nombre, categoria, descripcion, precio, precioUsd }) {
-        if (new.target === Producto) throw new TypeError('Producto es una clase abstracta');
-        if (!id) throw new TypeError('id no puede ser nulo');
-        if (precio && !Number.isInteger(precio) || precio < 0) throw new TypeError('precio debe ser un número entero mayor a 0');
-        if (precioUsd !== undefined && (typeof precioUsd !== 'number' || precioUsd < 0)) throw new TypeError('precioUsd debe ser un número positivo');
+    constructor({ id, idCotizacion, nombre, categoria, descripcion, precioUsd }) {
+        if (new.target === Producto) throw new TypeError("Producto es una clase abstracta");
+        if (!id) throw new ValidationError("id no puede ser nulo");
+        if (precioUsd !== undefined && (!Number.isInteger(precioUsd) || precioUsd < 0)) throw new BadRequestError("precioUsd debe ser un número entero mayor o igual a 0");
+        if (!nombre) throw new BadRequestError("nombre no puede ser nulo");
         this.id = id;
+        this.idCotizacion = idCotizacion;
         this.nombre = nombre;
         this.categoria = categoria;
         this.descripcion = descripcion;
-        this.precio = precio;
         this.precioUsd = precioUsd;
     }
 }

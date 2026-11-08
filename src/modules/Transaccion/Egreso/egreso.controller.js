@@ -1,6 +1,5 @@
 import { validarPaginacion } from "../../../common/utils/validarPaginacion.util.js";
 
-
 export class EgresoController {
     egresoService;
 
@@ -8,72 +7,40 @@ export class EgresoController {
         this.egresoService = egresoService;
     }
 
-    listarEgresos = async (req, res, next) => {
-        try {
-            const { pagina, limite } = validarPaginacion(req.query) 
-            const egresos = await this.egresoService.listarEgresos(pagina, limite);
-            res.status(200).json(egresos);
-        } catch (error) {
-            next(error);
-        }
+    listarEgresos = async (req, res) => {
+        const { pagina, limite } = validarPaginacion(req.query);
+        const egresos = await this.egresoService.listarEgresos(pagina, limite);
+        res.status(200).json(egresos);
     }
 
-    filtrarUsuarios = async (req, res, next) => {
-        try {
-            const { pagina, limite } = validarPaginacion(req.query) 
-            const egresos = await this.egresoService.filtrarEgresos(req.body, pagina, limite);
-            res.status(200).json(egresos);
-        } catch (error) {
-            next(error);
-        }
+    filtrarEgresos = async (req, res) => {
+        const { pagina, limite } = validarPaginacion(req.query);
+        const egresos = await this.egresoService.filtrarEgresos(req.body, pagina, limite);
+        res.status(200).json(egresos);
     }
 
-    buscarEgreso = async (req, res, next) => {
-        try { 
-            const egreso = await this.egresoService.buscarEgreso(req.params.id);
-            res.status(200).json(egreso);
-        } catch (error) {
-            next(error);
-        }
+    buscarEgreso = async (req, res) => {
+        const egreso = await this.egresoService.buscarEgreso(req.params.id);
+        res.status(200).json(egreso);
     }
 
-    crearEgreso = async (req, res, next) => {
-        try {
-            const egreso = await this.egresoService.crearEgreso(req.body);
-            res.status(201).json(egreso);
-        } catch (error) {
-            next(error);
-        }
+    crearEgreso = async (req, res) => {
+        const egreso = await this.egresoService.crearEgreso(req.body);
+        res.status(201).json(egreso);
     }
 
-    crearCompra = async (req, res, next) => {
-        try {
-            const egreso = await this.egresoService.crearCompra(req.session.userId, req.body);
-            res.status(201).json(egreso);
-        } catch (error) {
-            next(error);
-        }
+    crearCompra = async (req, res) => {
+        const egreso = await this.egresoService.crearCompra(req.session.userId, req.body);
+        res.status(201).json(egreso);
     }
 
-    actualizarEgreso = async (req, res, next) => {
-        try {
-            const egreso = await this.egresoService.actualizarEgreso(
-                req.params.id,
-                req.body
-            );
-
-            res.status(200).json(egreso);
-        } catch (error) {
-            next(error);
-        }
+    actualizarEgreso = async (req, res) => {
+        const egreso = await this.egresoService.actualizarEgreso(req.params.id, req.body);
+        res.status(200).json(egreso);
     }
 
-    eliminarEgreso = async (req, res, next) => {
-        try {
-            await this.egresoService.eliminarEgreso(req.params.id);
-            res.status(204).send();
-        } catch (error) {
-            next(error);
-        }
+    eliminarEgreso = async (req, res) => {
+        await this.egresoService.eliminarEgreso(req.params.id);
+        res.status(204).send();
     }
 }

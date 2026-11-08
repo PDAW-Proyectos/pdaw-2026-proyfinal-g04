@@ -1,17 +1,25 @@
+import { BadRequestError, NotFoundError } from "../../common/errors/errors.classes.js";
+
 export class ProductoService {
-    constructor(productoRepository) {
-        this.productoRepository = productoRepository
+    constructor(productoRepository, cotizacionService) {
+        this.productoRepository = productoRepository;
+        this.cotizacionService = cotizacionService;
     }
 
-    async listarProductos(pagina, limite) {
+    listarProductos(pagina, limite) {
         const { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
+        const datosConCotizacion = datos.map(producto => {
+            const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
+            const { idCotizacion, ...productoSinCotizacion } = producto;
+            return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
+        });
         return {
-            productos: datos,
+            productos: datosConCotizacion,
             ...paginacion
         };
     }
 
-    async filtrarProductos(filtros, pagina, limite) {
+    filtrarProductos(filtros, pagina, limite) {
         const { datos, ...paginacion } = this.productoRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
             productos: datos,
@@ -19,95 +27,119 @@ export class ProductoService {
         };
     }
 
-    async buscarProducto(id) {
-        const producto = await this.productoRepository.buscarPorId(id);
+    buscarProducto(id) {
+        const producto = this.productoRepository.buscarPorId(id);
 
         if (!producto) {
-            const error = new Error("producto no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Producto");
         }
 
-        return producto;
+        const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
+
+        const { idCotizacion, ...productoSinCotizacion } = producto;
+        return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
     }
 
     async crearProducto(datos) {
-        let productoCreado;
-        try {
-            productoCreado = await this.productoRepository.crear(datos);
-        } catch (error) {
-            error.status = 400;
-            throw error;
-        }
-        return productoCreado;
+            const idCotizacion = await this.cotizacionService.consultarCotizacion().cotizacion.id
+            return await this.productoRepository.crear({ ...datos, idCotizacion });
     }
 
     async actualizarProducto(id, datos) {
-        let productoActualizado;
         const anterior = await this.productoRepository.buscarPorId(id);
+
         if (!anterior) {
-            const error = new Error("producto no encontrado");
-            error.status = 404;
-            throw error;
-        }
-        
-        try {
-            const datosBase = { ...anterior, ...datos };
-            productoActualizado = await this.productoRepository.actualizar(datosBase);
-        } catch (error) {
-            error.status = 400;
-            throw error;
+            throw new NotFoundError("Producto");
         }
 
-        return productoActualizado;
+        try {
+            const datosBase = { ...anterior, ...datos };
+            return await this.productoRepository.actualizar(datosBase);
+        } catch (error) {
+            if (error instanceof TypeError) {
+                throw new BadRequestError(error.message);
+            }
+            throw error;
+        }
     }
 
     async actualizarPreciosMasivo(productosActualizados) {
         try {
             this.productoRepository.iniciarTransaccion();
-            for (const prodModificado of productosActualizados) {
-                const anterior = await this.productoRepository.buscarPorId(prodModificado.id);
-                
+            const cotizacionActual = await this.cotizacionService.consultarCotizacion();
+
+            for (const idProdModificado of productosActualizados) {
+                const anterior = await this.productoRepository.buscarPorId(idProdModificado);
+
                 if (anterior) {
-                    const datosBase = Object.assign(anterior, {
-                        precio: prodModificado.precio,
-                        precioUsd: prodModificado.precioUsd
-                    });
+                    const datosBase = {
+                        ...anterior,
+                        idCotizacion: cotizacionActual.cotizacion.id
+                    };
                     await this.productoRepository.actualizar(datosBase);
                 }
             }
 
             await this.productoRepository.confirmarTransaccion();
-
         } catch (error) {
             await this.productoRepository.rollback();
-            error.status = 500;
-            error.message = "Falló la actualización masiva de precios.";
             throw error;
         }
     }
-    
+
     async eliminarProducto(id) {
         const eliminado = await this.productoRepository.eliminar(id);
 
         if (!eliminado) {
-            const error = new Error("producto no encontrado");
-            error.status = 404;
-            throw error;
+            throw new NotFoundError("Producto");
         }
 
         return eliminado;
     }
 
     async aumentarStock(id, cantidad) {
-        const producto = await this.buscarProducto(id);
-        producto.unidad ? producto.unidad += cantidad : producto.peso += cantidad;
+        if (typeof cantidad !== "number" || !Number.isFinite(cantidad) || cantidad <= 0) {
+            throw new BadRequestError("La cantidad debe ser un número positivo");
+        }
+
+        const producto = await this.productoRepository.buscarPorId(id);
+
+        if (!producto) {
+            throw new NotFoundError("Producto");
+        }
+
+        if (producto.unidad !== undefined) {
+            producto.unidad += cantidad;
+        } else {
+            producto.peso += cantidad;
+        }
+
         return await this.productoRepository.actualizar(producto);
     }
 
     async disminuirStock(id, cantidad) {
-        const producto = await this.buscarProducto(id);
-        producto.unidad ? producto.unidad -= cantidad : producto.peso -= cantidad;
+        if (typeof cantidad !== "number" || !Number.isFinite(cantidad) || cantidad <= 0) {
+            throw new BadRequestError("La cantidad debe ser un número positivo");
+        }
+
+        const producto = await this.productoRepository.buscarPorId(id);
+
+        if (!producto) {
+            throw new NotFoundError("Producto");
+        }
+
+        if (producto.unidad !== undefined) {
+            if (producto.unidad < cantidad) {
+                throw new BadRequestError("Stock insuficiente");
+            }
+            producto.unidad -= cantidad;
+        } else {
+            if (producto.peso < cantidad) {
+                throw new BadRequestError("Stock insuficiente");
+            }
+            producto.peso -= cantidad;
+        }
+
         return await this.productoRepository.actualizar(producto);
     }
 }

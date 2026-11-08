@@ -1,3 +1,5 @@
+import { BadRequestError } from "../../common/errors/errors.classes"
+
 export class Usuario {
     id
     email
@@ -9,7 +11,7 @@ export class Usuario {
 
     constructor({ id, email, contraseña, nombre, apellido, rol, habilitado }) {
         if(!email || email.length === 0) {
-            throw new Error("Email vacio")
+            throw new BadRequestError("Email vacio")
         }
         this.id = id;
         this.email = email
