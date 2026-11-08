@@ -42,14 +42,6 @@ export class CotizacionRepository extends Repository {
 		await writeFile(this.ruta, JSON.stringify(data, null, 2), "utf8");
 	}
 
-  async guardar() {
-    const data = {
-      ultimaConsulta: this.#ultimaConsulta,
-      entidades: this.entidades,
-    };
-    await writeFile(this.ruta, JSON.stringify(data, null, 2), "utf8");
-  }
-
   async cargar() {
     try {
       const datos = JSON.parse(await readFile(this.ruta, "utf8"));

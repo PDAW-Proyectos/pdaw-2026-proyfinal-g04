@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let ordenAscendenteUsuarios = true;
 
   const tbodyUsuarios = document.getElementById("tabla-body-usuarios");
-  const vistaUsuarios = document.getElementById("vista-usuarios");
 
   //Obtener datos desde el backend
   async function cargarUsuarios() {
