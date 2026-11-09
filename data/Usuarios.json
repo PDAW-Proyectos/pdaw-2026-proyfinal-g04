@@ -5,17 +5,8 @@
     "contraseña": "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
     "nombre": "Joaco",
     "apellido": "Yakete",
-    "rol": "admin",
-    "tipo": "Usuario"
-  },
-  {
-    "id": 2,
-    "email": "cajero@kchin.com",
-    "contraseña": "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "rol": "cajero",
-    "tipo": "Usuario"
+    "habilitado": true,
+    "rol": "admin"
   },
   {
     "id": 3,
@@ -23,8 +14,8 @@
     "contraseña": "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
     "nombre": "Pedro",
     "apellido": "Gomez",
-    "rol": "repositor",
-    "tipo": "Usuario"
+    "habilitado": true,
+    "rol": "repositor"
   },
   {
     "id": 4,
@@ -32,7 +23,34 @@
     "contraseña": "$2b$12$NMWt1GPM/XgqULNYxDvHuu9BQXfdYcqhs.zZUL3KGv4KJKSH4BFHW",
     "nombre": "nacho",
     "apellido": "mendez",
-    "rol": "admin",
-    "tipo": "Usuario"
+    "habilitado": true,
+    "rol": "admin"
+  },
+  {
+    "id": 5,
+    "email": "geraldine@kchin.com",
+    "contraseña": "123456",
+    "nombre": "Geraldine",
+    "apellido": "Lagarrigue ",
+    "habilitado": false,
+    "rol": "admin"
+  },
+  {
+    "id": 6,
+    "email": "clara@kchin.com",
+    "contraseña": "123456",
+    "nombre": "Clara",
+    "apellido": "Orenella",
+    "habilitado": true,
+    "rol": "admin"
+  },
+  {
+    "id": 8,
+    "email": "cajero@kchin.com",
+    "contraseña": "123456",
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "habilitado": true,
+    "rol": "cajero"
   }
 ]
