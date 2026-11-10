@@ -1,10 +1,10 @@
-import { Factory } from "../../src/common/config/factory.js";
-import { Usuario } from "../../src/modules/Usuario/usuario.entity.js";
-import { ProductoUnidad } from "../../src/modules/Producto/productoUnidad.entity.js";
-import { ProductoPeso } from "../../src/modules/Producto/productoPeso.entity.js";
-import { Insumo } from "../../src/modules/Insumo/insumo.entity.js";
-import { Ingreso } from "../../src/modules/Transaccion/Ingreso/ingreso.entity.js";
-import { Egreso } from "../../src/modules/Transaccion/Egreso/egreso.entity.js";
+import { Factory } from "../../../src/common/config/factory.js";
+import { Usuario } from "../../../src/modules/Usuario/usuario.entity.js";
+import { ProductoUnidad } from "../../../src/modules/Producto/productoUnidad.entity.js";
+import { ProductoPeso } from "../../../src/modules/Producto/productoPeso.entity.js";
+import { Insumo } from "../../../src/modules/Insumo/insumo.entity.js";
+import { Ingreso } from "../../../src/modules/Transaccion/Ingreso/ingreso.entity.js";
+import { Egreso } from "../../../src/modules/Transaccion/Egreso/egreso.entity.js";
 
 describe("factory", () => {
     let factory;

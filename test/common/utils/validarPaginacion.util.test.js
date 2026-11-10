@@ -1,4 +1,4 @@
-import { validarPaginacion } from "../../src/common/utils/validarPaginacion.util.js";
+import { validarPaginacion } from "../../../src/common/utils/validarPaginacion.util.js";
 
 describe("validarPaginacicon", () => {
     test("valida correctamente la paginación con valores válidos", () => {

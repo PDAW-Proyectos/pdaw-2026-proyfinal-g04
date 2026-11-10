@@ -1,7 +1,7 @@
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Repository } from "../../src/common/config/repository.js";
+import { Repository } from "../../../src/common/config/repository.js";
 
 describe("Repository", () => {
     let tempDir;

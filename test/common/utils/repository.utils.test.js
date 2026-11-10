@@ -1,4 +1,4 @@
-import { coincidePropiedad } from "../../src/common/utils/repository.utils.js";
+import { coincidePropiedad } from "../../../src/common/utils/repository.utils.js";
 
 describe("coincidePropiedad", () => {
     describe("propiedades primitivas", () => {
