@@ -13,6 +13,7 @@ import crearRouterEgreso from "./src/modules/Transaccion/Egreso/egreso.routes.js
 import crearRouterCotizacion from "./src/modules/cotizacion/cotizacion.routes.js";
 import { NotFoundError } from "./src/common/errors/errors.classes.js";
 import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.js";
+import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,6 +40,7 @@ app.use(
 // 3. Inyección de dependencias
 const userController = await dependencyInjector.resolve("userController");
 const authController = await dependencyInjector.resolve("authController");
+const cajaController = await dependencyInjector.resolve("cajaController");
 const egresoController = await dependencyInjector.resolve("egresoController");
 const ingresoController = await dependencyInjector.resolve("ingresoController");
 const productoController = await dependencyInjector.resolve("productoController");
@@ -48,6 +50,7 @@ const cotizacionController = await dependencyInjector.resolve("cotizacionControl
 // 4. Rutas de la API
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
+app.use("/api/caja", crearRouterCaja(cajaController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));

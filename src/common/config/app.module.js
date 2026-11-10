@@ -18,6 +18,8 @@ import { EgresoService } from "../../modules/Transaccion/Egreso/egreso.service.j
 import { CotizacionController } from "../../modules/cotizacion/cotizacion.controller.js";
 import { CotizacionService } from "../../modules/cotizacion/cotizacion.service.js";
 import { CotizacionRepository } from "../../modules/cotizacion/cotizacion.repository.js";
+import { CajaService } from "../../modules/caja/caja.service.js";
+import { CajaController } from "../../modules/caja/caja.controller.js";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -42,6 +44,10 @@ dependencyInjector.registerSingleton("transaccionRepository", () =>
 
 dependencyInjector.registerSingleton("cotizacionRepository", () =>
   CotizacionRepository.inicializar(path.join(__dirname, "../../../data", "Cotizaciones.json"), factory.crearCotizacion),
+);
+
+dependencyInjector.registerSingleton("cajaRepository", () =>
+  Repository.inicializar(path.join(__dirname, "../../../data", "Caja.json"), factory.crearCaja),
 );
 
 dependencyInjector.registerSingleton("userService", async () => {
@@ -115,4 +121,15 @@ dependencyInjector.registerSingleton("cotizacionService", async () => {
 dependencyInjector.registerSingleton("cotizacionController", async () => {
   const cotizacionService = await dependencyInjector.resolve("cotizacionService");
   return new CotizacionController(cotizacionService);
+});
+
+dependencyInjector.registerSingleton("cajaService", async () => {
+  const cajaRepository = await dependencyInjector.resolve("cajaRepository");
+  const userService = await dependencyInjector.resolve("userService");
+  return new CajaService(cajaRepository, userService);
+});
+
+dependencyInjector.registerSingleton("cajaController", async () => {
+  const cajaService = await dependencyInjector.resolve("cajaService");
+  return new CajaController(cajaService);
 });

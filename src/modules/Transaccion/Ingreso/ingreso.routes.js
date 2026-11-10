@@ -1,16 +1,15 @@
 import { Router } from "express";
 
-export default function crearRouterIngreso(
-    IngresoController
-) {
+export default function crearRouterIngreso(ingresoController) {
     const router = Router();
 
-    router.get("/", IngresoController.listarIngresos);
-    router.get("/:id", IngresoController.buscarIngreso);
-    router.query("/", IngresoController.filtrarIngresos);
-    router.post("/", IngresoController.crearIngreso);
-    router.put("/:id", IngresoController.actualizarIngreso);
-    router.delete("/:id", IngresoController.eliminarIngreso);
+    router.get("/", ingresoController.listarIngresos);
+    router.get("/:id", ingresoController.buscarIngreso);
+    router.query("/", ingresoController.filtrarIngresos);
+    router.post("/", ingresoController.crearIngreso);
+    router.post("/venta", ingresoController.crearVenta);
+    router.put("/:id", ingresoController.actualizarIngreso);
+    router.delete("/:id", ingresoController.eliminarIngreso);
 
     return router;
 }

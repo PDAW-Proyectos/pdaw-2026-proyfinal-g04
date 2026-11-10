@@ -38,6 +38,54 @@ export class IngresoService {
         return await this.transaccionRepository.crear(datos);
     };
 
+    crearVenta = async (idUsuario, datos) => {
+        if (!Array.isArray(datos.articulos)) {
+            throw new BadRequestError("La lista de artículos debe ser un array");
+        }
+
+        const repositorios = [
+            this.productoService.productoRepository,
+            this.transaccionRepository
+        ];
+
+        const repositoriosUnicos = [...new Set(repositorios)];
+        const iniciados = [];
+
+        try {
+            for (const repositorio of repositoriosUnicos) {
+                repositorio.iniciarTransaccion();
+                iniciados.push(repositorio);
+            }
+
+            const articulos = [];
+
+            for (const articulo of datos.articulos) {
+                const resultado = await this.productoService.disminuirStock(articulo.id, articulo.unidad || articulo.peso);
+                articulos.push(resultado);
+            }
+
+            const venta = await this.crearIngreso({
+                idUsuario,
+                idCaja: datos.idCaja,
+                metodoDePago: datos.metodoDePago,
+                articulos,
+                monto: datos.monto
+            });
+
+            for (const repositorio of repositoriosUnicos) {
+                await repositorio.confirmarTransaccion();
+            }
+
+            return venta;
+        } catch (error) {
+            for (const repositorio of iniciados.reverse()) {
+                await repositorio.rollback();
+            }
+
+            throw error;
+        }
+    };
+
     actualizarIngreso = async (id, datos) => {
         const anterior = this.transaccionRepository.buscarPorId(id);
 

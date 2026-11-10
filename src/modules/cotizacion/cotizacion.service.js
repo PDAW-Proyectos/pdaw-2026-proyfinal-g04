@@ -78,8 +78,7 @@ export class CotizacionService {
     }
 
     return {
-      cotizacion,
-      valorActualizado,
+      cotizacion
     };
   };
 
