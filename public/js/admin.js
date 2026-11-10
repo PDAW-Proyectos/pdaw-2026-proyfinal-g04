@@ -1,17 +1,20 @@
+import { mostrarToast } from "../common/utils/alertas.js";
 let catalogoBase = [];
 let catalogoEdicion = [];
-let productosFiltrados = [];
 
-// Paginación
+// Paginación Backend
 let paginaActual = 1;
 const itemsPorPagina = 12;
+let totalPaginasBackend = 1;
+let totalProductosBackend = 0;
 
 // Lógica de Dólar y Borrador
 let ultimoDolarGuardado = null;
 let dolarApiEnVivo = null;
 let historialCambios = [];
-// let fechaCotizacionActual = null;
 let hayCambiosSinGuardar = false;
+let operacionMasivaPendiente = null; // Guarda qué cálculo mandar al backend si aprietan Guardar
+let htmlOriginalBotonGuardar = "";
 
 const tablaBodyPrecios = document.getElementById("tabla-body-precios");
 
@@ -23,61 +26,9 @@ const spanEjemploNombre = document.getElementById("ejemplo-nombre");
 const spanEjemploViejo = document.getElementById("ejemplo-viejo");
 const spanEjemploNuevo = document.getElementById("ejemplo-nuevo");
 
-// Funciones de dibujado y lógica
-
+// Funciones auxiliares y dashboard
 function redondearPrecio(precio) {
   return Math.round(precio / 10) * 10;
-}
-
-function actualizarControlesPaginacion() {
-  const contenedorNumeros = document.getElementById(
-    "numeros-paginacion-precios",
-  );
-  const btnAnterior = document.getElementById("btn-anterior-precios");
-  const btnSiguiente = document.getElementById("btn-siguiente-precios");
-  const spanInfoTotal = document.getElementById("info-total-productos");
-
-  if (!contenedorNumeros) return;
-
-  const totalPaginas =
-    Math.ceil(productosFiltrados.length / itemsPorPagina) || 1;
-
-  if (btnAnterior) btnAnterior.disabled = paginaActual === 1;
-  if (btnSiguiente) btnSiguiente.disabled = paginaActual === totalPaginas;
-  if (spanInfoTotal)
-    spanInfoTotal.textContent = `Mostrando ${productosFiltrados.length} productos`;
-
-  contenedorNumeros.innerHTML = "";
-
-  for (let i = 1; i <= totalPaginas; i++) {
-    const btnNumero = document.createElement("button");
-    btnNumero.className = `btn-fantasma ${i === paginaActual ? "active" : ""}`;
-    btnNumero.textContent = i;
-
-    btnNumero.addEventListener("click", () => {
-      paginaActual = i;
-      renderizarTablaPrecios();
-    });
-
-    contenedorNumeros.appendChild(btnNumero);
-  }
-}
-
-let htmlOriginalBotonGuardar = "";
-
-export function mostrarToast(mensaje, esError = false) {
-  const toast = document.createElement("div");
-  toast.textContent = mensaje;
-
-  toast.className = `toast-notificacion ${esError ? "toast-error" : "toast-exito"}`;
-  document.body.appendChild(toast);
-
-  requestAnimationFrame(() => toast.classList.add("toast-visible"));
-
-  setTimeout(() => {
-    toast.classList.remove("toast-visible");
-    setTimeout(() => toast.remove(), 300);
-  }, 3500);
 }
 
 function confirmarPublicacion(accionConfirmada) {
@@ -111,63 +62,8 @@ function confirmarPublicacion(accionConfirmada) {
   });
 }
 
-// Render tabla
-function renderizarTablaPrecios() {
-  if (!tablaBodyPrecios) return;
-
-  // Matemática del paginado
-  const totalPaginas =
-    Math.ceil(productosFiltrados.length / itemsPorPagina) || 1;
-  if (paginaActual > totalPaginas) paginaActual = totalPaginas;
-
-  const inicio = (paginaActual - 1) * itemsPorPagina;
-  const fin = inicio + itemsPorPagina;
-  const productosPagina = productosFiltrados.slice(inicio, fin);
-
-  tablaBodyPrecios.innerHTML = "";
-
-  productosPagina.forEach((prod) => {
-    const fila = document.createElement("tr");
-    const clasePrecio = hayCambiosSinGuardar
-      ? "td-ars precio-borrador"
-      : "td-ars";
-
-    fila.innerHTML = `
-      <td class="td-codigo">${prod.id}</td>
-      <td class="td-nombre">${prod.nombre}</td>
-      <td class="td-usd">U$D ${prod.precioUsd.toFixed(2)}</td>
-      <td class="${clasePrecio}">$ ${(prod.precioArs ?? 0).toLocaleString("es-AR")}</td>
-        <button type="button" class="btn-primario btn-chico" data-id="${prod.id}">
-          <i data-lucide="square-pen" class="icono-chico"></i> 
-        </button>
-      </td>
-    `;
-    tablaBodyPrecios.appendChild(fila);
-  });
-
-  actualizarControlesPaginacion();
-  if (typeof lucide !== "undefined") lucide.createIcons();
-}
-
-// Filtros
-function aplicarFiltros() {
-  const inputBuscador = document.getElementById("buscar-producto");
-  const termino = inputBuscador ? inputBuscador.value.toLowerCase().trim() : "";
-
-  productosFiltrados = catalogoEdicion.filter((prod) => {
-    const idTexto = prod.id ? prod.id.toString().toLowerCase() : "";
-    const nombreTexto = prod.nombre ? prod.nombre.toLowerCase() : "";
-
-    return nombreTexto.includes(termino) || idTexto.includes(termino);
-  });
-
-  paginaActual = 1;
-  renderizarTablaPrecios();
-}
-
-// Dashboard Financiero
 function actualizarDashboard(simulacionMonto = null) {
-  spanDolarSistema.textContent = `$${ultimoDolarGuardado}`;
+  spanDolarSistema.textContent = `$${ultimoDolarGuardado || "---"}`;
 
   if (dolarApiEnVivo && ultimoDolarGuardado !== dolarApiEnVivo) {
     spanAlertaDolar.style.display = "inline-block";
@@ -180,7 +76,7 @@ function actualizarDashboard(simulacionMonto = null) {
     const prodBorrador = catalogoEdicion[0];
 
     spanEjemploNombre.textContent = prodBase.nombre;
-    spanEjemploViejo.textContent = `$ ${prodBase.precioArs.toLocaleString("es-AR")}`;
+    spanEjemploViejo.textContent = `$ ${(prodBase.precioArs ?? 0).toLocaleString("es-AR")}`;
 
     if (simulacionMonto !== null) {
       spanEjemploNuevo.textContent = `$ ${simulacionMonto.toLocaleString("es-AR")}`;
@@ -197,6 +93,7 @@ function actualizarDashboard(simulacionMonto = null) {
       spanEjemploNuevo.style.color = "#759627";
     }
   }
+
 
   const btnGuardarCambios = document.getElementById("btn-guardar-cambios");
   if (btnGuardarCambios) {
@@ -221,12 +118,74 @@ function guardarEnHistorial() {
   hayCambiosSinGuardar = true;
 }
 
+// Conexión con el backend
+async function cargarProductosDesdeBackend() {
+  const inputBuscador = document.getElementById("buscar-producto");
+  const termino = inputBuscador ? inputBuscador.value.trim() : "";
+
+  let url = `/api/productos/?pagina=${paginaActual}&limite=${itemsPorPagina}`;
+  let opcionesFetch = { method: "GET" };
+
+  if (termino !== "") {
+    opcionesFetch = {
+      method: "QUERY",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nombre: termino }),
+    };
+  }
+
+  try {
+    const respuesta = await fetch(url, opcionesFetch);
+    if (!respuesta.ok) throw new Error("Error al traer productos");
+
+    const resultado = await respuesta.json();
+    const arrayProductos = resultado.productos || resultado.datos || resultado;
+
+    totalPaginasBackend = resultado.totalPaginas;
+    totalProductosBackend = resultado.total;
+
+    const productosMapeados = arrayProductos.map((p) => {
+      const usd = p.precioUsd ?? 0;
+      const cotizacionProducto = Number(p.cotizacion ?? 0);
+      const arsCalculado =
+        p.precio ??
+        p.precioArs ??
+        (cotizacionProducto > 0
+          ? redondearPrecio(usd * cotizacionProducto)
+          : 0);
+
+      return {
+        id: p.id,
+        nombre: p.nombre,
+        categoria: p.categoria || "General",
+        precioUsd: usd,
+        precioArs: arsCalculado,
+        stock: p.stock ?? p.unidad ?? p.peso ?? 0,
+        descripcion: p.descripcion || "",
+      };
+    });
+
+    hayCambiosSinGuardar = false;
+    operacionMasivaPendiente = null;
+    historialCambios = [];
+    catalogoEdicion = productosMapeados;
+
+    if (catalogoBase.length === 0) catalogoBase = [...productosMapeados];
+
+    renderizarTablaPrecios();
+    actualizarDashboard();
+  } catch (error) {
+    console.error("Error cargando tabla desde el backend:", error);
+  }
+}
+
 async function consultarDolarEnVivo() {
   try {
     const respuesta = await fetch("/api/cotizacion");
     if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
     const data = await respuesta.json();
     dolarApiEnVivo = data.cotizacion?.venta ?? data.venta;
+
     if (typeof dolarApiEnVivo !== "number") {
       throw new Error(
         "La respuesta de cotización no contiene una venta válida",
@@ -243,47 +202,87 @@ async function consultarDolarEnVivo() {
   }
 }
 
-// Inicialización y eventos del DOM
+// Renderizazo y paginación
+function renderizarTablaPrecios() {
+  if (!tablaBodyPrecios) return;
+  tablaBodyPrecios.innerHTML = "";
+
+  catalogoEdicion.forEach((prod) => {
+    const fila = document.createElement("tr");
+    const clasePrecio = hayCambiosSinGuardar
+      ? "td-ars precio-borrador"
+      : "td-ars";
+
+    fila.innerHTML = `
+      <td class="td-codigo">${prod.id}</td>
+      <td class="td-nombre">${prod.nombre}</td>
+      <td class="td-usd">U$D ${prod.precioUsd.toFixed(2)}</td>
+      <td class="${clasePrecio}">$ ${(prod.precioArs ?? 0).toLocaleString("es-AR")}</td>
+      <td>
+        <button type="button" class="btn-primario btn-chico" data-id="${prod.id}">
+          <i data-lucide="square-pen" class="icono-chico"></i> 
+        </button>
+      </td>
+    `;
+    tablaBodyPrecios.appendChild(fila);
+  });
+
+  actualizarControlesPaginacion();
+  if (typeof lucide !== "undefined") lucide.createIcons();
+}
+
+function actualizarControlesPaginacion() {
+  const contenedorNumeros = document.getElementById(
+    "numeros-paginacion-precios",
+  );
+  const btnAnterior = document.getElementById("btn-anterior-precios");
+  const btnSiguiente = document.getElementById("btn-siguiente-precios");
+  const spanInfoTotal = document.getElementById("info-total-productos");
+
+  if (!contenedorNumeros) return;
+
+  if (btnAnterior) btnAnterior.disabled = paginaActual === 1;
+  if (btnSiguiente)
+    btnSiguiente.disabled = paginaActual === totalPaginasBackend;
+  if (spanInfoTotal)
+    spanInfoTotal.textContent = `Mostrando página ${paginaActual} de ${totalPaginasBackend} (${totalProductosBackend} en total)`;
+
+  contenedorNumeros.innerHTML = "";
+
+  for (let i = 1; i <= totalPaginasBackend; i++) {
+    const btnNumero = document.createElement("button");
+    btnNumero.className = `btn-fantasma ${i === paginaActual ? "active" : ""}`;
+    btnNumero.textContent = i;
+
+    btnNumero.addEventListener("click", () => {
+
+      if (hayCambiosSinGuardar) {
+        return mostrarToast(
+          "Por favor, guardá o deshacé la prueba antes de cambiar de página",
+          true,
+        );
+      }
+      paginaActual = i;
+      cargarProductosDesdeBackend();
+    });
+
+    contenedorNumeros.appendChild(btnNumero);
+  }
+}
+
+function aplicarFiltros() {
+  paginaActual = 1;
+  cargarProductosDesdeBackend();
+}
+
+// Inicializacion y eventos del DOM
 document.addEventListener("DOMContentLoaded", async () => {
+  if (typeof lucide !== "undefined") lucide.createIcons();
+
   const btnGuardarCambios = document.getElementById("btn-guardar-cambios");
   if (btnGuardarCambios) htmlOriginalBotonGuardar = btnGuardarCambios.innerHTML;
 
-  if (typeof lucide !== "undefined") lucide.createIcons();
-
-  try {
-    const respuesta = await fetch("/api/productos");
-    if (respuesta.ok) {
-      const data = await respuesta.json();
-
-      const listaProductos = data.productos || data;
-
-      catalogoBase = listaProductos.map((p) => {
-        const usd = p.precioUsd ?? 0;
-        const cotizacionProducto = Number(p.cotizacion ?? 0);
-        const arsCalculado =
-          p.precio ??
-          p.precioArs ??
-          (cotizacionProducto > 0
-            ? redondearPrecio(usd * cotizacionProducto)
-            : 0);
-
-        return {
-          id: p.id,
-          nombre: p.nombre,
-          categoria: p.categoria || "General",
-          precioUsd: usd,
-          precioArs: arsCalculado,
-          stock: p.stock ?? p.unidad ?? p.peso ?? 0,
-        };
-      });
-
-      catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
-    }
-  } catch (error) {
-    console.error("Error al conectar con el backend de productos:", error);
-  }
-  aplicarFiltros();
-  actualizarDashboard();
+  await cargarProductosDesdeBackend();
   consultarDolarEnVivo();
 
   // --- Vistas ---
@@ -315,24 +314,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (btnAnterior && btnSiguiente) {
     btnAnterior.addEventListener("click", () => {
+      if (hayCambiosSinGuardar)
+        return mostrarToast("Guardá o deshacé la prueba primero", true);
       if (paginaActual > 1) {
         paginaActual--;
-        renderizarTablaPrecios();
+        cargarProductosDesdeBackend();
       }
     });
 
     btnSiguiente.addEventListener("click", () => {
-      const totalPaginas = Math.ceil(
-        productosFiltrados.length / itemsPorPagina,
-      );
-      if (paginaActual < totalPaginas) {
+      if (hayCambiosSinGuardar)
+        return mostrarToast("Guardá o deshacé la prueba primero", true);
+      if (paginaActual < totalPaginasBackend) {
         paginaActual++;
-        renderizarTablaPrecios();
+        cargarProductosDesdeBackend();
       }
     });
   }
 
-  // --- Botones de Control de Precios ---
+  // --- Botones de Control de Precios (Borrador Visual) ---
   const btnAplicarDolar = document.getElementById("btn-aplicar-dolar");
   const btnAplicarPorcentaje = document.getElementById(
     "btn-aplicar-porcentaje",
@@ -342,13 +342,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (btnAplicarDolar) {
     btnAplicarDolar.addEventListener("click", () => {
-      if (!dolarApiEnVivo) return;
+      if (!dolarApiEnVivo)
+        return mostrarToast("Cotización no disponible aún.", true);
       guardarEnHistorial();
+
       catalogoEdicion = catalogoEdicion.map((prod) => ({
         ...prod,
         precioArs: redondearPrecio(prod.precioUsd * dolarApiEnVivo),
       }));
-      aplicarFiltros();
+
+      operacionMasivaPendiente = { tipo: "dolar", valor: dolarApiEnVivo };
+
+      renderizarTablaPrecios();
       actualizarDashboard();
     });
   }
@@ -357,9 +362,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     inputPorcentaje.addEventListener("input", (e) => {
       const porcentaje = parseFloat(e.target.value);
       if (!isNaN(porcentaje)) {
-        const precioActualBorrador = catalogoEdicion[0].precioArs;
+        const precioActualBase = catalogoBase[0]?.precioArs || 0;
         const impacto = redondearPrecio(
-          precioActualBorrador * (1 + porcentaje / 100),
+          precioActualBase * (1 + porcentaje / 100),
         );
         actualizarDashboard(impacto);
       } else {
@@ -373,12 +378,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       const porcentaje = parseFloat(inputPorcentaje.value);
       if (isNaN(porcentaje) || porcentaje === 0) return;
       guardarEnHistorial();
+
       catalogoEdicion = catalogoEdicion.map((prod) => ({
         ...prod,
         precioArs: redondearPrecio(prod.precioArs * (1 + porcentaje / 100)),
       }));
+
+
+      operacionMasivaPendiente = { tipo: "porcentaje", valor: porcentaje };
       inputPorcentaje.value = "";
-      aplicarFiltros();
+
+      renderizarTablaPrecios();
       actualizarDashboard();
     });
   }
@@ -389,48 +399,42 @@ document.addEventListener("DOMContentLoaded", async () => {
         catalogoEdicion = historialCambios.pop();
         if (historialCambios.length === 0) {
           btnDeshacer.disabled = true;
-          const esIgualALaBase =
-            JSON.stringify(catalogoEdicion) === JSON.stringify(catalogoBase);
-          hayCambiosSinGuardar = !esIgualALaBase;
+          hayCambiosSinGuardar = false;
+          operacionMasivaPendiente = null;
         }
-        aplicarFiltros();
+        renderizarTablaPrecios();
         actualizarDashboard();
       }
     });
   }
 
+  // --- BOTÓN GUARDAR CAMBIOS MASIVOS ---
   if (btnGuardarCambios) {
     btnGuardarCambios.addEventListener("click", () => {
-      // Usamos el modal de confirmación
+      if (!operacionMasivaPendiente) return;
+
       confirmarPublicacion(async () => {
         try {
-          const payload = {
-            productos: catalogoEdicion.map((p) => p.id),
-          };
-
           const respuesta = await fetch("/api/productos/actualizar-precios", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+            body: JSON.stringify(operacionMasivaPendiente),
           });
 
-          if (!respuesta.ok) throw new Error("Error al guardar en el servidor");
+          if (!respuesta.ok) throw new Error("Error guardando en servidor");
 
-          catalogoBase = JSON.parse(JSON.stringify(catalogoEdicion));
-          if (dolarApiEnVivo) ultimoDolarGuardado = dolarApiEnVivo;
-
+          // Reset de botones
           historialCambios = [];
           hayCambiosSinGuardar = false;
-          btnDeshacer.disabled = true;
+          operacionMasivaPendiente = null;
+          if (btnDeshacer) btnDeshacer.disabled = true;
 
           btnGuardarCambios.innerHTML = `<i data-lucide="check-circle"></i> ¡Precios Publicados!`;
           btnGuardarCambios.style.backgroundColor = "#c7ff3e";
           btnGuardarCambios.style.borderColor = "#c7ff3e";
           btnGuardarCambios.style.color = "#161615";
 
-          aplicarFiltros();
-          actualizarDashboard();
-          mostrarToast("¡Los precios se actualizaron correctamente!");
+          mostrarToast("¡El catálogo se actualizó exitosamente!");
 
           setTimeout(() => {
             if (!hayCambiosSinGuardar && htmlOriginalBotonGuardar) {
@@ -442,19 +446,19 @@ document.addEventListener("DOMContentLoaded", async () => {
               if (typeof lucide !== "undefined") lucide.createIcons();
             }
           }, 2500);
+
+          await cargarProductosDesdeBackend();
         } catch (error) {
           console.error(error);
-          mostrarToast(
-            "Hubo un error al guardar los cambios en la base de datos.",
-            true,
-          );
+          mostrarToast("Hubo un error al publicar los cambios.", true);
         }
       });
     });
   }
 });
 
-// --- Modal Actualizar Precio / Producto ---
+
+// Modal editar producto
 const modalStock = document.getElementById("modal-stock");
 const formStock = document.getElementById("form-stock");
 const btnCerrarModal = document.getElementById("cerrar-modal");
@@ -468,7 +472,6 @@ if (tablaBodyPrecios) {
     if (!btnEditar) return;
 
     const idProd = btnEditar.getAttribute("data-id");
-
     const producto = catalogoEdicion.find(
       (p) => String(p.id) === String(idProd),
     );
@@ -536,27 +539,10 @@ if (formStock) {
 
       if (!respuesta.ok) throw new Error("Error al actualizar el producto");
 
-      const productoActualizadoServidor = await respuesta.json();
-
-      catalogoEdicion = catalogoEdicion.map((p) => {
-        if (String(p.id) === String(productoEnEdicionId)) {
-          return {
-            ...p,
-            precioUsd: productoActualizadoServidor.precioUsd ?? nuevoPrecioUsd,
-            precioArs: productoActualizadoServidor.precio ?? nuevoPrecioArs,
-            descripcion:
-              productoActualizadoServidor.descripcion ?? nuevaDescripcion,
-          };
-        }
-        return p;
-      });
-
-      catalogoBase = JSON.parse(JSON.stringify(catalogoEdicion));
-
       modalStock.close();
-      aplicarFiltros();
-      actualizarDashboard();
       mostrarToast("¡Producto actualizado con éxito!");
+
+      await cargarProductosDesdeBackend();
     } catch (error) {
       console.error(error);
       mostrarToast("Hubo un error al actualizar el producto.", true);
@@ -626,30 +612,11 @@ if (formCrear) {
       if (!respuesta.ok)
         throw new Error("Error al crear el producto en el servidor");
 
-      const productoCreadoServidor = await respuesta.json();
-
-      const productoFormateado = {
-        id: productoCreadoServidor.id,
-        nombre: productoCreadoServidor.nombre,
-        categoria: productoCreadoServidor.categoria || "General",
-        precioUsd: productoCreadoServidor.precioUsd ?? nuevoProducto.precioUsd,
-        precioArs: productoCreadoServidor.precio ?? nuevoProducto.precio,
-        stock:
-          productoCreadoServidor.stock ??
-          productoCreadoServidor.unidad ??
-          productoCreadoServidor.peso ??
-          0,
-        descripcion: productoCreadoServidor.descripcion,
-      };
-
-      catalogoBase.push(productoFormateado);
-      catalogoEdicion = JSON.parse(JSON.stringify(catalogoBase));
-
       modalCrear.close();
-      aplicarFiltros();
-      actualizarDashboard();
       mostrarToast("¡Producto creado y guardado con éxito!");
-      if (typeof lucide !== "undefined") lucide.createIcons();
+
+      paginaActual = 1;
+      await cargarProductosDesdeBackend();
     } catch (error) {
       console.error(error);
       mostrarToast("Hubo un error al crear el producto.", true);

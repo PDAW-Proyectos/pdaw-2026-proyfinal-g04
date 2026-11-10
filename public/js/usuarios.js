@@ -1,4 +1,4 @@
-import { mostrarToast } from "./admin.js";
+import { mostrarToast } from "../common/utils/alertas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let usuariosBase = [];
