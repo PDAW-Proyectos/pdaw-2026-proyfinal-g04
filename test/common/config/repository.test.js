@@ -84,6 +84,42 @@ describe("Repository", () => {
         expect(resultado).toBe(false);
     });
 
+    test("listar() devuelve las entidades correspondientes a la página solicitada y sus metadatos", async () => {
+        const repo = new Repository(repoPath, mockFactory);
+        await repo.crear({ nombre: "Uno", tipo: "A" });
+        await repo.crear({ nombre: "Dos", tipo: "B" });
+        await repo.crear({ nombre: "Tres", tipo: "A" });
+
+        const resultado = repo.listar(2, 2);
+
+        expect(resultado).toEqual({
+            datos: [repo.entidades[2]],
+            total: 3,
+            pagina: 2,
+            limite: 2,
+            totalPaginas: 2
+        });
+    });
+
+    test("listarPorPropiedades() devuelve las entidades filtradas correspondientes a la página solicitada y sus metadatos", async () => {
+        const repo = new Repository(repoPath, mockFactory);
+        await repo.crear({ nombre: "Uno", tipo: "A" });
+        await repo.crear({ nombre: "Dos", tipo: "B" });
+        await repo.crear({ nombre: "Tres", tipo: "A" });
+        await repo.crear({ nombre: "Cuatro", tipo: "A" });
+        await repo.crear({ nombre: "Cinco", tipo: "B" });
+
+        const resultado = repo.listarPorPropiedades({ tipo: "A" }, 2, 2);
+
+        expect(resultado).toEqual({
+            datos: [repo.entidades[3]],
+            total: 3,
+            pagina: 2,
+            limite: 2,
+            totalPaginas: 2
+        });
+    });
+
     describe("Transacciones", () => {
         test("iniciarTransaccion() evita que se guarde en disco al crear", async () => {
             const repo = new Repository(repoPath, mockFactory);
