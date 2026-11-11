@@ -64,14 +64,16 @@ export class IngresoService {
 
             for (const articulo of datos.articulos) {
                 const resultado = await this.productoService.disminuirStock(articulo.id, articulo.unidad || articulo.peso);
-                articulos.push(resultado);
+                articulos.push({ ...resultado, cantidad: articulo.unidad || articulo.peso });
             }
+
+            const articulosParseados = articulos.map((articulo) => {return { id: articulo.id, cantidad: articulo.cantidad }})
 
             const venta = await this.crearIngreso({
                 idUsuario,
                 idCaja: datos.idCaja,
                 metodoDePago: datos.metodoDePago,
-                articulos,
+                articulos: articulosParseados,
                 monto: datos.monto
             });
 
@@ -81,7 +83,10 @@ export class IngresoService {
                 }
             }
 
-            return venta;
+            return {
+                ...venta,
+                articulos
+            };
         } catch (error) {
             if (administrarTransacciones) {
                 for (const repositorio of iniciados.reverse()) {

@@ -91,7 +91,11 @@ export class CajaService {
                 await repositorio.confirmarTransaccion();
             }
 
-            return venta;
+            return {
+                id: caja.id,
+                totalEsperado,
+                venta,
+            };
         } catch (error) {
             for (const repositorio of iniciados.reverse()) {
                 await repositorio.rollback();
