@@ -1,4 +1,4 @@
-import { DependencyInjector } from "../../src/common/config/dependencyInjector.js";
+import { DependencyInjector } from "../../../src/common/config/dependencyInjector.js";
 
 describe('DependencyInjector', () => {
     let dependencyInjector;
