@@ -73,8 +73,6 @@ export class CotizacionService {
         cotizacion = await this.cotizacionRepository.crear(data);
       }
       this.cotizacionRepository.ultimaConsulta = currentTime;
-      valorActualizado =
-        !ultimaCotizacion || ultimaCotizacion.venta !== cotizacion.venta;
     }
 
     return {
