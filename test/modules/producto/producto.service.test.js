@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { ProductoService } from "../../../src/modules/Producto/producto.service.js";
+import { ProductoService } from "../../../src/modules/producto/producto.service.js";
 import { BadRequestError, NotFoundError } from "../../../src/common/errors/errors.classes.js";
 
 describe('ProductoService', () => {

@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { InsumoService } from "../../../src/modules/Insumo/insumo.service.js";
+import { InsumoService } from "../../../src/modules/insumo/insumo.service.js";
 import { BadRequestError, NotFoundError } from "../../../src/common/errors/errors.classes.js";
 
 describe('InsumoService', () => {

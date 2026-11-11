@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 import { requireAuth, allowRoles } from "../../common/middlewares/auth.guard.js";
 

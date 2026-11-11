@@ -1,6 +1,6 @@
-import { Producto } from "../../../src/modules/Producto/producto.entity.js";
-import { ProductoPeso } from "../../../src/modules/Producto/productoPeso.entity.js";
-import { ProductoUnidad } from "../../../src/modules/Producto/productoUnidad.entity.js";
+import { Producto } from "../../../src/modules/producto/producto.entity.js";
+import { ProductoPeso } from "../../../src/modules/producto/productoPeso.entity.js";
+import { ProductoUnidad } from "../../../src/modules/producto/productoUnidad.entity.js";
 
 describe("Producto", () => {
     test("al instanciar un objeto de tipo Producto devuelve una excepcion", async () => {
