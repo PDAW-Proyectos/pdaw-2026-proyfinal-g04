@@ -34,19 +34,19 @@ export class Repository {
         return this.entidades.find((e) => coincidePropiedad(e, propiedades));
     }
 
-    listar( pagina, limite ) {
+    listar(pagina, limite) {
         const total = this.entidades.length;
         const inicio = (pagina - 1) * limite;
         return {
-            datos: [...this.entidades].slice(inicio, inicio + limite),
+            datos: pagina ? [...this.entidades].slice(inicio, inicio + limite) : [...this.entidades],
             total,
-            pagina,
-            limite,
-            totalPaginas: Math.ceil(total / limite)
+            pagina: pagina || 1,
+            limite: limite || 0,
+            totalPaginas: limite ? Math.ceil(total / limite) : 1
         };
     }
 
-    listarPorPropiedades( propiedades, pagina, limite ) {
+    listarPorPropiedades(propiedades, pagina, limite) {
         if(!propiedades) throw new Error("Filtros inexistentes");
         const entidadesFiltradas = this.entidades.filter((e) =>
             coincidePropiedad(e, propiedades)
