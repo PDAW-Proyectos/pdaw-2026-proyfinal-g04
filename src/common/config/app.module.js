@@ -93,7 +93,8 @@ dependencyInjector.registerSingleton("insumoController", async () => {
 
 dependencyInjector.registerSingleton("ingresoService", async () => {
   const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
-  return new IngresoService(transaccionRepository);
+  const productoService = await dependencyInjector.resolve("productoService");
+  return new IngresoService(transaccionRepository, productoService);
 });
 
 dependencyInjector.registerSingleton("ingresoController", async () => {
@@ -125,8 +126,8 @@ dependencyInjector.registerSingleton("cotizacionController", async () => {
 
 dependencyInjector.registerSingleton("cajaService", async () => {
   const cajaRepository = await dependencyInjector.resolve("cajaRepository");
-  const userService = await dependencyInjector.resolve("userService");
-  return new CajaService(cajaRepository, userService);
+  const ingresoService = await dependencyInjector.resolve("ingresoService");
+  return new CajaService(cajaRepository, ingresoService);
 });
 
 dependencyInjector.registerSingleton("cajaController", async () => {

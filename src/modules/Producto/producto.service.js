@@ -130,12 +130,12 @@ export class ProductoService {
 
         if (producto.unidad !== undefined) {
             if (producto.unidad < cantidad) {
-                throw new BadRequestError("Stock insuficiente de" + producto.nombre);
+                throw new BadRequestError("Stock insuficiente de " + producto.nombre);
             }
             producto.unidad -= cantidad;
         } else {
             if (producto.peso < cantidad) {
-                throw new BadRequestError("Stock insuficiente" + producto.nombre);
+                throw new BadRequestError("Stock insuficiente de " + producto.nombre);
             }
             producto.peso -= cantidad;
         }

@@ -50,7 +50,7 @@ const cotizacionController = await dependencyInjector.resolve("cotizacionControl
 // 4. Rutas de la API
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
-app.use("/api/caja", crearRouterCaja(cajaController));
+app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));

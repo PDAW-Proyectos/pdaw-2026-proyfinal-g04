@@ -3,8 +3,9 @@ import { BadRequestError, NotFoundError } from "../../../common/errors/errors.cl
 export class IngresoService {
     transaccionRepository;
 
-    constructor(transaccionRepository) {
+    constructor(transaccionRepository, productoService) {
         this.transaccionRepository = transaccionRepository;
+        this.productoService = productoService
     }
 
     listarIngresos = (pagina, limite) => {
@@ -38,7 +39,7 @@ export class IngresoService {
         return await this.transaccionRepository.crear(datos);
     };
 
-    crearVenta = async (idUsuario, datos) => {
+    crearVenta = async ( idUsuario, datos,  { administrarTransacciones = true } = {} ) => {
         if (!Array.isArray(datos.articulos)) {
             throw new BadRequestError("La lista de artículos debe ser un array");
         }
@@ -52,9 +53,11 @@ export class IngresoService {
         const iniciados = [];
 
         try {
-            for (const repositorio of repositoriosUnicos) {
-                repositorio.iniciarTransaccion();
-                iniciados.push(repositorio);
+            if (administrarTransacciones) {
+                for (const repositorio of repositoriosUnicos) {
+                    repositorio.iniciarTransaccion();
+                    iniciados.push(repositorio);
+                }
             }
 
             const articulos = [];
@@ -72,14 +75,18 @@ export class IngresoService {
                 monto: datos.monto
             });
 
-            for (const repositorio of repositoriosUnicos) {
-                await repositorio.confirmarTransaccion();
+            if (administrarTransacciones) {
+                for (const repositorio of repositoriosUnicos) {
+                    await repositorio.confirmarTransaccion();
+                }
             }
 
             return venta;
         } catch (error) {
-            for (const repositorio of iniciados.reverse()) {
-                await repositorio.rollback();
+            if (administrarTransacciones) {
+                for (const repositorio of iniciados.reverse()) {
+                    await repositorio.rollback();
+                }
             }
 
             throw error;
