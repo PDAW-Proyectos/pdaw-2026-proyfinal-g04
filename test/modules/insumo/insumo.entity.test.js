@@ -1,4 +1,4 @@
-import { Insumo } from "../../../src/modules/Insumo/insumo.entity.js";
+import { Insumo } from "../../../src/modules/insumo/insumo.entity.js";
 
 describe("Insumo", () => {
     test("al crear una instancia de Insumo con id nulo devuelve una excepcion", async () => {
