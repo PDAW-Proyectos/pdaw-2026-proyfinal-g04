@@ -17,7 +17,6 @@ export class CotizacionService {
     const horaUTC = currentTime.getUTCHours();
     const dentroDelHorario = horaUTC >= 14 && horaUTC < 20;
     const ultimaCotizacion = this.cotizacionRepository.listar().datos.at(-1);
-    let valorActualizado = false;
     let cotizacion = ultimaCotizacion;
 
     const debeConsultar =
