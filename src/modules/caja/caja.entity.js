@@ -15,13 +15,17 @@ export class Caja {
     observaciones
     historialDeTransacciones
 
-    constructor({ id, usuarioAbre, usuarioCierra, totalEsperado, totalContado, diferencia = 0, fechaApertura = new Date().toISOString(), fechaCierre, estado = "abierta", montoInicial = 0, observaciones = [], historialDeTransacciones = [] }) {
+    constructor({ id, nroCaja, usuarioAbre, usuarioCierra, totalEsperado, totalContado, diferencia = 0, fechaApertura = new Date().toISOString(), fechaCierre, estado = "abierta", montoInicial = 0, observaciones = [], historialDeTransacciones = [] }) {
         if (id == null) {
             throw new ValidationError("id no puede ser nulo");
         }
 
         if (usuarioAbre == null) {
             throw new BadRequestError("usuarioAbre no puede ser nulo");
+        }
+
+        if (nroCaja == null) {
+            throw new BadRequestError("nroCaja no puede ser nulo");
         }
 
         if (!["abierta", "cerrada"].includes(estado)) {
@@ -57,6 +61,7 @@ export class Caja {
         }
 
         this.id = id;
+        this.nroCaja = nroCaja;
         this.usuarioAbre = usuarioAbre;
         this.usuarioCierra = usuarioCierra ?? null;
         this.montoInicial = montoInicial;
