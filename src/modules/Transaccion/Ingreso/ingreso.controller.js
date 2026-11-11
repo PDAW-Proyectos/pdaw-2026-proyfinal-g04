@@ -29,6 +29,11 @@ export class IngresoController {
         res.status(201).json(ingresos);
     }
 
+    crearVenta = async (req, res) => {
+        const ingreso = await this.ingresoService.crearVenta(req.session.userId, req.body);
+        res.status(201).json(ingreso);
+    };  
+
     actualizarIngreso = async (req, res) => {
         const ingresos = await this.ingresoService.actualizarIngreso(req.params.id, req.body);
         res.status(200).json(ingresos);

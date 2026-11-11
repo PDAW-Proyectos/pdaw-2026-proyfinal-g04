@@ -118,7 +118,6 @@ export class Repository {
             throw new Error("Ya existe una transacción activa");
         }
 
-        // Copia independiente de las entidades y del próximo ID.
         this.#estadoAnterior = {
             entidades: [...this.entidades],
             proximoId: this.proximoId
@@ -131,7 +130,6 @@ export class Repository {
         if (!this.#enTransaccion) {
             throw new Error("No existe una transacción activa");
         }
-        
         this.#enTransaccion = false;
         this.#estadoAnterior = null;
 

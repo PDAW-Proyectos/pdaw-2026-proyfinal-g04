@@ -50,4 +50,16 @@ export class AuthController {
 
         return res.status(200).json(user);
     };
+
+    logout = async (req, res, next) => {
+        try {
+            await this.authService.logout(req.session);
+
+            res.clearCookie("connect.sid");
+            res.status(200).json({ mensaje: "Sesión cerrada correctamente" });
+        } catch (error) {
+            next(error);
+        }
+    };
+
 }
