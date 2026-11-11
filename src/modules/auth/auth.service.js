@@ -58,4 +58,16 @@ export class AuthService {
         };
     };
 
+    logout = async (session) => {
+        return new Promise((resolve, reject) => {
+            session.destroy((error) => {
+                if (error) {
+                    return reject(error);
+                }
+
+                resolve();
+            });
+        });
+    };
+
 }
