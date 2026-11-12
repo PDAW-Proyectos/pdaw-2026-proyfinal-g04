@@ -10,8 +10,63 @@ const formatearPrecio = (valor) =>
     maximumFractionDigits: 2,
   })}`;
 
+let estadoModificador = "descuento";
+let subtotalActual = 0;
+let carritoActual = [];
+
+const calcularPrevisualizacion = () => {
+  const valorInput = parseFloat(inputValorMod.value) || 0;
+
+  // Ahora leemos el atributo data-valor del botón en lugar del select
+  const esPorcentaje = indicadorTipoValor.dataset.valor === "porcentaje";
+  const montoModificacion = esPorcentaje
+    ? subtotalActual * (valorInput / 100)
+    : valorInput;
+
+  let nuevoTotal = subtotalActual;
+  if (estadoModificador === "descuento") {
+    nuevoTotal -= montoModificacion;
+  } else {
+    nuevoTotal += montoModificacion;
+  }
+
+  nuevoTotal = Math.max(0, nuevoTotal);
+  prevNuevoTotal.textContent = formatearPrecio(nuevoTotal);
+};
+
+function mostrarNotificacion(mensaje, tipo = "info") {
+  let contenedor = document.getElementById("contenedor-toasts");
+
+  // Si no existe el contenedor en el HTML, lo creamos
+  if (!contenedor) {
+    contenedor = document.createElement("div");
+    contenedor.id = "contenedor-toasts";
+    contenedor.className = "contenedor-toasts";
+    document.body.appendChild(contenedor);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `toast-alerta ${tipo}`;
+
+  const iconoStr = tipo === "error" ? "alert-triangle" : "info";
+
+  toast.innerHTML = `
+    <i data-lucide="${iconoStr}" aria-hidden="true"></i>
+    <span>${mensaje}</span>
+  `;
+
+  contenedor.appendChild(toast);
+
+  if (window.lucide) window.lucide.createIcons({ root: toast });
+
+  setTimeout(() => {
+    toast.classList.add("ocultar");
+    toast.addEventListener("animationend", () => toast.remove());
+  }, 3000);
+}
+
 // =========================================
-//  Navegación entre vistas del main
+// NAVEGACIÓN ENTRE VISTAS DEL MAIN
 // =========================================
 document.addEventListener("DOMContentLoaded", () => {
   const enlaces = document.querySelectorAll(".nav-enlace");
@@ -42,10 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-let estadoModificador = "descuento";
-let subtotalActual = 0;
-let carritoActual = [];
-
 document.addEventListener("DOMContentLoaded", () => {
   // Modal pausa
   const modalPausa = document.getElementById("modal-pausa");
@@ -53,11 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "contenedor-ventas-pausadas",
   );
   const btnConfirmarPausa = document.getElementById("btn-confirmar-pausa");
-
-  // Modal descuento
-  // const btnConfirmarDescuento = document.getElementById(
-  // "btn-confirmar-descuento",
-  // );
 
   const ventasPausadas = [];
 
@@ -258,71 +304,9 @@ document.addEventListener("DOMContentLoaded", () => {
   actualizarEstadoBotonPausa();
 });
 
-////////////////////
-// Modal descuento
-////////////////////
-
-const calcularPrevisualizacion = () => {
-  const valorInput = parseFloat(inputValorMod.value) || 0;
-
-  // Ahora leemos el atributo data-valor del botón en lugar del select
-  const esPorcentaje = indicadorTipoValor.dataset.valor === "porcentaje";
-  const montoModificacion = esPorcentaje
-    ? subtotalActual * (valorInput / 100)
-    : valorInput;
-
-  let nuevoTotal = subtotalActual;
-  if (estadoModificador === "descuento") {
-    nuevoTotal -= montoModificacion;
-  } else {
-    nuevoTotal += montoModificacion;
-  }
-
-  nuevoTotal = Math.max(0, nuevoTotal);
-  prevNuevoTotal.textContent = formatearPrecio(nuevoTotal);
-};
-
 // (Mantenés el evento del input para cuando el usuario tipea)
 if (inputValorMod)
   inputValorMod.addEventListener("input", calcularPrevisualizacion);
-
-// ==========================================
-// SISTEMA DE NOTIFICACIONES TIPO TOAST
-// ==========================================
-mostrarNotificacion = function (mensaje, tipo = "info") {
-  let contenedor = document.getElementById("contenedor-toasts");
-
-  // Si no existe el contenedor en el HTML, lo creamos
-  if (!contenedor) {
-    contenedor = document.createElement("div");
-    contenedor.id = "contenedor-toasts";
-    contenedor.className = "contenedor-toasts";
-    document.body.appendChild(contenedor);
-  }
-
-  // Crear la alerta
-  const toast = document.createElement("div");
-  toast.className = `toast-alerta ${tipo}`;
-
-  // Seleccionar ícono según el tipo (error o info)
-  const iconoStr = tipo === "error" ? "alert-triangle" : "info";
-
-  toast.innerHTML = `
-    <i data-lucide="${iconoStr}" aria-hidden="true"></i>
-    <span>${mensaje}</span>
-  `;
-
-  contenedor.appendChild(toast);
-
-  // Refrescar íconos de Lucide en el nuevo elemento
-  if (window.lucide) window.lucide.createIcons({ root: toast });
-
-  // Desaparecer automáticamente después de 3 segundos
-  setTimeout(() => {
-    toast.classList.add("ocultar");
-    toast.addEventListener("animationend", () => toast.remove());
-  }, 3000);
-};
 
 /////////////////////////////////////
 // Reloj de caja y atajos de teclado
@@ -843,62 +827,6 @@ document.addEventListener("click", (event) => {
 document.addEventListener("DOMContentLoaded", () => {
   renderizarVentasTurno();
 });
-
-// ==========================================
-// SIMULACIÓN DE MOVIMIENTOS DE ARQUEO
-// ==========================================
-const movimientosArqueoMock = [
-  {
-    hora: "15:42",
-    tipo: "Ingreso",
-    motivo: "Carga de fondo inicial",
-    monto: 50000.0,
-    responsable: "Cajero 1",
-  },
-  {
-    hora: "16:15",
-    tipo: "Ingreso",
-    motivo: "Ingreso de efectivo",
-    monto: 5000.0,
-    responsable: "Cajero 1",
-  },
-  {
-    hora: "17:30",
-    tipo: "Retiro",
-    motivo: "Retiro de efectivo para compras",
-    monto: 15000.0,
-    responsable: "Cajero 1",
-  },
-];
-
-// const renderizarMovimientosArqueo = () => {
-//   const tbody = document.getElementById("lista-movimientos-turno");
-//   if (!tbody) return;
-
-//   tbody.innerHTML = "";
-
-//   if (movimientosArqueoMock.length === 0) {
-//     tbody.innerHTML = `<tr><td colspan="5">No hay movimientos registrados.</td></tr>`;
-//     return;
-//   }
-
-//   movimientosArqueoMock.forEach((mov) => {
-//     // Determinar la clase de la etiqueta (badge)
-//     const claseBadge =
-//       mov.tipo === "Ingreso" ? "badge-ingreso" : "badge-retiro";
-
-//     const html = `
-//       <tr>
-//         <td>${mov.hora}</td>
-//         <td><span class="badge-movimiento ${claseBadge}">${mov.tipo}</span></td>
-//         <td>${mov.motivo}</td>
-//         <td><strong>${formatearPrecio(mov.monto)}</strong></td>
-//         <td>${mov.responsable}</td>
-//       </tr>
-//     `;
-//     tbody.insertAdjacentHTML("beforeend", html);
-//   });
-// };
 
 // --- VARIABLES PARA EL MODAL DE MOVIMIENTO ---
 const modalMovimiento = document.getElementById("modal-registrar-movimiento");
