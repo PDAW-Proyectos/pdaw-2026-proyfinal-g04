@@ -1,0 +1,17 @@
+import { Router } from "express";
+
+export default function crearRouterEgreso(
+    egresoController
+) {
+    const router = Router();
+
+    router.get("/", egresoController.listarEgresos);
+    router.get("/:id", egresoController.buscarEgreso);
+    router.query("/", egresoController.filtrarEgresos);
+    router.post("/", egresoController.crearEgreso);
+    router.post("/compra", egresoController.crearCompra);
+    router.put("/:id", egresoController.actualizarEgreso);
+    router.delete("/:id", egresoController.eliminarEgreso);
+
+    return router;
+}

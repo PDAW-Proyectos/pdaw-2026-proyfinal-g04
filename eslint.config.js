@@ -14,6 +14,12 @@ export default defineConfig([
         ...globals.jest,
         lucide: "readonly"
       } 
-    } 
+    },
+    rules: {
+      "no-unused-vars": ["error", {
+        args: "none",
+        "ignoreRestSiblings": true
+      }]
+    }
   },
 ]);

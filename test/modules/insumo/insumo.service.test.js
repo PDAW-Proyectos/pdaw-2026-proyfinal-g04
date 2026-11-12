@@ -115,7 +115,7 @@ describe('InsumoService', () => {
             const datosNuevos = { precio: 500 };
             const insumoAnterior = { id: 1, nombre: 'Laptop', precio: 400 };
             
-            mockInsumoRepository.buscarPorId.mockResolvedValue(insumoAnterior);
+            mockInsumoRepository.buscarPorId.mockReturnValue(insumoAnterior);
             mockInsumoRepository.actualizar.mockResolvedValue({ ...insumoAnterior, ...datosNuevos });
 
             const resultado = await insumoService.actualizarInsumo(id, datosNuevos);
@@ -130,7 +130,7 @@ describe('InsumoService', () => {
         });
 
         it('debe lanzar NotFoundError si el insumo a actualizar no existe', async () => {
-            mockInsumoRepository.buscarPorId.mockResolvedValue(null);
+            mockInsumoRepository.buscarPorId.mockReturnValue(null);
 
             await expect(insumoService.actualizarInsumo(99, { nombre: 'test' })).rejects.toThrow(NotFoundError);
         });
