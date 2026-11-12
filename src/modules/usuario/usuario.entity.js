@@ -13,6 +13,11 @@ export class Usuario {
         if(!email || email.length === 0) {
             throw new BadRequestError("Email vacio")
         }
+
+        if(!contraseña || contraseña.length === 0) {
+            throw new BadRequestError("Contraseña vacia")
+        }
+
         this.id = id;
         this.email = email
         this.contraseña = contraseña
