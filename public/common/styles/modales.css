@@ -1,0 +1,1078 @@
+/* =========================================
+   1. BASE COMPARTIDA DE TODOS LOS MODALES
+========================================= */
+
+/* Fondo oscuro superpuesto */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.2s ease;
+}
+
+.modal-oculto {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Tarjeta del modal */
+.modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  padding: 1.5rem;
+  color: #f1f9e4;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.modal-oculto .modal-card {
+  transform: translateY(20px);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+  font-size: 1.3rem;
+  color: #161615;
+  margin: 0;
+  font-weight: 700;
+}
+
+.modal-cerrar {
+  background: transparent;
+  border: none;
+  color: #161615;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-cerrar:hover {
+  color: #abe80f;
+}
+
+/* Divisor genérico usado en varios modales */
+.modal-divisor {
+  border: 0;
+  border-top: 1px solid #adafab;
+  margin: 1.5rem 0;
+}
+
+/* =========================================
+   MODAL APERTURA DE TURNO
+========================================= */
+#modal-inicio-turno .modal-card {
+  max-width: 700px;
+}
+
+
+.apertura-seccion {
+  margin-bottom: 1rem;
+}
+
+.apertura-seccion-titulo {
+  font-size: 1.1rem;
+  color: #161615;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.apertura-grid-datos {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+
+.apertura-detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.apertura-total-calculado {
+  font-size: 1.1rem;
+  color: #71717a;
+}
+
+.grilla-billetes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem 1.5rem;
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #e4e4e7;
+}
+
+.fila-billete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e4e4e7;
+}
+
+.etiqueta-billete {
+  font-weight: 700;
+  color: #161615;
+  width: 80px;
+}
+
+.input-billete {
+  width: 80px;
+  text-align: right;
+  border: none;
+  background: #f4f4f5;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: 700;
+  color: #161615;
+  outline: none;
+  transition: background 0.2s;
+}
+
+.input-billete:focus {
+  background: #e4e4e7;
+  box-shadow: inset 0 0 0 2px #c7ff3e;
+}
+
+.modal-footer-apertura {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+/* =========================================
+   2. ESPECÍFICO: MODAL PAUSAR VENTA
+========================================= */
+.pausar-actual-caja {
+  background: #c7f25a;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.pausar-actual-caja p {
+  font-size: 0.9rem;
+  color: #161615;
+  margin-bottom: 1rem;
+}
+
+.btn-pausar-activa {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  background: #abe80f;
+  color: #161615;
+  border: none;
+  padding: 0.85rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-pausar-activa:hover {
+  background: #9ccc23;
+}
+
+.subtitulo-modal {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #abe80f;
+}
+
+.lista-ventas-pausadas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.venta-pausada-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e1e1d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+}
+
+.venta-pausada-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.venta-pausada-info strong {
+  font-size: 0.95rem;
+  color: #f1f9e4;
+}
+
+.venta-pausada-info span {
+  font-size: 0.8rem;
+  color: #a1a1aa;
+}
+
+.btn-recuperar {
+  background: transparent;
+  color: #c7ff3e;
+  border: 1px solid rgba(199, 255, 62, 0.4);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.btn-recuperar:hover {
+  background: #c7ff3e;
+  color: #161615;
+}
+
+.estado-vacio-pausa {
+  text-align: center;
+  color: #71717a;
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+
+/* =========================================
+   3. ESPECÍFICO: MODAL DESCUENTO / RECARGO
+========================================= */
+
+.tipo-modificador-tabs {
+  display: flex;
+  background: #eef1ec;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tipo-modificador-tabs .tab-btn {
+  flex: 1;
+  background: transparent;
+  color: #a1a1aa;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tipo-modificador-tabs .tab-btn.activo {
+  background: #c7ff3e;
+  color: #161615;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.valor-modificador-input label {
+  display: block;
+  font-size: 0.85rem;
+  color: #161615;
+  margin-bottom: 0.5rem;
+}
+
+.indicador-tipo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #c7ff3e;
+  color: #161615;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.25rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.input-grupo-mixto {
+  display: flex;
+  background: #ffffff;
+  border: 2px solid #c7ff3e;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.input-grupo-mixto input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #161615;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+.previsualizacion-totales {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #f1f9e4;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(199, 255, 62, 0.2);
+}
+
+.linea-total-mini {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: black;
+}
+
+.linea-total-mini.destacado {
+  font-size: 1.1rem;
+  color: black;
+  margin-top: 0.25rem;
+}
+
+.texto-neon {
+  color: #abe80f;
+  font-weight: 800;
+}
+
+.modal-footer-acciones {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.input-valor-mod {
+  color: #161615;
+}
+
+.btn-secundario,
+.btn-principal {
+  flex: 1;
+  padding: 0.85rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.btn-secundario {
+  background: transparent;
+  color: black;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-secundario:hover {
+  background: #eef1ec;
+}
+
+.btn-principal {
+  background: #c7ff3e;
+  color: #161615;
+}
+
+.btn-principal:hover {
+  background: #b3ef25;
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   4. ESPECÍFICO: MODAL CONSULTA RÁPIDA
+========================================= */
+.resultado-consulta-tarjeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(199, 255, 62, 0.05);
+  border: 1px dashed rgba(199, 255, 62, 0.2);
+  padding: 1.25rem;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+#modal-consulta .input-grupo-mixto {
+  padding: 0;
+}
+
+#modal-consulta .input-grupo-mixto input {
+  padding-left: 1rem;
+}
+
+#modal-registrar-movimiento .input-grupo-mixto input {
+  padding-left: 1rem;
+}
+
+#modal-registrar-movimiento .input-grupo-mixto {
+  padding: 0;
+}
+
+#modal-historial-movimiento .input-grupo-mixto {
+  padding: 0;
+}
+
+#modal-historial-movimiento .input-grupo-mixto input {
+  padding-left: 1rem;
+}
+
+.select-mixto {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  background: #c7ff3e;
+  color: #161615;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.select-mixto svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+}
+
+.resultado-consulta-tarjeta.oculto {
+  display: none;
+}
+
+.resultado-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.resultado-sku {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  font-family: monospace;
+}
+
+.resultado-info h3 {
+  font-size: 1.1rem;
+  color: #f1f9e4;
+  margin: 0;
+}
+
+.resultado-stock {
+  font-size: 0.85rem;
+  color: #a1a1aa;
+}
+
+.resultado-stock.stock-ok {
+  color: #10b981; /* Verde */
+}
+.resultado-stock.stock-bajo {
+  color: #f59e0b; /* Naranja */
+}
+.resultado-stock.stock-cero {
+  color: #ef4444; /* Rojo */
+}
+
+.resultado-precio strong {
+  font-size: 1.8rem;
+}
+
+/* =========================================
+   5. ESPECÍFICO: MODAL TECLADO NUMÉRICO (NUMPAD)
+========================================= */
+
+.modal-compacto {
+  max-width: 320px; /* Es un modal más angosto que el resto */
+}
+
+.visor-teclado {
+  width: 100%;
+  background: #f1f9e4; /* Fondo claro para contraste */
+  border: 2px solid #c7ff3e;
+  color: #161615;
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  outline: none;
+}
+
+.teclado-numerico-grilla {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.teclado-numerico-grilla .tecla {
+  background: #ffffff;
+  color: #161615;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.25rem 0;
+  border-radius: 10px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.teclado-numerico-grilla .tecla:hover {
+  background: #eef1ec;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.teclado-numerico-grilla .tecla:active {
+  transform: scale(0.95);
+}
+
+.teclado-numerico-grilla .tecla-borrar {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.teclado-numerico-grilla .tecla-aceptar {
+  background: #c7ff3e;
+  color: #161615;
+  border-color: #c7ff3e;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   MODAL REGISTRAR MOVIMIENTO
+========================================= */
+.paso-oculto {
+  display: none !important;
+}
+
+.opcion-movimiento.estatica {
+  cursor: default;
+  pointer-events: none;
+}
+
+.opcion-movimiento.estatica .chevron-icono {
+  display: none;
+}
+
+.modal-ancha {
+  max-width: 600px;
+}
+
+.header-movimiento {
+  align-items: flex-start;
+}
+
+.header-movimiento h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.subtitulo-movimiento {
+  color: #71717a;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Grilla del Paso 1 */
+.grid-movimientos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.opcion-movimiento {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  padding: 1.25rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  position: relative;
+  gap: 1rem;
+}
+
+.opcion-movimiento:hover {
+  border-color: #c7ff3e;
+}
+
+.opcion-movimiento.activa {
+  background: #f4fce3;
+  border-color: #a3e635;
+}
+
+/* Iconos de las opciones */
+.opcion-icono {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #161615;
+}
+
+.opcion-icono i {
+  width: 35px;
+  height: 24px;
+}
+
+.opcion-icono i,
+.opcion-icono svg {
+  width: 45px;
+  height: 65px;
+}
+
+.icono-badge {
+  position: absolute;
+  bottom: 4px;
+  right: -8px;
+  background: #a3e635;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 30px;
+  border: 2px solid #ffffff;
+}
+
+.icono-badge i {
+  width: 10px;
+  height: 10px;
+  color: #161615;
+}
+
+.opcion-texto {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.opcion-texto strong {
+  font-size: 1.05rem;
+  color: #161615;
+  margin-bottom: 0.15rem;
+}
+
+.opcion-texto span {
+  font-size: 0.85rem;
+  color: #71717a;
+}
+
+.chevron-icono {
+  color: #161615;
+  width: 30px;
+  height: 20px;
+}
+
+/* =========================================
+   FORMULARIO DINÁMICO (PASO 2)
+========================================= */
+.formulario-movimiento {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #161615;
+}
+
+.select-estandar {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #c7ff3e;
+  border-radius: 10px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 1rem;
+  color: #161615;
+  outline: none;
+  cursor: pointer;
+  appearance: auto;
+  transition: border-color 0.2s;
+}
+
+.select-estandar:focus {
+  border-color: #a3e635;
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.2);
+}
+
+.input-grupo-mixto {
+  display: flex;
+  align-items: center;
+  border: 1px solid #c7ff3e;
+  border-radius: 10px;
+  padding: 0 1rem;
+  background: #f4fce3;
+  transition: all 0.2s ease;
+}
+
+.input-grupo-mixto:focus-within {
+  border-color: #a3e635;
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.2);
+}
+
+.input-grupo-mixto input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.85rem 0;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+/* Pie del modal */
+.modal-footer-movimiento {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.btn-cancelar-mov {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-cancelar-mov:hover {
+  color: #161615;
+}
+
+.btn-continuar-mov {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #a3e635;
+  color: #161615;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-continuar-mov:hover {
+  background: #84cc16;
+}
+
+/* =========================================
+   MODAL HISTORIAL (REINTEGRO / DEVOLUCIÓN)
+========================================= */
+
+.form-group-historial {
+  margin-bottom: 1rem;
+}
+
+.form-group-historial label {
+  display: block;
+  font-size: 0.9rem;
+  color: #71717a; /* Gris neutro oscuro */
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+/* Campos de texto y select genéricos */
+.input-historial {
+  width: 100%;
+  background: #f8fafc; /* Gris muy clarito */
+  border: 1px solid #e4e4e7;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  color: #161615;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  appearance: none; /* Para el select */
+}
+
+.input-historial:focus {
+  border-color: #c7ff3e;
+  background: #ffffff;
+}
+
+/* Selector nativo del motivo (flecha) */
+select.input-historial {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23161615%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2em;
+}
+
+/* Ajustes para el input de moneda destacado */
+.input-grupo-mixto.focus-activo {
+  background: #ffffff;
+  border: 2px solid #c7ff3e;
+}
+
+.select-moneda-simple {
+  border: none;
+  background: transparent;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #161615;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  padding-right: 1.2rem;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%24%2024%22%20fill%3D%22none%22%20stroke%3D%22%23161615%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.moneda-fija {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #161615;
+}
+
+/* =========================================
+   MODAL CIERRE DE CAJA (BLANCO)
+========================================= */
+.modal-cierre-card {
+  background: #ffffff !important; /* Forzamos fondo blanco */
+  color: #18181b;
+  max-width: 500px;
+}
+
+.modal-header-cierre {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.header-cierre-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icono-caja-badge {
+  position: relative;
+  font-size: 2rem;
+  color: #18181b;
+  display: flex;
+  align-items: center;
+}
+
+.badge-check-verde {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: #c7ff3e;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  color: #18181b;
+}
+
+.badge-check-verde i {
+  width: 12px;
+  height: 12px;
+}
+
+.textos-cierre h2 {
+  font-size: 1.4rem;
+  margin: 0 0 0.2rem 0;
+  color: #18181b;
+}
+
+.textos-cierre p {
+  margin: 0;
+  color: #71717a;
+  font-size: 0.95rem;
+}
+
+.modal-cerrar-oscuro {
+  background: transparent;
+  border: none;
+  color: #18181b;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+/* Grilla Gris */
+.cierre-resumen-grid {
+  display: flex;
+  justify-content: space-between;
+  background: #f4f4f5;
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cierre-metrica {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.metrica-central {
+  border-left: 1px solid #e4e4e7;
+  border-right: 1px solid #e4e4e7;
+}
+
+.metrica-label {
+  color: #71717a;
+  font-size: 0.85rem;
+}
+
+.metrica-valor {
+  color: #18181b;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+/* Input y Diferencia */
+.label-oscuro {
+  display: block;
+  color: #18181b;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.input-cierre {
+  border: 2px solid #c7ff3e !important;
+  background: #ffffff;
+  padding-right: 0.5rem;
+}
+
+.bg-transparent {
+  background: transparent !important;
+}
+.text-oscuro {
+  color: #18181b !important;
+  font-size: 1.1rem;
+}
+
+.stepper-iconos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #71717a;
+}
+.stepper-iconos i {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.cierre-diferencia-caja {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f4f4f5;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+}
+
+.diferencia-label {
+  color: #18181b;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.diferencia-valor {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.texto-ok {
+  color: #abe80f;
+} /* Verde */
+.texto-peligro {
+  color: #ef4444;
+} /* Rojo */
+
+/* Botones */
+.btn-cancelar-cierre {
+  background: transparent;
+  color: #71717a;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  flex: 1;
+}
+
+.btn-confirmar-cierre {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #c7ff3e;
+  color: #18181b;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.85rem;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1;
+}
