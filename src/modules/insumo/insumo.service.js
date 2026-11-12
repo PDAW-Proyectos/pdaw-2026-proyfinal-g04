@@ -36,7 +36,7 @@ export class InsumoService {
     }
 
     async actualizarInsumo(id, datos) {
-        const anterior = await this.insumoRepository.buscarPorId(id);
+        const anterior = this.insumoRepository.buscarPorId(id);
 
         if (!anterior) {
             throw new NotFoundError("Insumo");
@@ -61,7 +61,7 @@ export class InsumoService {
             throw new BadRequestError("La cantidad debe ser un número entero positivo");
         }
 
-        const insumo = await this.buscarInsumo(id);
+        const insumo = this.buscarInsumo(id);
         insumo.unidad += cantidad;
         return await this.insumoRepository.actualizar(insumo);
     }
@@ -71,7 +71,7 @@ export class InsumoService {
             throw new BadRequestError("La cantidad debe ser un número entero positivo");
         }
 
-        const insumo = await this.buscarInsumo(id);
+        const insumo = this.buscarInsumo(id);
 
         if (insumo.unidad < cantidad) {
             throw new BadRequestError("Stock insuficiente");
