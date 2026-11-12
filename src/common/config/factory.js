@@ -33,4 +33,9 @@ export class Factory {
     crearCaja(entidad) {
         return new Caja(entidad)
     }
+
+    // Sin uso aun
+    crearConfiguracion(entidad) {
+        return entidad
+    }
 }

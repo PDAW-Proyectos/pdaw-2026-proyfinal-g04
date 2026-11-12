@@ -8,6 +8,7 @@ export const crearRouterCaja = (cajaController) => {
     router.query("/", cajaController.filtrarCajas);
     router.post("/", cajaController.crearCaja);
     router.post("/:id/venta", cajaController.registrarVenta);
+    router.post("/:id/retiro", cajaController.retirarEfectivo);
     router.put("/:id", cajaController.actualizarCaja);
     router.put("/:id/cerrar", cajaController.cerrarCaja);
     router.delete("/:id", cajaController.eliminarCaja);

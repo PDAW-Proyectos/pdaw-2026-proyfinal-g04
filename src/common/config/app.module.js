@@ -20,6 +20,9 @@ import { CotizacionService } from "../../modules/cotizacion/cotizacion.service.j
 import { CotizacionRepository } from "../../modules/cotizacion/cotizacion.repository.js";
 import { CajaService } from "../../modules/caja/caja.service.js";
 import { CajaController } from "../../modules/caja/caja.controller.js";
+import { ConfiguracionRepository } from "../../modules/configuracion/configuracion.repository.js";
+import { ConfiguracionService } from "../../modules/configuracion/configuracion.service.js";
+import { ConfiguracionController } from "../../modules/configuracion/configuracion.controller.js";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -49,6 +52,11 @@ dependencyInjector.registerSingleton("cotizacionRepository", () =>
 dependencyInjector.registerSingleton("cajaRepository", () =>
   Repository.inicializar(path.join(__dirname, "../../../data", "Caja.json"), factory.crearCaja),
 );
+
+dependencyInjector.registerSingleton("configuracionRepository", () =>
+  ConfiguracionRepository.inicializar(path.join(__dirname, "../../../data", "Configuraciones.json"), factory.crearConfiguracion),
+);
+
 
 dependencyInjector.registerSingleton("userService", async () => {
   const userRepository = await dependencyInjector.resolve("userRepository");
@@ -127,10 +135,21 @@ dependencyInjector.registerSingleton("cotizacionController", async () => {
 dependencyInjector.registerSingleton("cajaService", async () => {
   const cajaRepository = await dependencyInjector.resolve("cajaRepository");
   const ingresoService = await dependencyInjector.resolve("ingresoService");
-  return new CajaService(cajaRepository, ingresoService);
+  const egresoService = await dependencyInjector.resolve("egresoService");
+  return new CajaService(cajaRepository, ingresoService, egresoService);
 });
 
 dependencyInjector.registerSingleton("cajaController", async () => {
   const cajaService = await dependencyInjector.resolve("cajaService");
   return new CajaController(cajaService);
+});
+
+dependencyInjector.registerSingleton("configuracionService", async () => {
+  const configuracionRepository = await dependencyInjector.resolve("configuracionRepository");
+  return new ConfiguracionService(configuracionRepository);
+});
+
+dependencyInjector.registerSingleton("configuracionController", async () => {
+  const configuracionService = await dependencyInjector.resolve("configuracionService");
+  return new ConfiguracionController(configuracionService);
 });

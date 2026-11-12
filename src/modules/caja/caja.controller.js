@@ -32,6 +32,11 @@ export class CajaController {
         res.status(201).json(venta);
     };
 
+    retirarEfectivo = async (req, res, next) => {
+        const venta = await this.cajaService.retirarEfectivo(req.params.id, req.session.userId, req.body);
+        res.status(201).json(venta);
+    };
+
     actualizarCaja = async (req, res) => {
         const caja = await this.cajaService.actualizarCaja(req.params.id, req.body);
         res.status(200).json(caja);

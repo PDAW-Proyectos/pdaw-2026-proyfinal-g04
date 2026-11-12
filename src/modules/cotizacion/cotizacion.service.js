@@ -69,9 +69,9 @@ export class CotizacionService {
           fechaActualizacion: data.fechaActualizacion,
         });
       } else {
+        this.cotizacionRepository.ultimaConsulta = currentTime;
         cotizacion = await this.cotizacionRepository.crear(data);
       }
-      this.cotizacionRepository.ultimaConsulta = currentTime;
     }
 
     return {
