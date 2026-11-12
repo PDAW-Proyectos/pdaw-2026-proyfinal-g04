@@ -5,14 +5,16 @@ import { fileURLToPath } from "node:url";
 import { dependencyInjector } from "./src/common/config/app.module.js";
 import crearRouterAuth from "./src/modules/auth/auth.routes.js";
 import { requireAuth, allowRoles } from "./src/common/middlewares/auth.guard.js";
-import crearRouterUsuarios from "./src/modules/Usuario/usuario.routes.js";
-import crearRouterProductos from "./src/modules/Producto/producto.routes.js";
-import crearRouterInsumos from "./src/modules/Insumo/insumo.routes.js";
-import crearRouterIngreso from "./src/modules/Transaccion/Ingreso/ingreso.routes.js";
-import crearRouterEgreso from "./src/modules/Transaccion/Egreso/egreso.routes.js";
+import crearRouterUsuarios from "./src/modules/usuario/usuario.routes.js";
+import crearRouterProductos from "./src/modules/producto/producto.routes.js";
+import crearRouterInsumos from "./src/modules/insumo/insumo.routes.js";
+import crearRouterIngreso from "./src/modules/transaccion/ingreso/ingreso.routes.js";
+import crearRouterEgreso from "./src/modules/transaccion/egreso/egreso.routes.js";
 import crearRouterCotizacion from "./src/modules/cotizacion/cotizacion.routes.js";
 import { NotFoundError } from "./src/common/errors/errors.classes.js";
 import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.js";
+import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
+import { crearRouterConfiguracion } from "./src/modules/configuracion/configuration.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,6 +41,8 @@ app.use(
 // 3. Inyección de dependencias
 const userController = await dependencyInjector.resolve("userController");
 const authController = await dependencyInjector.resolve("authController");
+const cajaController = await dependencyInjector.resolve("cajaController");
+const configuracionController = await dependencyInjector.resolve("configuracionController");
 const egresoController = await dependencyInjector.resolve("egresoController");
 const ingresoController = await dependencyInjector.resolve("ingresoController");
 const productoController = await dependencyInjector.resolve("productoController");
@@ -48,6 +52,8 @@ const cotizacionController = await dependencyInjector.resolve("cotizacionControl
 // 4. Rutas de la API
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
+app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
+app.use("/api/configuracion", allowRoles(), crearRouterConfiguracion(configuracionController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));

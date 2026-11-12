@@ -1,10 +1,11 @@
-import { Usuario } from "../../modules/Usuario/usuario.entity.js";
-import { ProductoPeso } from "../../modules/Producto/productoPeso.entity.js";
-import { ProductoUnidad } from "../../modules/Producto/productoUnidad.entity.js";
-import { Insumo } from "../../modules/Insumo/insumo.entity.js";
-import { Ingreso } from "../../modules/Transaccion/Ingreso/ingreso.entity.js";
-import { Egreso } from "../../modules/Transaccion/Egreso/egreso.entity.js";
+import { Usuario } from "../../modules/usuario/usuario.entity.js";
+import { ProductoPeso } from "../../modules/producto/productoPeso.entity.js";
+import { ProductoUnidad } from "../../modules/producto/productoUnidad.entity.js";
+import { Insumo } from "../../modules/insumo/insumo.entity.js";
+import { Ingreso } from "../../modules/transaccion/ingreso/ingreso.entity.js";
+import { Egreso } from "../../modules/transaccion/egreso/egreso.entity.js";
 import { Cotizacion } from "../../modules/cotizacion/cotizacion.entity.js";
+import { Caja } from "../../modules/caja/caja.entity.js";
 
 export class Factory {
     crearUsuario(entidad) {
@@ -27,5 +28,14 @@ export class Factory {
 
     crearCotizacion(entidad) {
         return new Cotizacion(entidad)
+    }
+
+    crearCaja(entidad) {
+        return new Caja(entidad)
+    }
+
+    // Sin uso aun
+    crearConfiguracion(entidad) {
+        return entidad
     }
 }

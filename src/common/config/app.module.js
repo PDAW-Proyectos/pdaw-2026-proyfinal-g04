@@ -3,21 +3,26 @@ import { fileURLToPath } from "node:url";
 import { DependencyInjector } from "./dependencyInjector.js";
 import { Repository } from "./repository.js";
 import { Factory } from "./factory.js";
-import { UserController } from "../../modules/Usuario/usuario.controller.js";
-import { UserService } from "../../modules/Usuario/usuario.service.js";
+import { UserController } from "../../modules/usuario/usuario.controller.js";
+import { UserService } from "../../modules/usuario/usuario.service.js";
 import { AuthController } from "../../modules/auth/auth.controller.js";
 import { AuthService } from "../../modules/auth/auth.service.js";
-import { ProductoController } from "../../modules/Producto/producto.controller.js";
-import { ProductoService } from "../../modules/Producto/producto.service.js";
-import { InsumoController } from "../../modules/Insumo/insumo.controller.js";
-import { InsumoService } from "../../modules/Insumo/insumo.service.js";
-import { IngresoController } from "../../modules/Transaccion/Ingreso/ingreso.controller.js";
-import { IngresoService } from "../../modules/Transaccion/Ingreso/ingreso.service.js";
-import { EgresoController } from "../../modules/Transaccion/Egreso/egreso.controller.js";
-import { EgresoService } from "../../modules/Transaccion/Egreso/egreso.service.js";
+import { ProductoController } from "../../modules/producto/producto.controller.js";
+import { ProductoService } from "../../modules/producto/producto.service.js";
+import { InsumoController } from "../../modules/insumo/insumo.controller.js";
+import { InsumoService } from "../../modules/insumo/insumo.service.js";
+import { IngresoController } from "../../modules/transaccion/ingreso/ingreso.controller.js";
+import { IngresoService } from "../../modules/transaccion/ingreso/ingreso.service.js";
+import { EgresoController } from "../../modules/transaccion/egreso/egreso.controller.js";
+import { EgresoService } from "../../modules/transaccion/egreso/egreso.service.js";
 import { CotizacionController } from "../../modules/cotizacion/cotizacion.controller.js";
 import { CotizacionService } from "../../modules/cotizacion/cotizacion.service.js";
 import { CotizacionRepository } from "../../modules/cotizacion/cotizacion.repository.js";
+import { CajaService } from "../../modules/caja/caja.service.js";
+import { CajaController } from "../../modules/caja/caja.controller.js";
+import { ConfiguracionRepository } from "../../modules/configuracion/configuracion.repository.js";
+import { ConfiguracionService } from "../../modules/configuracion/configuracion.service.js";
+import { ConfiguracionController } from "../../modules/configuracion/configuracion.controller.js";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -43,6 +48,15 @@ dependencyInjector.registerSingleton("transaccionRepository", () =>
 dependencyInjector.registerSingleton("cotizacionRepository", () =>
   CotizacionRepository.inicializar(path.join(__dirname, "../../../data", "Cotizaciones.json"), factory.crearCotizacion),
 );
+
+dependencyInjector.registerSingleton("cajaRepository", () =>
+  Repository.inicializar(path.join(__dirname, "../../../data", "Caja.json"), factory.crearCaja),
+);
+
+dependencyInjector.registerSingleton("configuracionRepository", () =>
+  ConfiguracionRepository.inicializar(path.join(__dirname, "../../../data", "Configuraciones.json"), factory.crearConfiguracion),
+);
+
 
 dependencyInjector.registerSingleton("userService", async () => {
   const userRepository = await dependencyInjector.resolve("userRepository");
@@ -87,7 +101,8 @@ dependencyInjector.registerSingleton("insumoController", async () => {
 
 dependencyInjector.registerSingleton("ingresoService", async () => {
   const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
-  return new IngresoService(transaccionRepository);
+  const productoService = await dependencyInjector.resolve("productoService");
+  return new IngresoService(transaccionRepository, productoService);
 });
 
 dependencyInjector.registerSingleton("ingresoController", async () => {
@@ -115,4 +130,26 @@ dependencyInjector.registerSingleton("cotizacionService", async () => {
 dependencyInjector.registerSingleton("cotizacionController", async () => {
   const cotizacionService = await dependencyInjector.resolve("cotizacionService");
   return new CotizacionController(cotizacionService);
+});
+
+dependencyInjector.registerSingleton("cajaService", async () => {
+  const cajaRepository = await dependencyInjector.resolve("cajaRepository");
+  const ingresoService = await dependencyInjector.resolve("ingresoService");
+  const egresoService = await dependencyInjector.resolve("egresoService");
+  return new CajaService(cajaRepository, ingresoService, egresoService);
+});
+
+dependencyInjector.registerSingleton("cajaController", async () => {
+  const cajaService = await dependencyInjector.resolve("cajaService");
+  return new CajaController(cajaService);
+});
+
+dependencyInjector.registerSingleton("configuracionService", async () => {
+  const configuracionRepository = await dependencyInjector.resolve("configuracionRepository");
+  return new ConfiguracionService(configuracionRepository);
+});
+
+dependencyInjector.registerSingleton("configuracionController", async () => {
+  const configuracionService = await dependencyInjector.resolve("configuracionService");
+  return new ConfiguracionController(configuracionService);
 });
