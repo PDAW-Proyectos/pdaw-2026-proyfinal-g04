@@ -11,7 +11,7 @@ describe("Usuario", () => {
         expect(() => {new Usuario({ id: 1, email: "juan@gmail.com", contraseña: "", nombre: "Juan", apellido: "Perez", rol: "admin", habilitado: true })}).toThrow("Contraseña vacia");
     });
 
-    it("al crear una instancia de producto con todos los parametros correctos devuelve una instancia de Insumo", async () => {
+    it("al crear una instancia de producto con todos los parametros correctos devuelve una instancia de Usuario", async () => {
         const usuario = new Usuario({ id: 1, email: "juan@gmail.com", contraseña: 123456, nombre: "Juan", apellido: "Perez", rol: "admin", habilitado: true });
         expect(usuario).toBeInstanceOf(Usuario);
         expect(usuario).toEqual({ 
