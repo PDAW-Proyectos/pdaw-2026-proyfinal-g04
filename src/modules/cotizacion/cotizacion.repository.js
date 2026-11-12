@@ -23,7 +23,6 @@ export class CotizacionRepository extends Repository {
     }
 
 	async guardar() {
-        console.log("cotizacion repo");
 		const data = {
 			ultimaConsulta: this.#ultimaConsulta,
 			entidades: this.entidades,
