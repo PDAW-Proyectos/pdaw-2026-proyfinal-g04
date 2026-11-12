@@ -75,6 +75,33 @@
   margin: 1.5rem 0;
 }
 
+.input-grupo-mixto {
+  display: flex;
+  align-items: center;
+  background: #f4fce3;
+  border: 1px solid #c7ff3e;
+  border-radius: 10px;
+  padding: 0 1rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.input-grupo-mixto:focus-within {
+  border-color: #a3e635;
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.2);
+}
+
+.input-grupo-mixto input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #161615;
+  padding: 0.85rem 0;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+}
+
 /* =========================================
    MODAL APERTURA DE TURNO
 ========================================= */
@@ -315,25 +342,6 @@
   line-height: 1;
 }
 
-.input-grupo-mixto {
-  display: flex;
-  background: #ffffff;
-  border: 2px solid #c7ff3e;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-
-.input-grupo-mixto input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: #161615;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  outline: none;
-}
-
 .previsualizacion-totales {
   display: flex;
   flex-direction: column;
@@ -419,30 +427,6 @@
   transition: all 0.2s ease;
 }
 
-#modal-consulta .input-grupo-mixto {
-  padding: 0;
-}
-
-#modal-consulta .input-grupo-mixto input {
-  padding-left: 1rem;
-}
-
-#modal-registrar-movimiento .input-grupo-mixto input {
-  padding-left: 1rem;
-}
-
-#modal-registrar-movimiento .input-grupo-mixto {
-  padding: 0;
-}
-
-#modal-historial-movimiento .input-grupo-mixto {
-  padding: 0;
-}
-
-#modal-historial-movimiento .input-grupo-mixto input {
-  padding-left: 1rem;
-}
-
 .select-mixto {
   position: relative;
   box-sizing: border-box;
@@ -512,17 +496,29 @@
   font-size: 1.8rem;
 }
 
+#modal-consulta .input-grupo-mixto,
+#modal-registrar-movimiento .input-grupo-mixto,
+#modal-historial-movimiento .input-grupo-mixto {
+  padding: 0;
+}
+
+#modal-consulta .input-grupo-mixto input,
+#modal-registrar-movimiento .input-grupo-mixto input,
+#modal-historial-movimiento .input-grupo-mixto input {
+  padding-left: 1rem;
+}
+
 /* =========================================
    5. ESPECÍFICO: MODAL TECLADO NUMÉRICO (NUMPAD)
 ========================================= */
 
 .modal-compacto {
-  max-width: 320px; /* Es un modal más angosto que el resto */
+  max-width: 320px;
 }
 
 .visor-teclado {
   width: 100%;
-  background: #f1f9e4; /* Fondo claro para contraste */
+  background: #f1f9e4;
   border: 2px solid #c7ff3e;
   color: #161615;
   font-size: 2.5rem;
@@ -577,7 +573,7 @@
 }
 
 /* =========================================
-   MODAL REGISTRAR MOVIMIENTO
+   6. MODAL REGISTRAR MOVIMIENTO
 ========================================= */
 .paso-oculto {
   display: none !important;
@@ -746,30 +742,6 @@
   box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.2);
 }
 
-.input-grupo-mixto {
-  display: flex;
-  align-items: center;
-  border: 1px solid #c7ff3e;
-  border-radius: 10px;
-  padding: 0 1rem;
-  background: #f4fce3;
-  transition: all 0.2s ease;
-}
-
-.input-grupo-mixto:focus-within {
-  border-color: #a3e635;
-  box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.2);
-}
-
-.input-grupo-mixto input {
-  flex: 1;
-  border: none;
-  outline: none;
-  padding: 0.85rem 0;
-  font-size: 1rem;
-  font-family: inherit;
-}
-
 /* Pie del modal */
 .modal-footer-movimiento {
   display: flex;
@@ -812,7 +784,7 @@
 }
 
 /* =========================================
-   MODAL HISTORIAL (REINTEGRO / DEVOLUCIÓN)
+   7. MODAL HISTORIAL (REINTEGRO / DEVOLUCIÓN)
 ========================================= */
 
 .form-group-historial {
@@ -884,7 +856,7 @@ select.input-historial {
 }
 
 /* =========================================
-   MODAL CIERRE DE CAJA (BLANCO)
+   8. MODAL CIERRE DE CAJA (BLANCO)
 ========================================= */
 .modal-cierre-card {
   background: #ffffff !important; /* Forzamos fondo blanco */

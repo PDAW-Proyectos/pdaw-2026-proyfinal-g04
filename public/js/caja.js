@@ -55,9 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnConfirmarPausa = document.getElementById("btn-confirmar-pausa");
 
   // Modal descuento
-  const btnConfirmarDescuento = document.getElementById(
-    "btn-confirmar-descuento",
-  );
+  // const btnConfirmarDescuento = document.getElementById(
+  // "btn-confirmar-descuento",
+  // );
 
   const ventasPausadas = [];
 
@@ -267,13 +267,9 @@ const calcularPrevisualizacion = () => {
 
   // Ahora leemos el atributo data-valor del botón en lugar del select
   const esPorcentaje = indicadorTipoValor.dataset.valor === "porcentaje";
-  let montoModificacion = 0;
-
-  if (esPorcentaje) {
-    montoModificacion = subtotalActual * (valorInput / 100);
-  } else {
-    montoModificacion = valorInput;
-  }
+  const montoModificacion = esPorcentaje
+    ? subtotalActual * (valorInput / 100)
+    : valorInput;
 
   let nuevoTotal = subtotalActual;
   if (estadoModificador === "descuento") {
@@ -293,7 +289,7 @@ if (inputValorMod)
 // ==========================================
 // SISTEMA DE NOTIFICACIONES TIPO TOAST
 // ==========================================
-window.mostrarNotificacion = function (mensaje, tipo = "info") {
+mostrarNotificacion = function (mensaje, tipo = "info") {
   let contenedor = document.getElementById("contenedor-toasts");
 
   // Si no existe el contenedor en el HTML, lo creamos
@@ -875,34 +871,34 @@ const movimientosArqueoMock = [
   },
 ];
 
-const renderizarMovimientosArqueo = () => {
-  const tbody = document.getElementById("lista-movimientos-turno");
-  if (!tbody) return;
+// const renderizarMovimientosArqueo = () => {
+//   const tbody = document.getElementById("lista-movimientos-turno");
+//   if (!tbody) return;
 
-  tbody.innerHTML = "";
+//   tbody.innerHTML = "";
 
-  if (movimientosArqueoMock.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5">No hay movimientos registrados.</td></tr>`;
-    return;
-  }
+//   if (movimientosArqueoMock.length === 0) {
+//     tbody.innerHTML = `<tr><td colspan="5">No hay movimientos registrados.</td></tr>`;
+//     return;
+//   }
 
-  movimientosArqueoMock.forEach((mov) => {
-    // Determinar la clase de la etiqueta (badge)
-    const claseBadge =
-      mov.tipo === "Ingreso" ? "badge-ingreso" : "badge-retiro";
+//   movimientosArqueoMock.forEach((mov) => {
+//     // Determinar la clase de la etiqueta (badge)
+//     const claseBadge =
+//       mov.tipo === "Ingreso" ? "badge-ingreso" : "badge-retiro";
 
-    const html = `
-      <tr>
-        <td>${mov.hora}</td>
-        <td><span class="badge-movimiento ${claseBadge}">${mov.tipo}</span></td>
-        <td>${mov.motivo}</td>
-        <td><strong>${formatearPrecio(mov.monto)}</strong></td>
-        <td>${mov.responsable}</td>
-      </tr>
-    `;
-    tbody.insertAdjacentHTML("beforeend", html);
-  });
-};
+//     const html = `
+//       <tr>
+//         <td>${mov.hora}</td>
+//         <td><span class="badge-movimiento ${claseBadge}">${mov.tipo}</span></td>
+//         <td>${mov.motivo}</td>
+//         <td><strong>${formatearPrecio(mov.monto)}</strong></td>
+//         <td>${mov.responsable}</td>
+//       </tr>
+//     `;
+//     tbody.insertAdjacentHTML("beforeend", html);
+//   });
+// };
 
 // --- VARIABLES PARA EL MODAL DE MOVIMIENTO ---
 const modalMovimiento = document.getElementById("modal-registrar-movimiento");
