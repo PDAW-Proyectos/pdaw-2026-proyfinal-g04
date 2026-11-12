@@ -38,7 +38,7 @@ export class EgresoService {
         return await this.transaccionRepository.crear(datos);
     };
 
-    crearCompra = async (idUsuario, datos) => {
+    crearCompra = async (idUsuario, datos, { administrarTransacciones = true } = {}) => {
         if (!Array.isArray(datos.articulos)) {
             throw new BadRequestError("La lista de artículos debe ser un array");
         }
@@ -53,9 +53,11 @@ export class EgresoService {
         const iniciados = [];
 
         try {
-            for (const repositorio of repositoriosUnicos) {
-                repositorio.iniciarTransaccion();
-                iniciados.push(repositorio);
+            if (administrarTransacciones) {
+                for (const repositorio of repositoriosUnicos) {
+                    repositorio.iniciarTransaccion();
+                    iniciados.push(repositorio);
+                }
             }
 
             const articulos = [];
@@ -80,19 +82,24 @@ export class EgresoService {
 
             const compra = await this.crearEgreso({
                 idUsuario,
+                idCaja: datos.idCaja,
                 metodoDePago: datos.metodoDePago,
                 articulos,
                 monto: datos.monto
             });
 
-            for (const repositorio of repositoriosUnicos) {
-                await repositorio.confirmarTransaccion();
+            if (administrarTransacciones) {
+                for (const repositorio of repositoriosUnicos) {
+                    await repositorio.confirmarTransaccion();
+                }
             }
 
             return compra;
         } catch (error) {
-            for (const repositorio of iniciados.reverse()) {
-                await repositorio.rollback();
+            if (administrarTransacciones) {
+                for (const repositorio of iniciados.reverse()) {
+                    await repositorio.rollback();
+                }
             }
 
             throw error;

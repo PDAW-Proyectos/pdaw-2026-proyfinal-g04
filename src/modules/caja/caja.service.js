@@ -1,9 +1,10 @@
 import { BadRequestError, NotFoundError } from "../../common/errors/errors.classes.js";
 
 export class CajaService {
-    constructor(cajaRepository, ingresoService) {
+    constructor(cajaRepository, ingresoService, egresoService) {
         this.cajaRepository = cajaRepository;
         this.ingresoService = ingresoService;
+        this.egresoService = egresoService;
     }
 
     listarCajas = (pagina, limite) => {
@@ -79,9 +80,6 @@ export class CajaService {
             const datosActualizados = {
                 ...caja,
                 totalEsperado,
-                diferencia: caja.totalContado != null
-                    ? caja.totalContado - totalEsperado
-                    : caja.diferencia,
                 historialDeTransacciones: [...caja.historialDeTransacciones, venta.id]
             };
 
@@ -105,6 +103,69 @@ export class CajaService {
         }
     };
 
+    retirarEfectivo = async (idCaja, idUsuario, datos) => {
+        const caja = await this.cajaRepository.buscarPorId(Number(idCaja));
+
+        if (!caja) {
+            throw new NotFoundError("La caja no existe");
+        }
+
+        if (caja.estado !== "abierta") {
+            throw new BadRequestError("No se pueden registrar retiros en una caja cerrada");
+        }
+
+        if (datos.monto > caja.totalEsperado) {
+            throw new BadRequestError("No hay suficiente efectivo en la caja para realizar el retiro");
+        }
+
+        const repositorios = [
+            this.egresoService.transaccionRepository,
+            this.cajaRepository
+        ];
+
+        const repositoriosUnicos = [...new Set(repositorios)];
+        const iniciados = [];
+
+        try {
+            for (const repositorio of repositoriosUnicos) {
+                repositorio.iniciarTransaccion();
+                iniciados.push(repositorio);
+            }
+
+            const egreso = await this.egresoService.crearEgreso({
+                ...datos,
+                monto: -Math.abs(datos.monto),
+                idUsuario,
+                idCaja: caja.id
+            }, { administrarTransacciones: false });
+
+            const totalEsperado = caja.totalEsperado -Math.abs(egreso.monto);
+
+            const datosActualizados = {
+                ...caja,
+                totalEsperado,
+                historialDeTransacciones: [...caja.historialDeTransacciones, egreso.id]
+            };
+
+            await this.cajaRepository.actualizar(datosActualizados);
+
+            for (const repositorio of repositoriosUnicos) {
+                await repositorio.confirmarTransaccion();
+            }
+
+            return {
+                id: caja.id,
+                totalEsperado,
+                egreso
+            };
+        } catch (error) {
+            for (const repositorio of iniciados.reverse()) {
+                await repositorio.rollback();
+            }
+
+            throw error;
+        }
+    };
 
     actualizarCaja = async (id, datos) => {
         const anterior = this.cajaRepository.buscarPorId(id);

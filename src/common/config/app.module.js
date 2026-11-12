@@ -127,7 +127,8 @@ dependencyInjector.registerSingleton("cotizacionController", async () => {
 dependencyInjector.registerSingleton("cajaService", async () => {
   const cajaRepository = await dependencyInjector.resolve("cajaRepository");
   const ingresoService = await dependencyInjector.resolve("ingresoService");
-  return new CajaService(cajaRepository, ingresoService);
+  const egresoService = await dependencyInjector.resolve("egresoService");
+  return new CajaService(cajaRepository, ingresoService, egresoService);
 });
 
 dependencyInjector.registerSingleton("cajaController", async () => {
