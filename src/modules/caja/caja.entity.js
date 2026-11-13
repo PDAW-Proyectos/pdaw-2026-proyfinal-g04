@@ -1,4 +1,3 @@
-
 import { BadRequestError, ValidationError } from "../../common/errors/errors.classes.js";
 
 export class Caja {
