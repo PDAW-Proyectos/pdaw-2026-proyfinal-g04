@@ -2,11 +2,6 @@ import { Ingreso } from "../../../../src/modules/transaccion/ingreso/ingreso.ent
 import { BadRequestError, ValidationError } from "../../../../src/common/errors/errors.classes.js";
 
 describe("Ingreso", () => {
-    const datosValidosBase = {
-        id: 1,
-        monto: 100
-    };
-
     it("crea una instancia de Ingreso exitosamente cuando el monto es mayor a cero", () => {
         const ingreso = new Ingreso({ id: 1, monto: 50 });
         expect(ingreso).toBeInstanceOf(Ingreso);

@@ -2,11 +2,6 @@ import { Egreso } from "../../../../src/modules/transaccion/egreso/egreso.entity
 import { BadRequestError, ValidationError } from "../../../../src/common/errors/errors.classes.js";
 
 describe("Egreso", () => {
-    const datosValidosBase = {
-        id: 1,
-        monto: -100
-    };
-
     it("crea una instancia de Egreso exitosamente cuando el monto es menor o igual a cero", () => {
         const egresoNegativo = new Egreso({ id: 1, monto: -50 });
         const egresoCero = new Egreso({ id: 2, monto: 0 });
