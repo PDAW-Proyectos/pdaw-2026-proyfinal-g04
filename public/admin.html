@@ -66,6 +66,198 @@
         <header class="vista-header">
           <h2>Dashboard Financiero</h2>
         </header>
+        <div class="vista-cuerpo">
+          <div class="dashboard-grid">
+            <!-- Ventas Monetarias -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-label">Ventas Totales</span>
+                <select class="input-mini filtro-card" data-card="ventas">
+                  <option value="mes">Mes</option>
+                  <option value="dia">Hoy</option>
+                  <option value="anio">Año</option>
+                </select>
+              </div>
+              <div class="card-body">
+                <p class="card-valor">$ 1.450.300</p>
+                <span class="card-tendencia positivo"
+                  >↑ +12% vs período ant.</span
+                >
+              </div>
+            </div>
+
+            <!-- Cantidad de Tickets -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-label">Cantidad de Tickets</span>
+                <select class="input-mini filtro-card" data-card="tickets">
+                  <option value="mes">Mes</option>
+                  <option value="dia">Hoy</option>
+                  <option value="anio">Año</option>
+                </select>
+              </div>
+              <div class="card-body">
+                <p class="card-valor">412</p>
+                <span class="card-tendencia neutro"
+                  >Operaciones registradas</span
+                >
+              </div>
+            </div>
+
+            <!-- Ticket Promedio -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-label">Ticket Promedio</span>
+                <select class="input-mini filtro-card" data-card="promedio">
+                  <option value="mes">Mes</option>
+                  <option value="dia">Hoy</option>
+                  <option value="anio">Año</option>
+                </select>
+              </div>
+              <div class="card-body">
+                <p class="card-valor">$ 3.520</p>
+                <span class="card-tendencia positivo"
+                  >↑ +5% vs período ant.</span
+                >
+              </div>
+            </div>
+
+            <!-- Capital en Stock -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-label">Capital en Stock</span>
+                <span class="badge-fijo">Actual</span>
+              </div>
+              <div class="card-body">
+                <p class="card-valor">U$D 2.840</p>
+                <span class="card-tendencia neutro"
+                  >Inmovilizado en inventario</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Promedios Diario y Mensual -->
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-label">Promedio Diario</span>
+                <i
+                  data-lucide="calendar"
+                  style="width: 16px; height: 16px; color: #777b70"
+                ></i>
+              </div>
+              <div class="card-body" style="gap: 12px; margin-top: 8px">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 14px;
+                  "
+                >
+                  <span style="color: #777b70">Ingresos:</span>
+                  <strong style="color: #16a34a">$ 48.340 / día</strong>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 14px;
+                  "
+                >
+                  <span style="color: #777b70">Egresos:</span>
+                  <strong style="color: #ef4444">$ 12.100 / día</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span class="card-label">Promedio Mensual</span>
+                <i
+                  data-lucide="calendar-days"
+                  style="width: 16px; height: 16px; color: #777b70"
+                ></i>
+              </div>
+              <div class="card-body" style="gap: 12px; margin-top: 8px">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 14px;
+                  "
+                >
+                  <span style="color: #777b70">Ingresos Netos:</span>
+                  <strong style="color: #16a34a">$ 1.450.300 / mes</strong>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 14px;
+                  "
+                >
+                  <span style="color: #777b70">Costos Op.:</span>
+                  <strong style="color: #ef4444">$ 363.000 / mes</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gráficos -->
+          <div class="dashboard-grid">
+            <!-- Gráfico Ventas -->
+            <div class="card" style="height: 340px">
+              <div class="card-header">
+                <span class="card-label">Evolución de Ventas</span>
+                <select class="input-mini filtro-card" data-grafico="ventas">
+                  <option value="mes">Este Mes</option>
+                  <option value="anio">Este Año</option>
+                </select>
+              </div>
+              <div
+                class="card-body"
+                style="flex-grow: 1; position: relative; margin-top: 8px"
+              >
+                <canvas id="grafico-ventas"></canvas>
+              </div>
+            </div>
+
+            <!-- Gráfico de Métodos de Pago -->
+            <div class="card" style="height: 340px">
+              <div class="card-header">
+                <span class="card-label">Métodos de Pago</span>
+                <select class="input-mini filtro-card" data-grafico="pagos">
+                  <option value="mes">Este Mes</option>
+                  <option value="anio">Este Año</option>
+                </select>
+              </div>
+              <div
+                class="card-body card-grafico-dona"
+                style="flex-grow: 1; position: relative; margin-top: 8px"
+              >
+                <canvas id="grafico-pagos"></canvas>
+              </div>
+            </div>
+
+            <!-- Gráfico Aumeto de precios -->
+            <div class="card" style="height: 340px">
+              <div class="card-header">
+                <span class="card-label">Aumento Histórico de Precios</span>
+                <select class="input-mini filtro-card" data-grafico="precios">
+                  <option value="anio">Este Año</option>
+                  <option value="historico">Histórico Completo</option>
+                </select>
+              </div>
+              <div
+                class="card-body"
+                style="flex-grow: 1; position: relative; margin-top: 8px"
+              >
+                <canvas id="grafico-precios"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="precios" class="vista">
@@ -354,6 +546,240 @@
         <header class="vista-header">
           <h2>Configuración del Sistema</h2>
         </header>
+
+        <section style="margin-bottom: 32px">
+          <section class="config-section">
+            <h3>Datos del negocio</h3>
+            <div class="dashboard-grid">
+              <form id="form-negocio" class="modal-form config-form-wrapper">
+                <div class="modal-input-group">
+                  <label for="negocio-nombre">Nombre del Local:</label>
+                  <input
+                    type="text"
+                    id="negocio-nombre"
+                    value="Mi Comercio"
+                    placeholder="Ej: KCHIN Store"
+                  />
+                </div>
+                <div class="modal-input-group">
+                  <label for="negocio-telefono">Teléfono de Contacto:</label>
+                  <input
+                    type="text"
+                    id="negocio-telefono"
+                    placeholder="Ej: 291 555 1234"
+                  />
+                </div>
+                <div class="modal-input-group">
+                  <label for="negocio-direccion">Dirección:</label>
+                  <input
+                    type="text"
+                    id="negocio-direccion"
+                    placeholder="Calle Falsa 123"
+                  />
+                </div>
+                <button type="submit" class="btn-primario config-btn-guardar">
+                  Guardar Datos
+                </button>
+              </form>
+
+              <article class="card" aria-live="polite">
+                <div class="card-header">
+                  <h3>Datos actuales</h3>
+                  <i data-lucide="store" aria-hidden="true"></i>
+                </div>
+                <div class="card-body">
+                  <p class="card-valor" id="negocio-preview-nombre">
+                    Mi Comercio
+                  </p>
+                  <p>
+                    <span class="card-label">Teléfono</span><br />
+                    <span id="negocio-preview-telefono">Sin especificar</span>
+                  </p>
+                  <p>
+                    <span class="card-label">Dirección</span><br />
+                    <span id="negocio-preview-direccion">Sin especificar</span>
+                  </p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <hr class="config-divider" />
+
+          <!-- Sección 2: Seguridad y Sesión -->
+          <section class="config-section">
+            <h3>Seguridad y Sesión</h3>
+            <form id="form-sesion" class="modal-form config-form-wrapper">
+              <div class="modal-input-group">
+                <label>Cerrar sesión por inactividad:</label>
+                <!-- Reutilizamos el estilo del input del modal pero en un select -->
+                <select id="tiempo-inactividad" class="config-select">
+                  <option value="15">15 minutos</option>
+                  <option value="30" selected>30 minutos</option>
+                  <option value="60">1 hora</option>
+                  <option value="480">8 horas</option>
+                  <option value="0">Nunca</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-primario config-btn-guardar">
+                Guardar Sesión
+              </button>
+            </form>
+          </section>
+
+          <hr class="config-divider" />
+
+          <!-- Sección 3: Alertas de Stock -->
+          <section class="config-section">
+            <h3>Alertas de Stock</h3>
+            <p class="config-subtitle">
+              Definí los rangos para el semáforo de inventario.
+            </p>
+
+            <form
+              id="form-alertas-stock"
+              class="modal-form"
+              style="margin-top: 16px; max-width: 600px"
+            >
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                  gap: 16px;
+                "
+              >
+                <div class="modal-input-group">
+                  <label style="color: #ef4444">Stock Crítico (Rojo)</label>
+                  <input
+                    type="number"
+                    id="stock-critico"
+                    value="5"
+                    min="0"
+                    placeholder="Menor o igual a..."
+                  />
+                  <span style="font-size: 11px; color: #777b70"
+                    >Avisar si es ≤ a este valor</span
+                  >
+                </div>
+
+                <div class="modal-input-group">
+                  <label style="color: #f59e0b">Stock Medio (Amarillo)</label>
+                  <input
+                    type="number"
+                    id="stock-medio"
+                    value="15"
+                    min="0"
+                    placeholder="Menor o igual a..."
+                  />
+                  <span style="font-size: 11px; color: #777b70"
+                    >Avisar si está entre el crítico y este</span
+                  >
+                </div>
+
+                <div class="modal-input-group">
+                  <label style="color: #16a34a">Stock Ideal (Verde)</label>
+                  <!-- Este input está deshabilitado porque lógicamente es todo lo que supera al stock medio -->
+                  <input
+                    type="text"
+                    value="Mayor al Medio"
+                    disabled
+                    style="
+                      background: #f4f5f0;
+                      color: #777b70;
+                      cursor: not-allowed;
+                      border-style: dashed;
+                    "
+                  />
+                  <span style="font-size: 11px; color: #777b70"
+                    >Automático</span
+                  >
+                </div>
+              </div>
+              <button type="submit" class="btn-primario config-btn-guardar">
+                Guardar Niveles
+              </button>
+            </form>
+          </section>
+
+          <hr class="config-divider" />
+
+          <!-- Sección 4: Métodos de Pago -->
+          <section class="config-section">
+            <h3>Métodos de Pago Habilitados</h3>
+            <p class="config-subtitle">
+              Activá o desactivá los medios de pago en la caja.
+            </p>
+
+            <div class="config-switches">
+              <label class="toggle-switch-container">
+                <span class="toggle-label">Efectivo</span>
+                <input type="checkbox" checked disabled />
+                <span class="slider round"></span>
+              </label>
+              <label class="toggle-switch-container">
+                <span class="toggle-label">Tarjetas de Débito/Crédito</span>
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+              <label class="toggle-switch-container">
+                <span class="toggle-label">Mercado Pago / Transferencia</span>
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </section>
+
+          <hr class="config-divider" />
+
+          <!-- Sección 5: Categorías -->
+          <section class="config-section">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                margin-bottom: 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+              "
+            >
+              <div>
+                <h3>Gestión de Categorías</h3>
+                <p class="config-subtitle">
+                  Administrá tus rubros y revisá los productos asociados a cada
+                  uno.
+                </p>
+              </div>
+
+              <!-- Formulario inline para agregar rápido -->
+              <form
+                id="form-nueva-categoria"
+                style="display: flex; gap: 8px; align-items: stretch"
+              >
+                <input
+                  type="text"
+                  id="nueva-categoria-nombre"
+                  placeholder="Nombre de categoría..."
+                  class="input-base"
+                  style="
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    border: 1px solid #d1d5db;
+                    outline: none;
+                    width: 200px;
+                  "
+                  required
+                />
+                <button type="submit" class="btn-primario">Añadir</button>
+              </form>
+            </div>
+
+            <!-- Grid donde se inyectarán las tarjetas de categorías -->
+            <div id="grid-categorias" class="grid-categorias-cards">
+              <!-- Se llena dinámicamente -->
+            </div>
+          </section>
+        </section>
       </section>
     </main>
 
@@ -629,5 +1055,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module" src="./js/usuarios.js"></script>
     <script type="module" src="./js/admin.js"></script>
+    <script type="module" src="./js/finanzas.js"></script>
+    <script type="module" src="./js/configuracion.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </body>
 </html>

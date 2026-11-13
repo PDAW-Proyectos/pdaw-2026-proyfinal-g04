@@ -146,7 +146,8 @@ dependencyInjector.registerSingleton("cajaController", async () => {
 
 dependencyInjector.registerSingleton("configuracionService", async () => {
   const configuracionRepository = await dependencyInjector.resolve("configuracionRepository");
-  return new ConfiguracionService(configuracionRepository);
+  const productoRepository = await dependencyInjector.resolve("productoRepository");
+  return new ConfiguracionService(configuracionRepository, productoRepository);
 });
 
 dependencyInjector.registerSingleton("configuracionController", async () => {

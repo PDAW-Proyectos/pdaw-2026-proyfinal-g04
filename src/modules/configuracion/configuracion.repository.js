@@ -2,7 +2,18 @@ import { readFile, writeFile } from "node:fs/promises";
 import { Repository } from "../../common/config/repository.js";
 
 export class ConfiguracionRepository extends Repository {
-    #configuracion;
+    #configuracion = {
+        sessionExpiringTime: 8 * 60 * 60 * 1000,
+        negocio: {
+            nombre: "Mi Comercio",
+            telefono: "",
+            direccion: ""
+        },
+        stock: {
+            critico: 5,
+            medio: 15
+        }
+    };
 
     constructor(ruta, factory) {
         super(ruta, factory);
@@ -21,9 +32,17 @@ export class ConfiguracionRepository extends Repository {
     async actualizarConfiguracion(datos) {
         this.#configuracion = {
             ...this.#configuracion,
-            ...datos
+            ...datos,
+            negocio: {
+                ...this.#configuracion.negocio,
+                ...datos.negocio
+            },
+            stock: {
+                ...this.#configuracion.stock,
+                ...datos.stock
+            }
         };
-        await this.guardar()
+        await this.guardar();
     }
 
 	async guardar() {
@@ -38,7 +57,18 @@ export class ConfiguracionRepository extends Repository {
         try {
             const datos = JSON.parse(await readFile(this.ruta, "utf8"));
             this.cargarDesdeJson(datos.entidades);
-            this.#configuracion = datos?.configuracion ? datos.configuracion : { sessionExpiringTime: 28800000 };
+            this.#configuracion = {
+                ...this.#configuracion,
+                ...datos?.configuracion,
+                negocio: {
+                    ...this.#configuracion.negocio,
+                    ...datos?.configuracion?.negocio
+                },
+                stock: {
+                    ...this.#configuracion.stock,
+                    ...datos?.configuracion?.stock
+                }
+            };
             this.proximoId = Math.max(0, ...this.entidades.map((e) => e.id)) + 1;
         } catch (error) {
             if (error.code !== "ENOENT") {
