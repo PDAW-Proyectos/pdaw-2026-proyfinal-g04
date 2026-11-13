@@ -1,5 +1,5 @@
-import { BadRequestError } from "../../../common/errors/errors.classes.js";
 import { Transaccion } from "../transaccion.entity.js";
+import { BadRequestError } from "../../../common/errors/errors.classes.js";
 
 export class Egreso extends Transaccion {
 
