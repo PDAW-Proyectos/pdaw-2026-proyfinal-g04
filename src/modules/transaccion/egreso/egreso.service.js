@@ -64,8 +64,6 @@ export class EgresoService {
 
             for (const articulo of datos.articulos) {
                 let resultado;
-                console.log(articulo);
-                
 
                 if (articulo.tipo === "producto") {
                     resultado = articulo.id
@@ -81,9 +79,6 @@ export class EgresoService {
 
                 articulos.push({cantidad: articulo.unidad || articulo.peso, ...resultado});
             }
-
-            console.log(articulos);
-            
 
             const articulosParseados = articulos.map((articulo) => {return { id: articulo.id, cantidad: articulo.unidad, tipo: articulo.tipo }})
 
