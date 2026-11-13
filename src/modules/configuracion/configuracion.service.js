@@ -21,7 +21,7 @@ export class ConfiguracionService {
         return{ 
             sessionExpiringTime: (await this.obtenerConfiguracion()).configuracion.sessionExpiringTime
         }
-};
+    };
 
     actualizarDuracionSesion = async (datos) => {
         let { duracionHoras } = datos
