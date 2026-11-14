@@ -50,15 +50,15 @@ const insumoController = await dependencyInjector.resolve("insumoController");
 const cotizacionController = await dependencyInjector.resolve("cotizacionController");
 
 // 4. Rutas de la API
-app.use("/api/usuarios", crearRouterUsuarios(userController));
+app.use("/api/usuarios", allowRoles(), crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
 app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
-app.use("/api/configuracion", allowRoles(), crearRouterConfiguracion(configuracionController));
+app.use("/api/configuracion", requireAuth, crearRouterConfiguracion(configuracionController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
-app.use("/api/productos", crearRouterProductos(productoController));
-app.use("/api/insumos", crearRouterInsumos(insumoController));
-app.use("/api/cotizacion", requireAuth, allowRoles("admin"), crearRouterCotizacion(cotizacionController));
+app.use("/api/productos", requireAuth, crearRouterProductos(productoController));
+app.use("/api/insumos", allowRoles("repositor"), crearRouterInsumos(insumoController));
+app.use("/api/cotizacion", requireAuth, crearRouterCotizacion(cotizacionController));
 
 // 5. Redirección de la raíz
 app.get("/", (req, res) => {

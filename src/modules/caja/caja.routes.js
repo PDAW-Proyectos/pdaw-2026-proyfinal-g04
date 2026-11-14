@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { allowRoles } from "../../common/middlewares/auth.guard.js";
 
 export const crearRouterCaja = (cajaController) => {
     const router = Router();
@@ -11,7 +12,7 @@ export const crearRouterCaja = (cajaController) => {
     router.post("/:id/retiro", cajaController.retirarEfectivo);
     router.put("/:id", cajaController.actualizarCaja);
     router.put("/:id/cerrar", cajaController.cerrarCaja);
-    router.delete("/:id", cajaController.eliminarCaja);
+    router.delete("/:id", allowRoles("admin"), cajaController.eliminarCaja);
 
     return router;
 };
