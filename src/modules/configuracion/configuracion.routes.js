@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { allowRoles, requireAuth } from "../../common/middlewares/auth.guard.js";
+import { allowRoles } from "../../common/middlewares/auth.guard.js";
 
 export const crearRouterConfiguracion = (configuracionController) => {
     const router = Router();

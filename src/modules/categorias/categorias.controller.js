@@ -7,7 +7,7 @@ export class CategoriasController {
 
     listarCategorias = async (req, res) => {
         const { pagina, limite } = validarPaginacion(req.query);
-        const categorias = this.categoriasService.listarCategorias();
+        const categorias = this.categoriasService.listarCategorias(pagina, limite);
         res.status(200).json({ categorias });
     };
 

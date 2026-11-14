@@ -31,7 +31,7 @@ export class ConfiguracionService {
         stock: (await this.obtenerConfiguracion()).configuracion.stock
     });
 
-    obtenerStock = async () => ({
+    obtenerNegocio = async () => ({
         negocio: (await this.obtenerConfiguracion()).configuracion.negocio
     });
 
