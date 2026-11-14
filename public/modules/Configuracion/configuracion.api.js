@@ -12,20 +12,5 @@ export function crearConfiguracionApi(base = "/api") {
                 body: JSON.stringify(payload),
             });
         },
-
-        listarCategorias() {
-            return solicitarJson(`${base}/configuracion/categorias`);
-        },
-
-        crearCategoria(nombre) {
-            return solicitarJson(`${base}/configuracion/categorias`, {
-                method: "POST",
-                body: JSON.stringify({ nombre }),
-            });
-        },
-
-        eliminarCategoria(id) {
-            return solicitarJson(`${base}/configuracion/categorias/${encodeURIComponent(id)}`, { method: "DELETE" });
-        },
     };
 }
