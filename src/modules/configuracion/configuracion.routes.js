@@ -8,7 +8,6 @@ export const crearRouterConfiguracion = (configuracionController) => {
     router.get("/stock", configuracionController.obtenerStock);
     router.get("/sesion", configuracionController.obtenerSesion);
     router.get("/negocio", configuracionController.obtenerSesion);
-
     router.patch("/negocio", allowRoles(), configuracionController.actualizarNegocio);
     router.patch("/expiracion", allowRoles(), configuracionController.actualizarExpiracion);
     router.patch("/stock", allowRoles(), configuracionController.actualizarStock);
