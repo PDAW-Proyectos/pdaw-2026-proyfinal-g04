@@ -18,6 +18,7 @@ import { crearRouterConfiguracion } from "./src/modules/configuracion/configurac
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const configuracionRepository = await dependencyInjector.resolve("configuracionRepository");
 
 // 1. Middlewares base
 app.use(express.json());
@@ -33,10 +34,18 @@ app.use(
       httpOnly: true, // Mitiga robo mediante XSS
       sameSite: "lax", // Mitiga CSRF
       secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 8, // 8 horas
+      maxAge: configuracionRepository.configuracion.sessionExpiringTime || null,
     },
   }),
 );
+
+app.use((req, res, next) => {
+  if (req.session?.cookie) {
+    const duracion = configuracionRepository.configuracion.sessionExpiringTime;
+    req.session.cookie.maxAge = duracion === 0 ? null : duracion;
+  }
+  next();
+});
 
 // 3. Inyección de dependencias
 const userController = await dependencyInjector.resolve("userController");
@@ -53,6 +62,12 @@ const cotizacionController = await dependencyInjector.resolve("cotizacionControl
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
 app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
+app.get(
+  "/api/configuracion/stock",
+  requireAuth,
+  allowRoles("repositor", "cajero"),
+  configuracionController.obtenerStock,
+);
 app.use("/api/configuracion", allowRoles(), crearRouterConfiguracion(configuracionController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
@@ -73,7 +88,7 @@ app.get("/caja.html", requireAuth, allowRoles("cajero"), (req, res) => {
 
 // B. Reposición / Inventario: Solo pueden entrar Repositor y Admin
 app.get("/repositor.html", requireAuth, allowRoles("repositor"), (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "repositor.html"));
 });
 
 // C. Panel general de Admin

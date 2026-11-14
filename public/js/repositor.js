@@ -1,3 +1,5 @@
+import { mostrarToast } from "../common/utils/alertas.js";
+
 // Mock de productos
 const inventarioMock = [
   {
@@ -222,6 +224,7 @@ let proveedoresFiltrados = [...proveedoresMock];
 
 // Variables paginacion inventario
 let paginaActual = 1;
+let umbralesStock = { critico: 5, medio: 10 };
 const itemsPorPagina = 12;
 let paginaProvActual = 1;
 const itemsPorPaginaProv = 10;
@@ -248,9 +251,9 @@ function renderizarInventario() {
 
     // Lógica del Semáforo
     let claseStock = "neutro"; // Por defecto no tiene fondo
-    if (producto.stock <= 5) {
+    if (producto.stock <= umbralesStock.critico) {
       claseStock = "rojo";
-    } else if (producto.stock <= 10) {
+    } else if (producto.stock <= umbralesStock.medio) {
       claseStock = "naranja";
     }
 
@@ -427,11 +430,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let coincideSemaforo = true;
       if (estadoStock === "critico") {
-        coincideSemaforo = producto.stock <= 5;
+        coincideSemaforo = producto.stock <= umbralesStock.critico;
       } else if (estadoStock === "advertencia") {
-        coincideSemaforo = producto.stock > 5 && producto.stock <= 10;
+        coincideSemaforo =
+          producto.stock > umbralesStock.critico &&
+          producto.stock <= umbralesStock.medio;
       } else if (estadoStock === "normal") {
-        coincideSemaforo = producto.stock > 10;
+        coincideSemaforo = producto.stock > umbralesStock.medio;
       }
 
       return coincideTexto && coincideSemaforo;
@@ -443,6 +448,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (inputBuscador) inputBuscador.addEventListener("input", aplicarFiltros);
   if (selectSemaforo) selectSemaforo.addEventListener("change", aplicarFiltros);
+
+  async function cargarUmbralesStock() {
+    try {
+      const respuesta = await fetch("/api/configuracion/stock");
+      if (!respuesta.ok) {
+        throw new Error(`Error HTTP ${respuesta.status}`);
+      }
+
+      const { stock } = await respuesta.json();
+      if (
+        !Number.isInteger(stock?.critico) ||
+        !Number.isInteger(stock?.medio) ||
+        stock.critico < 0 ||
+        stock.medio <= stock.critico
+      ) {
+        throw new Error("El backend devolvió umbrales de stock inválidos");
+      }
+
+      umbralesStock = stock;
+      aplicarFiltros();
+    } catch (error) {
+      console.error("Error cargando los umbrales de stock:", error);
+      mostrarToast("No se pudieron cargar los umbrales de stock", true);
+    }
+  }
+
+  cargarUmbralesStock();
 
   if (btnAnterior && btnSiguiente) {
     btnAnterior.addEventListener("click", () => {
