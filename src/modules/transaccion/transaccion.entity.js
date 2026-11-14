@@ -13,11 +13,11 @@ export class Transaccion {
         if (!id) throw new ValidationError("id no puede ser nulo");
         if (!Number.isInteger(monto)) throw new BadRequestError('monto debe ser un número entero');
         this.id = id
-        this.monto = monto
         this.idUsuario = idUsuario
+        this.idCaja = idCaja
+        this.monto = monto
         this.fecha = fecha || new Date().toISOString()
         this.metodoDePago = metodoDePago
         this.articulos = articulos || []
-        this.idCaja = idCaja
     }
 }

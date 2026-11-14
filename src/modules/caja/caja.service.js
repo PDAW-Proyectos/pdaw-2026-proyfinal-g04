@@ -135,6 +135,7 @@ export class CajaService {
             const egreso = await this.egresoService.crearEgreso({
                 ...datos,
                 monto: -Math.abs(datos.monto),
+                metodoDePago: "efectivo",
                 idUsuario,
                 idCaja: caja.id
             }, { administrarTransacciones: false });

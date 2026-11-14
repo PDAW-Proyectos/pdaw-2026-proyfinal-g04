@@ -14,7 +14,7 @@ import crearRouterCotizacion from "./src/modules/cotizacion/cotizacion.routes.js
 import { NotFoundError } from "./src/common/errors/errors.classes.js";
 import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.js";
 import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
-import { crearRouterConfiguracion } from "./src/modules/configuracion/configuration.routes.js";
+import { crearRouterConfiguracion } from "./src/modules/configuracion/configuracion.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

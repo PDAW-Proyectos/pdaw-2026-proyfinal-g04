@@ -77,14 +77,16 @@ export class EgresoService {
                     throw new BadRequestError(`Tipo de artículo inválido: ${articulo.tipo}`);
                 }
 
-                articulos.push(resultado);
+                articulos.push({cantidad: articulo.unidad || articulo.peso, ...resultado});
             }
+
+            const articulosParseados = articulos.map((articulo) => {return { id: articulo.id, cantidad: articulo.unidad, tipo: articulo.tipo }})
 
             const compra = await this.crearEgreso({
                 idUsuario,
                 idCaja: datos.idCaja,
                 metodoDePago: datos.metodoDePago,
-                articulos,
+                articulos: articulosParseados,
                 monto: datos.monto
             });
 
@@ -94,7 +96,10 @@ export class EgresoService {
                 }
             }
 
-            return compra;
+            return {
+                ...compra, 
+                articulos
+            };
         } catch (error) {
             if (administrarTransacciones) {
                 for (const repositorio of iniciados.reverse()) {

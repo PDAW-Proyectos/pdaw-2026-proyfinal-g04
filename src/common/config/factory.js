@@ -13,7 +13,7 @@ export class Factory {
     }
 
     crearProducto(entidad) {
-        const producto = entidad.unidad ? new ProductoUnidad(entidad) : new ProductoPeso(entidad);
+        const producto = entidad.unidad !== undefined ? new ProductoUnidad(entidad) : new ProductoPeso(entidad);
         return producto;
     }
 
