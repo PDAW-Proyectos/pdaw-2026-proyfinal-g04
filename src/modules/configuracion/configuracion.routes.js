@@ -1,10 +1,12 @@
 import { Router } from "express";
+import { requireAuth } from "../../common/middlewares/auth.guard.js";
 
 export const crearRouterConfiguracion = (configuracionController) => {
     const router = Router();
 
     router.get("/", configuracionController.obtenerConfiguracion);
     router.patch("/", configuracionController.actualizarConfiguracion);
+    router.get("/stock", requireAuth, configuracionController.obtenerStock);
     router.get("/sesion", configuracionController.obtenerSesion);
     router.patch("/sesion", configuracionController.actualizarDuracionSesion);
     router.get("/categorias", configuracionController.listarCategorias);
