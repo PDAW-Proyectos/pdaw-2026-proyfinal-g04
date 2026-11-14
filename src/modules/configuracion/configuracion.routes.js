@@ -1,15 +1,18 @@
 import { Router } from "express";
+import { allowRoles } from "../../common/middlewares/auth.guard.js";
 
 export const crearRouterConfiguracion = (configuracionController) => {
     const router = Router();
 
     router.get("/", configuracionController.obtenerConfiguracion);
-    router.patch("/", configuracionController.actualizarConfiguracion);
+    router.get("/stock", configuracionController.obtenerStock);
     router.get("/sesion", configuracionController.obtenerSesion);
-    router.patch("/sesion", configuracionController.actualizarDuracionSesion);
-    router.get("/categorias", configuracionController.listarCategorias);
-    router.post("/categorias", configuracionController.crearCategoria);
-    router.delete("/categorias/:id", configuracionController.eliminarCategoria);
+    router.get("/negocio", configuracionController.obtenerSesion);
+
+    router.patch("/negocio", allowRoles(), configuracionController.actualizarNegocio);
+    router.patch("/expiracion", allowRoles(), configuracionController.actualizarExpiracion);
+    router.patch("/stock", allowRoles(), configuracionController.actualizarStock);
+    router.patch("/sesion", allowRoles(), configuracionController.actualizarDuracionSesion);
 
     return router;
 };

@@ -13,34 +13,33 @@ export class ConfiguracionController {
         res.status(200).json(configuracion);
     };
 
+    obtenerNegocio = async (req, res) => {
+        const configuracion = await this.configuracionService.obtenerNegocio(req.body);
+        res.status(200).json(configuracion);
+    };
+
     actualizarDuracionSesion = async (req, res) => {
         const configuracion = await this.configuracionService.actualizarDuracionSesion(req.body);
         res.status(200).json(configuracion);
     };
 
-    actualizarConfiguracion = async (req, res) => {
-        const configuracion =
-            await this.configuracionService.actualizarConfiguracion(req.body);
+    actualizarNegocio = async (req, res) => {
+        const configuracion = await this.configuracionService.actualizarNegocio(req.body);
+        res.status(200).json({ configuracion });
+    };
+
+    actualizarExpiracion = async (req, res) => {
+        const configuracion = await this.configuracionService.actualizarExpiracion(req.body.sessionDurationMinutes);
+        res.status(200).json({ configuracion });
+    };
+
+    actualizarStock = async (req, res) => {
+        const configuracion = await this.configuracionService.actualizarStock(req.body);
         res.status(200).json({ configuracion });
     };
 
     obtenerStock = async (_req, res) => {
         const stock = await this.configuracionService.obtenerStock();
         res.status(200).json(stock);
-    };
-
-    listarCategorias = async (_req, res) => {
-        const categorias = await this.configuracionService.listarCategorias();
-        res.status(200).json({ categorias });
-    };
-
-    crearCategoria = async (req, res) => {
-        const categoria = await this.configuracionService.crearCategoria(req.body?.nombre);
-        res.status(201).json({ categoria });
-    };
-
-    eliminarCategoria = async (req, res) => {
-        await this.configuracionService.eliminarCategoria(req.params.id);
-        res.status(204).send();
-    };
+    }; 
 }

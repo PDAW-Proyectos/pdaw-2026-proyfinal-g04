@@ -15,6 +15,7 @@ import { NotFoundError } from "./src/common/errors/errors.classes.js";
 import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.js";
 import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
 import { crearRouterConfiguracion } from "./src/modules/configuracion/configuracion.routes.js";
+import { crearRouterCategorias } from "./src/modules/categorias/categorias.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
 const userController = await dependencyInjector.resolve("userController");
 const authController = await dependencyInjector.resolve("authController");
 const cajaController = await dependencyInjector.resolve("cajaController");
+const categoriasController = await dependencyInjector.resolve("categoriaController");
 const configuracionController = await dependencyInjector.resolve("configuracionController");
 const egresoController = await dependencyInjector.resolve("egresoController");
 const ingresoController = await dependencyInjector.resolve("ingresoController");
@@ -62,13 +64,8 @@ const cotizacionController = await dependencyInjector.resolve("cotizacionControl
 app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
 app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
-app.get(
-  "/api/configuracion/stock",
-  requireAuth,
-  allowRoles("repositor", "cajero"),
-  configuracionController.obtenerStock,
-);
-app.use("/api/configuracion", allowRoles(), crearRouterConfiguracion(configuracionController));
+app.use("/api/categorias", requireAuth, crearRouterCategorias(categoriasController));
+app.use("/api/configuracion", requireAuth(), crearRouterConfiguracion(configuracionController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));

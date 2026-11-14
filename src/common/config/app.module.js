@@ -23,6 +23,8 @@ import { CajaController } from "../../modules/caja/caja.controller.js";
 import { ConfiguracionRepository } from "../../modules/configuracion/configuracion.repository.js";
 import { ConfiguracionService } from "../../modules/configuracion/configuracion.service.js";
 import { ConfiguracionController } from "../../modules/configuracion/configuracion.controller.js";
+import { CategoriasService } from "../../modules/categorias/categorias.service.js";
+import { CategoriasController } from "../../modules/categorias/categorias.controller.js";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -55,6 +57,10 @@ dependencyInjector.registerSingleton("cajaRepository", () =>
 
 dependencyInjector.registerSingleton("configuracionRepository", () =>
   ConfiguracionRepository.inicializar(path.join(__dirname, "../../../data", "Configuraciones.json"), factory.crearConfiguracion),
+);
+
+dependencyInjector.registerSingleton("categoriaRepository", () =>
+  Repository.inicializar(path.join(__dirname, "../../../data", "Categorias.json"), factory.crearCategoria),
 );
 
 
@@ -153,4 +159,14 @@ dependencyInjector.registerSingleton("configuracionService", async () => {
 dependencyInjector.registerSingleton("configuracionController", async () => {
   const configuracionService = await dependencyInjector.resolve("configuracionService");
   return new ConfiguracionController(configuracionService);
+});
+
+dependencyInjector.registerSingleton("categoriaService", async () => {
+  const categoriaRepository = await dependencyInjector.resolve("categoriaRepository");
+  return new CategoriasService(categoriaRepository);
+});
+
+dependencyInjector.registerSingleton("categoriaController", async () => {
+  const categoriaService = await dependencyInjector.resolve("categoriaService");
+  return new CategoriasController(categoriaService);
 });
