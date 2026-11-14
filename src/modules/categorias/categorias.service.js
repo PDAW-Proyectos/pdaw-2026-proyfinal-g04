@@ -1,5 +1,5 @@
 
-import { BadRequestError, NotFoundError } from "../../common/errors/errors.classes.js";
+import { BadRequestError, ConflictError, NotFoundError } from "../../common/errors/errors.classes.js";
 
 export class CategoriasService {
     constructor(categoriaRepository) {
@@ -89,6 +89,10 @@ export class CategoriasService {
 
         if (!categoria) {
             throw new NotFoundError("No se encontró la categoría.");
+        }
+
+        if(categoria.productos.length > 0) {
+            throw new ConflictError("No puede eliminarse una categoria con productos asociados")
         }
 
         await this.categoriaRepository.eliminar(Number(id));
