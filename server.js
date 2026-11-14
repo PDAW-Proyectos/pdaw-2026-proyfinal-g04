@@ -65,7 +65,7 @@ app.use("/api/usuarios", crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
 app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
 app.use("/api/categorias", requireAuth, crearRouterCategorias(categoriasController));
-app.use("/api/configuracion", allowRoles(), crearRouterConfiguracion(configuracionController));
+app.use("/api/configuracion", requireAuth(), crearRouterConfiguracion(configuracionController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", crearRouterProductos(productoController));
