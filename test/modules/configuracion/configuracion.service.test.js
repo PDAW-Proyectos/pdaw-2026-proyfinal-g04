@@ -18,7 +18,10 @@ describe("ConfiguracionService", () => {
         test("retorna la configuración correctamente si existe en el repositorio", async () => {
             const resultado = await service.obtenerConfiguracion();
             expect(resultado).toEqual({
-                configuracion: { sessionExpiringTime: 28800000 }
+                configuracion: {
+                    sessionExpiringTime: 28800000,
+                    sessionDurationMinutes: 480
+                }
             });
         });
 

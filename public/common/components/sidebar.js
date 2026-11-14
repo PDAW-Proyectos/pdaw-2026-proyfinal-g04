@@ -1,2 +1,5 @@
+import { renderizarIconos } from "../utils/iconos.js";
 
-lucide.createIcons();
+export function iniciarSidebar() {
+    renderizarIconos();
+}

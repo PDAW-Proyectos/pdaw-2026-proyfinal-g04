@@ -15,9 +15,11 @@ import { NotFoundError } from "./src/common/errors/errors.classes.js";
 import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.js";
 import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
 import { crearRouterConfiguracion } from "./src/modules/configuracion/configuracion.routes.js";
+import { crearRouterCategorias } from "./src/modules/categorias/categorias.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const configuracionRepository = await dependencyInjector.resolve("configuracionRepository");
 
 // 1. Middlewares base
 app.use(express.json());
@@ -33,15 +35,24 @@ app.use(
       httpOnly: true, // Mitiga robo mediante XSS
       sameSite: "lax", // Mitiga CSRF
       secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 8, // 8 horas
+      maxAge: configuracionRepository.configuracion.sessionExpiringTime || null,
     },
   }),
 );
+
+app.use((req, res, next) => {
+  if (req.session?.cookie) {
+    const duracion = configuracionRepository.configuracion.sessionExpiringTime;
+    req.session.cookie.maxAge = duracion === 0 ? null : duracion;
+  }
+  next();
+});
 
 // 3. Inyección de dependencias
 const userController = await dependencyInjector.resolve("userController");
 const authController = await dependencyInjector.resolve("authController");
 const cajaController = await dependencyInjector.resolve("cajaController");
+const categoriasController = await dependencyInjector.resolve("categoriaController");
 const configuracionController = await dependencyInjector.resolve("configuracionController");
 const egresoController = await dependencyInjector.resolve("egresoController");
 const ingresoController = await dependencyInjector.resolve("ingresoController");
@@ -50,9 +61,10 @@ const insumoController = await dependencyInjector.resolve("insumoController");
 const cotizacionController = await dependencyInjector.resolve("cotizacionController");
 
 // 4. Rutas de la API
-app.use("/api/usuarios", allowRoles(), crearRouterUsuarios(userController));
+app.use("/api/usuarios", requireAuth, crearRouterUsuarios(userController));
 app.use("/api/auth", crearRouterAuth(authController));
 app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
+app.use("/api/categorias", requireAuth, crearRouterCategorias(categoriasController));
 app.use("/api/configuracion", requireAuth, crearRouterConfiguracion(configuracionController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
@@ -73,7 +85,7 @@ app.get("/caja.html", requireAuth, allowRoles("cajero"), (req, res) => {
 
 // B. Reposición / Inventario: Solo pueden entrar Repositor y Admin
 app.get("/repositor.html", requireAuth, allowRoles("repositor"), (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "repositor.html"));
 });
 
 // C. Panel general de Admin

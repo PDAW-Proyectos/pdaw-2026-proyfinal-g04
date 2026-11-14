@@ -6,6 +6,7 @@ import { Ingreso } from "../../modules/transaccion/ingreso/ingreso.entity.js";
 import { Egreso } from "../../modules/transaccion/egreso/egreso.entity.js";
 import { Cotizacion } from "../../modules/cotizacion/cotizacion.entity.js";
 import { Caja } from "../../modules/caja/caja.entity.js";
+import { Categoria } from "../../modules/categorias/categorias.entity.js";
 
 export class Factory {
     crearUsuario(entidad) {
@@ -37,5 +38,9 @@ export class Factory {
     // Sin uso aun
     crearConfiguracion(entidad) {
         return entidad
+    }
+
+    crearCategoria(entidad) {
+        return new Categoria(entidad)
     }
 }

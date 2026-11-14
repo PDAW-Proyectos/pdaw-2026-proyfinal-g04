@@ -7,6 +7,18 @@ describe("ConfiguracionRepository", () => {
     let tempDir;
     let repoPath;
     const mockFactory = (data) => ({ ...data, _instanciado: true });
+    const CONFIG_DEFAULT = {
+        sessionExpiringTime: 28800000,
+        negocio: {
+            nombre: "Mi Comercio",
+            telefono: "",
+            direccion: ""
+        },
+        stock: {
+            critico: 5,
+            medio: 15
+        }
+    };
 
     beforeEach(async () => {
         tempDir = await mkdtemp(join(tmpdir(), "test-configuracion-"));
@@ -20,7 +32,7 @@ describe("ConfiguracionRepository", () => {
         expect(repo.ruta).toBe(repoPath);
         expect(repo.factory).toBe(mockFactory);
         expect(repo.entidades).toEqual([]);
-        expect(repo.configuracion).toBeUndefined(); 
+        expect(repo.configuracion).toEqual(CONFIG_DEFAULT);
     });
 
     test("actualizarConfiguracion() actualiza duracionHoras y guarda automáticamente en disco", async () => {
@@ -32,9 +44,10 @@ describe("ConfiguracionRepository", () => {
         
         await repo.actualizarConfiguracion({ duracionHoras: 12 });
         
-        expect(repo.configuracion).toEqual({ duracionHoras: 12 });
+        const esperado = { ...CONFIG_DEFAULT, duracionHoras: 12 };
+        expect(repo.configuracion).toEqual(esperado);
         const archivoGuardado = JSON.parse(await readFile(repoPath, "utf8"));
-        expect(archivoGuardado.configuracion).toEqual({ duracionHoras: 12 });
+        expect(archivoGuardado.configuracion).toEqual(esperado);
     });
 
     test("guardar() persiste tanto la configuracion en memoria como las entidades", async () => {
@@ -65,7 +78,10 @@ describe("ConfiguracionRepository", () => {
 
         await repo.cargar();
         
-        expect(repo.configuracion).toEqual(datosPersistidos.configuracion);
+        expect(repo.configuracion).toEqual({
+            ...CONFIG_DEFAULT,
+            ...datosPersistidos.configuracion
+        });
         expect(repo.entidades.length).toBe(2);
         expect(repo.entidades[0]._instanciado).toBe(true);
         expect(repo.proximoId).toBe(3);
@@ -80,7 +96,7 @@ describe("ConfiguracionRepository", () => {
         const repo = new ConfiguracionRepository(repoPath, mockFactory);
         await repo.cargar();
         
-        expect(repo.configuracion).toEqual({ sessionExpiringTime: 28800000 });
+        expect(repo.configuracion).toEqual(CONFIG_DEFAULT);
         expect(repo.proximoId).toBe(11);
     });
 
@@ -89,7 +105,7 @@ describe("ConfiguracionRepository", () => {
         
         await expect(repo.cargar()).resolves.not.toThrow();
         
-        expect(repo.configuracion).toBeUndefined();
+        expect(repo.configuracion).toEqual(CONFIG_DEFAULT);
         expect(repo.entidades).toEqual([]); 
     });
 
@@ -97,10 +113,13 @@ describe("ConfiguracionRepository", () => {
         const repo1 = await ConfiguracionRepository.inicializar(repoPath, mockFactory);
         await repo1.actualizarConfiguracion({ duracionHoras: 72 });
         await repo1.crear({ param: "test1" }); 
-        
+
         const repo2 = await ConfiguracionRepository.inicializar(repoPath, mockFactory);
         
-        expect(repo2.configuracion).toEqual({ duracionHoras: 72 });
+        expect(repo2.configuracion).toEqual({
+            ...CONFIG_DEFAULT,
+            duracionHoras: 72
+        });
         const resultadoListar = repo2.listar(1, 10);
         expect(resultadoListar.datos.length).toBe(1);
         expect(resultadoListar.datos[0].param).toBe("test1");

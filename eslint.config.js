@@ -12,7 +12,8 @@ export default defineConfig([
         ...globals.browser, 
         ...globals.node,
         ...globals.jest,
-        lucide: "readonly"
+        lucide: "readonly",
+        Chart: 'readonly'
       } 
     },
     rules: {

@@ -34,14 +34,18 @@ export class ProductoController {
   };
 
   actualizarPreciosMasivo = async (req, res) => {
-    const { productos } = req.body;
+    const { tipo, valor } = req.body;
 
-    if (!Array.isArray(productos)) {
-      throw new BadRequestError("El formato de productos es inválido");
+    if (!tipo || valor === undefined) {
+      throw new BadRequestError("Faltan el tipo o el valor para actualizar los precios");
     }
 
-    await this.productoService.actualizarPreciosMasivo(productos);
-    res.status(200).json({ message: "Precios y cotización actualizados correctamente" });
+    const modificados = await this.productoService.actualizarPreciosMasivo(tipo, valor);
+    
+    res.status(200).json({ 
+      message: "Precios actualizados correctamente", 
+      modificados 
+    });
   };
 
   eliminarProducto = async (req, res) => {
