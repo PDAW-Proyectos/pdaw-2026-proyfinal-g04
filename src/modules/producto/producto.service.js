@@ -63,43 +63,24 @@ export class ProductoService {
         }
     }
 
-   async actualizarPreciosMasivo(tipo, valor) {
+    async actualizarPreciosMasivo(productosActualizados) {
         try {
             this.productoRepository.iniciarTransaccion();
-
             const cotizacionActual = await this.cotizacionService.consultarCotizacion();
-            const idCoti = cotizacionActual.cotizacion.id;
 
-            const todosLosProductos = this.productoRepository.listar(1, 999999).datos;
-            let modificados = 0;
+            for (const idProdModificado of productosActualizados) {
+                const anterior = await this.productoRepository.buscarPorId(idProdModificado);
 
-            for (const prod of todosLosProductos) {
-                const usd = prod.precioUsd || 0;
-                const arsActual = prod.precio || prod.precioArs || 0;
-                let nuevoArs = arsActual;
-
-                if (tipo === 'porcentaje') {
-                    nuevoArs = arsActual * (1 + (valor / 100));
-                } else if (tipo === 'dolar') {
-                    nuevoArs = usd * valor;
+                if (anterior) {
+                    const datosBase = {
+                        ...anterior,
+                        idCotizacion: cotizacionActual.cotizacion.id
+                    };
+                    await this.productoRepository.actualizar(datosBase);
                 }
-
-                const precioRedondeado = Math.round(nuevoArs / 10) * 10;
-
-                const datosActualizados = {
-                    ...prod,
-                    precio: precioRedondeado,
-                    precioArs: precioRedondeado, 
-                    idCotizacion: idCoti
-                };
-
-                await this.productoRepository.actualizar(datosActualizados);
-                modificados++;
             }
+
             await this.productoRepository.confirmarTransaccion();
-            
-            return modificados;
-            
         } catch (error) {
             await this.productoRepository.rollback();
             throw error;
