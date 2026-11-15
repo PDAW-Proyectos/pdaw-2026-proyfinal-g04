@@ -11,7 +11,7 @@ export class IngresoService {
     listarIngresos = (pagina, limite) => {
         const { datos, ...paginacion } = this.transaccionRepository.listar(pagina, limite);
         return {
-            ingresos: datos,
+            ingresos: datos.filter(({ monto }) => monto > 0),
             ...paginacion
         };
     };
@@ -19,7 +19,7 @@ export class IngresoService {
     filtrarIngresos = (filtros, pagina, limite) => {
         const { datos, ...paginacion } = this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
-            ingresos: datos,
+            ingresos: datos.filter(({ monto }) => monto > 0),
             ...paginacion
         };
     };
@@ -27,7 +27,7 @@ export class IngresoService {
     buscarIngreso = (id) => {
         const ingreso = this.transaccionRepository.buscarPorId(id);
 
-        if (!ingreso) {
+        if (!ingreso || ingreso.monto <= 0) {
             throw new NotFoundError("Ingreso");
         }
 
