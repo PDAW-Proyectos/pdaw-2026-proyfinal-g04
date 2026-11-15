@@ -51,6 +51,11 @@ export class AuthController {
         return res.status(200).json(user);
     };
 
+    me = (req, res) => {
+        const usuario = this.authService.me(req.session.userId);
+        return res.status(200).json(usuario);
+    };
+
     logout = async (req, res, next) => {
         try {
             await this.authService.logout(req.session);

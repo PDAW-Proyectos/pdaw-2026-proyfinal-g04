@@ -67,7 +67,7 @@ export class EgresoService {
 
                 if (articulo.tipo === "producto") {
                     resultado = articulo.id
-                        ? await this.productoService.aumentarStock(articulo.id, articulo.unidad || articulo.peso)
+                        ? await this.productoService.aumentarStock(articulo.id, articulo.unidad || articulo.peso || articulo.cantidad)
                         : await this.productoService.crearProducto(articulo);
                 } else if (articulo.tipo === "insumo") {
                     resultado = articulo.id

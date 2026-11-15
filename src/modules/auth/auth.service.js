@@ -58,6 +58,18 @@ export class AuthService {
         };
     };
 
+    me = (idUsuario) => {
+        const usuario = this.userService.buscarUsuario(idUsuario);
+
+        return {
+            id: usuario.id,
+            nombre: usuario.nombre,
+            apellido: usuario.apellido,
+            email: usuario.email,
+            rol: usuario.rol
+        };
+    };
+
     logout = async (session) => {
         return new Promise((resolve, reject) => {
             session.destroy((error) => {

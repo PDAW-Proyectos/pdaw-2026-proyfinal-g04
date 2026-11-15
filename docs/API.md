@@ -235,7 +235,23 @@ Base: `/api/auth`
 
 ### `GET /api/auth/me`
 
-**No implementado.** El router lo registra solo si `authController.me` existe; actualmente no existe, por lo que la ruta devuelve `404`.
+**Descripción:** Devuelve los datos públicos del usuario autenticado.
+
+**Headers:** cookie de sesión `connect.sid`.
+
+**Response `200`:**
+
+```json
+{
+  "id": 3,
+  "nombre": "Juan",
+  "apellido": "Perez",
+  "email": "cajero@kchin.com",
+  "rol": "cajero"
+}
+```
+
+La respuesta **no incluye** `contraseña`.
 
 ---
 
@@ -1047,14 +1063,13 @@ Base: `/api/caja`
 
 ### `POST /api/caja/`
 
-**Descripción:** Abre/crea una caja.
+**Descripcion:** Abre/crea una caja. `usuarioAbre` se toma de `req.session.userId`, no del body.
 
 **Request:**
 
 ```json
 {
   "nroCaja": 4,
-  "usuarioAbre": 3,
   "montoInicial": 50000,
   "observaciones": ["Apertura de turno tarde"]
 }

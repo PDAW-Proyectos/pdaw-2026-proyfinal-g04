@@ -399,12 +399,25 @@ body {
   width: 330px;
   height: 100vh;
   padding: 29px 23px 22px;
-  overflow-y: auto;
 
   border-left: 1px solid #e0e3d9;
   background: #fff;
   color: #171914;
   box-shadow: -10px 0 35px #17191408;
+}
+
+.cobro-panel .carrito-lista,
+.cobro-panel .cobro-vacio {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.cobro-panel .cobro-footer {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #e9ebe5;
 }
 
 .cobro-header {
@@ -1105,4 +1118,39 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+.metodos-pago {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.metodo-pago {
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #161615;
+  padding: 0.6rem 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.metodo-pago.activo {
+  background: #c7ff3e;
+  border-color: #161615;
+}
+
+#input-observaciones-cierre {
+  width: 100%;
+  resize: vertical;
+}
+
+.select-modo {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
 }

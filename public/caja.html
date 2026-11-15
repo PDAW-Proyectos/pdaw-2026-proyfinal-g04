@@ -15,7 +15,7 @@
       <a class="sidebar-logo">
         <img src="img/Logo-reducido-negro.svg" alt="KCHIN" />
       </a>
-      <a class="sidebar-perfil">
+      <a class="nav-enlace" href="#" data-nav="perfil">
         <i data-lucide="user-round" aria-hidden="true"></i>
         <span>Perfil</span>
       </a>
@@ -64,15 +64,15 @@
         <header class="rol-header">
           <div>
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
-            <h1 id="nombre-rol">Cajero 1</h1>
+            <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniaciado a las <strong>08:00 hs</strong>
+              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            Caja abierta
+            <span data-campo="estado-caja">Caja cerrada</span>
           </div>
         </header>
 
@@ -99,14 +99,13 @@
 
         <!-- Entrada para lector de código de barras -->
         <section class="lector-seccion" aria-label="Lector de código de barras">
-          <form id="form-lector-codigo" class="lector-caja">
+          <form class="lector-caja lector-form">
             <i data-lucide="scan-barcode" aria-hidden="true"></i>
 
             <input
               type="text"
-              id="input-lector-barras"
+              class="lector-input"
               placeholder="Escanear código o presionar F2 para escribir..."
-              autofocus
               autocomplete="off"
             />
             <button type="submit" class="boton-lector">Cargar</button>
@@ -164,7 +163,6 @@
                   <th>Ticket</th>
                   <th>Método</th>
                   <th>Total</th>
-                  <th class="col-acciones">Acción</th>
                 </tr>
               </thead>
               <tbody id="tabla-base-body"></tbody>
@@ -217,29 +215,28 @@
         <header class="rol-header">
           <div>
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
-            <h1 id="nombre-rol">Cajero 1</h1>
+            <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniaciado a las <strong>08:00 hs</strong>
+              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            Caja abierta
+            <span data-campo="estado-caja">Caja cerrada</span>
           </div>
         </header>
 
         <!-- Grilla de productos y buscador -->
         <!-- Entrada para lector de código de barras -->
         <section class="lector-seccion" aria-label="Lector de código de barras">
-          <form id="form-lector-codigo" class="lector-caja">
+          <form class="lector-caja lector-form">
             <i data-lucide="scan-barcode" aria-hidden="true"></i>
 
             <input
               type="text"
-              id="input-lector-barras"
+              class="lector-input"
               placeholder="Escanear código o presionar F2 para escribir..."
-              autofocus
               autocomplete="off"
             />
             <button type="submit" class="boton-lector">Cargar</button>
@@ -247,15 +244,7 @@
         </section>
 
         <!--Filtro de categorias-->
-        <nav class="chips-categorias" aria-label="Filtros rápidos">
-          <button type="button" class="chip active">Todos</button>
-          <button type="button" class="chip">Almácen</button>
-          <button type="button" class="chip">Verduleria</button>
-          <button type="button" class="chip">Fiambreria</button>
-          <button type="button" class="chip">Bebidas</button>
-          <button type="button" class="chip">Golosinas</button>
-          <button type="button" class="chip">Limpieza</button>
-        </nav>
+        <nav class="chips-categorias" aria-label="Filtros rapidos"></nav>
 
         <!-- Fila de Favoritos / Venta Frecuente -->
         <section class="catalogo-seccion">
@@ -312,15 +301,15 @@
         <header class="rol-header">
           <div>
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
-            <h1 id="nombre-rol">Cajero 1</h1>
+            <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniaciado a las <strong>08:00 hs</strong>
+              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            Caja abierta
+            <span data-campo="estado-caja">Caja cerrada</span>
           </div>
         </header>
 
@@ -333,11 +322,14 @@
             <button type="button" class="chip" data-filtro="Efectivo">
               Efectivo
             </button>
-            <button type="button" class="chip" data-filtro="Tarjeta">
-              Tarjeta
+            <button type="button" class="chip" data-filtro="credito">
+              Crédito
             </button>
-            <button type="button" class="chip" data-filtro="Billeteras / QR">
-              Billeteras / QR
+            <button type="button" class="chip" data-filtro="debito">
+              Débito
+            </button>
+            <button type="button" class="chip" data-filtro="transferencia">
+              Transferencia
             </button>
           </nav>
         </section>
@@ -356,7 +348,6 @@
                   <th>Ticket</th>
                   <th>Método</th>
                   <th>Total</th>
-                  <th class="col-acciones">Acciones</th>
                 </tr>
               </thead>
               <tbody id="lista-ventas-turno">
@@ -372,15 +363,15 @@
         <header class="rol-header">
           <div>
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
-            <h1 id="nombre-rol">Cajero 1</h1>
+            <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniaciado a las <strong>08:00 hs</strong>
+              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            Caja abierta
+            <span data-campo="estado-caja">Caja cerrada</span>
           </div>
         </header>
         <!-- Tarjetas de Balance y acción -->
@@ -388,17 +379,17 @@
         <section class="arqueo-metricas" aria-label="Métricas de arqueo">
           <article class="metrica-tarjeta">
             <span class="metrica-titulo">Fondo Inicial</span>
-            <strong class="metrica-valor texto-inicial">$ 50.000,00</strong>
+            <strong class="metrica-valor texto-inicial" id="arqueo-fondo-inicial">$ 0,00</strong>
           </article>
 
           <article class="metrica-tarjeta">
             <span class="metrica-titulo">Ingresos del Turno</span>
-            <strong class="metrica-valor texto-ingreso">+$ 5.000,00</strong>
+            <strong class="metrica-valor texto-ingreso" id="arqueo-ingresos">+$ 0,00</strong>
           </article>
 
           <article class="metrica-tarjeta">
             <span class="metrica-titulo">Egresos del Turno</span>
-            <strong class="metrica-valor texto-egreso">-$ 15.000,00</strong>
+            <strong class="metrica-valor texto-egreso" id="arqueo-egresos">-$ 0,00</strong>
           </article>
 
           <!-- Botón para nuevo movimiento -->
@@ -423,7 +414,6 @@
                 <tr>
                   <th>Hora</th>
                   <th>Tipo</th>
-                  <th>Motivo / Concepto</th>
                   <th>Monto</th>
                   <th>Responsable</th>
                 </tr>
@@ -477,23 +467,24 @@
             </p>
           </div>
           <div class="caja-estado">
-            <span class="estado-indicador"></span> Caja abierta
+            <span class="estado-indicador"></span>
+            <span data-campo="estado-caja">Caja cerrada</span>
           </div>
         </header>
 
         <!-- Buscador por número de ticket -->
         <section class="filtros-historial" aria-label="Búsqueda y filtros">
           <div class="buscar-historial">
-            <form id="form-lector-codigo" class="lector-caja">
-              <i data-lucide="search" aria-hidden="true"></i>
+          <form id="form-lector-inicio" class="lector-caja">
+            <i data-lucide="scan-barcode" aria-hidden="true"></i>
 
-              <input
-                type="text"
-                id="input-lector-barras"
-                placeholder="Buscar Nro de Ticket (ej: #0032)... "
-                autofocus
-                autocomplete="off"
-              />
+            <input
+              type="text"
+              id="input-lector-inicio"
+              class="lector-input"
+              placeholder="Escanear código o presionar F2 para escribir..."
+              autocomplete="off"
+            />
               <button type="submit" class="boton-lector">Buscar</button>
             </form>
           </div>
@@ -551,13 +542,13 @@
           <!-- Total Recaudado -->
           <article class="tarjeta-metrica-blanca">
             <span class="metrica-titulo-claro">Total recaudado</span>
-            <strong class="metrica-valor-resaltado">$ 128.450,00</strong>
+            <strong class="metrica-valor-resaltado" id="historial-total-recaudado">$ 0,00</strong>
           </article>
 
           <!-- Total Tickets -->
           <article class="tarjeta-metrica-blanca">
             <span class="metrica-titulo-claro">Total tickets</span>
-            <strong class="metrica-valor-simple">48</strong>
+            <strong class="metrica-valor-simple" id="historial-total-tickets">0</strong>
           </article>
         </section>
 
@@ -576,7 +567,6 @@
                   <th>Total</th>
                   <th>Metodo de pago</th>
                   <th>Estado</th>
-                  <th class="col-acciones">Acciones</th>
                 </tr>
               </thead>
               <tbody id="lista-historial-completo">
@@ -584,6 +574,66 @@
               </tbody>
             </table>
           </div>
+        </section>
+      </div>
+
+      <!-- VISTA: PERFIL -->
+      <div id="perfil" class="vista-tab">
+        <header class="rol-header">
+          <div>
+            <p class="rol-eyebrow">KCHIN / PERFIL</p>
+            <h1 data-campo="perfil-nombre">Cajero</h1>
+            <p class="rol-descripcion" data-campo="perfil-email">
+              Sesion iniciada
+            </p>
+          </div>
+
+          <div class="caja-estado">
+            <span class="estado-indicador"></span>
+            <span data-campo="estado-caja">Caja cerrada</span>
+          </div>
+        </header>
+
+        <section class="inicio-metricas" aria-label="Datos del perfil">
+          <article class="metrica-tarjeta">
+            <span class="metrica-titulo">Nombre</span>
+            <strong class="metrica-valor" id="perfil-nombre-completo">--</strong>
+          </article>
+
+          <article class="metrica-tarjeta">
+            <span class="metrica-titulo">Rol</span>
+            <strong class="metrica-valor" id="perfil-rol">--</strong>
+          </article>
+
+          <article class="metrica-tarjeta">
+            <span class="metrica-titulo">Caja actual</span>
+            <strong class="metrica-valor" id="perfil-caja">Sin caja</strong>
+          </article>
+        </section>
+
+        <section class="inicio-acciones" aria-label="Acciones de perfil">
+          <button
+            type="button"
+            class="accion-btn"
+            data-accion="abrir-modal-apertura"
+          >
+            <i data-lucide="lock-open" aria-hidden="true"></i>
+            <span>Abrir caja</span>
+          </button>
+
+          <button
+            type="button"
+            class="accion-btn"
+            data-accion="abrir-modal-seleccionar-caja"
+          >
+            <i data-lucide="lock-keyhole" aria-hidden="true"></i>
+            <span>Cerrar caja</span>
+          </button>
+
+          <button type="button" class="accion-btn" id="btn-logout">
+            <i data-lucide="log-out" aria-hidden="true"></i>
+            <span>Cerrar sesion</span>
+          </button>
         </section>
       </div>
     </main>
@@ -609,30 +659,39 @@
         <p>Elegí productos del catálogo para comenzar.</p>
       </div>
 
-      <div class="cobro-resumen">
-        <div class="cobro-linea">
-          <span>Subtotal</span>
+      <div class="cobro-footer">
+        <div class="cobro-resumen">
+          <div class="cobro-linea">
+            <span>Subtotal</span>
 
-          <span id="subtotal-venta">$ 0,00</span>
+            <span id="subtotal-venta">$ 0,00</span>
+          </div>
+
+          <div class="cobro-linea">
+            <span id="etiqueta-ajuste">Descuento</span>
+
+            <span id="descuento-venta">$ 0,00</span>
+          </div>
+
+          <div class="cobro-total">
+            <span>Total</span>
+
+            <strong id="total-venta">$ 0,00</strong>
+          </div>
+
+          <div class="metodos-pago" id="selector-metodo-pago" role="group" aria-label="MActodo de pago">
+            <button type="button" class="metodo-pago" data-metodo="efectivo">Efectivo</button>
+            <button type="button" class="metodo-pago" data-metodo="debito">Debito</button>
+            <button type="button" class="metodo-pago" data-metodo="credito">Credito</button>
+            <button type="button" class="metodo-pago" data-metodo="transferencia">Transferencia</button>
+          </div>
+
+          <button type="button" class="boton-cobrar" id="boton-cobrar" disabled>
+            <span>Cobrar venta</span>
+
+            <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+          </button>
         </div>
-
-        <div class="cobro-linea">
-          <span>Descuentos</span>
-
-          <span id="descuento-venta">$ 0,00</span>
-        </div>
-
-        <div class="cobro-total">
-          <span>Total</span>
-
-          <strong id="total-venta">$ 0,00</strong>
-        </div>
-
-        <button type="button" class="boton-cobrar" id="boton-cobrar" disabled>
-          <span>Cobrar venta</span>
-
-          <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-        </button>
       </div>
     </aside>
 
@@ -669,27 +728,17 @@
         </header>
 
         <div class="modal-body">
-          <!-- Sección: Responsable -->
+          <!-- Sección: Caja física -->
           <section class="apertura-seccion">
-            <h3 class="apertura-seccion-titulo">Responsable de Caja</h3>
+            <h3 class="apertura-seccion-titulo">Caja física</h3>
             <div class="apertura-grid-datos">
               <div class="form-group">
-                <label for="select-id-responsable">ID (Perfil)</label>
-                <select id="select-id-responsable" class="select-estandar">
-                  <option value="cajero1" selected>Cajero 1</option>
-                  <option value="cajero2">Cajero 2</option>
-                  <option value="admin">Administrativo</option>
+                <label for="select-nro-caja">Número de caja</label>
+                <select id="select-nro-caja" class="select-estandar">
+                  <option value="1" selected>Caja 1</option>
+                  <option value="2">Caja 2</option>
+                  <option value="3">Caja 3</option>
                 </select>
-              </div>
-              <div class="form-group">
-                <label for="input-nombre-responsable">Nombre y apellido</label>
-                <!-- Este input podría autocompletarse según el ID, o permitirse editar -->
-                <input
-                  type="text"
-                  id="input-nombre-responsable"
-                  class="input-historial"
-                  value="Juanita Mingus"
-                />
               </div>
             </div>
           </section>
@@ -940,13 +989,10 @@
           <div class="valor-modificador-input">
             <label for="input-valor-mod">Monto a aplicar</label>
             <div class="input-grupo-mixto">
-              <span
-                id="tipo-valor"
-                class="indicador-tipo"
-                data-valor="porcentaje"
-                aria-hidden="true"
-                >%</span
-              >
+                <select id="modo-valor-mod" class="select-modo" aria-label="Tipo de valor">
+                  <option value="porcentaje">%</option>
+                  <option value="fijo">$</option>
+                </select>
               <input
                 type="number"
                 id="input-valor-mod"
@@ -1080,11 +1126,12 @@
         <div class="modal-body teclado-container">
           <input
             type="text"
-            id="input-teclado-cantidad"
-            class="visor-teclado"
-            value="1"
-            readonly
-          />
+              id="input-teclado-cantidad"
+              class="visor-teclado"
+              value="1"
+              inputmode="decimal"
+              autocomplete="off"
+            />
 
           <div class="teclado-numerico-grilla">
             <button type="button" class="tecla">1</button>
@@ -1185,44 +1232,6 @@
                 <i data-lucide="chevron-right" class="chevron-icono"></i>
               </button>
 
-              <!-- Ajuste de caja -->
-              <button
-                type="button"
-                class="opcion-movimiento"
-                data-accion="avanzar-paso-2"
-                data-tipo="ajuste"
-              >
-                <div class="opcion-icono">
-                  <i data-lucide="credit-card"></i
-                  ><span class="icono-badge verde"
-                    ><i data-lucide="plus"></i
-                  ></span>
-                </div>
-                <div class="opcion-texto">
-                  <strong>Ajuste de caja</strong><span>Corregí un monto</span>
-                </div>
-                <i data-lucide="chevron-right" class="chevron-icono"></i>
-              </button>
-
-              <!-- Otro movimiento -->
-              <button
-                type="button"
-                class="opcion-movimiento"
-                data-accion="avanzar-paso-2"
-                data-tipo="otro"
-              >
-                <div class="opcion-icono">
-                  <i data-lucide="file-text"></i
-                  ><span class="icono-badge verde"
-                    ><i data-lucide="clock"></i
-                  ></span>
-                </div>
-                <div class="opcion-texto">
-                  <strong>Otro movimiento</strong
-                  ><span>Registrá otro concepto</span>
-                </div>
-                <i data-lucide="chevron-right" class="chevron-icono"></i>
-              </button>
             </div>
           </div>
 
@@ -1257,31 +1266,6 @@
                 </div>
               </div>
 
-              <!-- Grupo Concepto -->
-              <div class="form-group" id="grupo-concepto">
-                <label id="label-concepto" for="select-concepto-mov"
-                  >Motivo / Concepto</label
-                >
-                <select id="select-concepto-mov" class="select-estandar">
-                  <option value="" disabled selected>
-                    Seleccioná un motivo
-                  </option>
-                  <option value="cambio">Cambio / Sencillo</option>
-                  <option value="pago_proveedor">Pago a proveedor</option>
-                  <option value="retiro_seguridad">Retiro de seguridad</option>
-                  <option value="otro">Otro concepto</option>
-                </select>
-              </div>
-
-              <!-- Grupo Responsable -->
-              <div class="form-group" id="grupo-responsable">
-                <label for="select-responsable-mov">Responsable</label>
-                <select id="select-responsable-mov" class="select-estandar">
-                  <option value="Cajero 1" selected>Cajero 1</option>
-                  <option value="Cajero 2">Cajero 2</option>
-                  <option value="Admin">Administrador</option>
-                </select>
-              </div>
             </form>
           </div>
         </div>
@@ -1306,23 +1290,23 @@
       </div>
     </div>
 
-    <!-- Modal Historial (Reintegro / Devolución) -->
+    <!-- Modal Seleccion de Caja a Cerrar -->
     <div
       class="modal-overlay modal-oculto"
-      id="modal-historial-movimiento"
+      id="modal-seleccionar-caja-cierre"
       aria-hidden="true"
     >
       <div
-        class="modal-card"
+        class="modal-card modal-ancha"
         role="dialog"
-        aria-labelledby="titulo-historial-movimiento"
+        aria-labelledby="titulo-seleccionar-caja-cierre"
       >
         <header class="modal-header">
-          <h2 id="titulo-historial-movimiento">Movimiento</h2>
+          <h2 id="titulo-seleccionar-caja-cierre">Seleccionar caja a cerrar</h2>
           <button
             type="button"
             class="modal-cerrar"
-            data-accion="cerrar-modal-historial"
+            data-accion="cerrar-modal-seleccionar-caja"
             aria-label="Cerrar modal"
           >
             <i data-lucide="x" aria-hidden="true"></i>
@@ -1330,83 +1314,18 @@
         </header>
 
         <div class="modal-body">
-          <!-- Pestañas de tipo -->
-          <div class="tipo-modificador-tabs">
-            <button
-              type="button"
-              class="tab-btn activo"
-              data-accion="set-tipo-historial"
-              data-tipo="reintegro"
-            >
-              Cambio
-            </button>
-            <button
-              type="button"
-              class="tab-btn"
-              data-accion="set-tipo-historial"
-              data-tipo="devolucion"
-            >
-              Devolución
-            </button>
-          </div>
-
-          <!-- Monto a reintegrar -->
-          <div class="form-group-historial">
-            <label id="label-monto-historial">Monto a reintegrar</label>
-            <div class="input-grupo-mixto focus-activo">
-              <div class="select-mixto">
-                <span class="moneda-fija" aria-label="Moneda en pesos">$</span>
-              </div>
-              <input
-                type="number"
-                id="input-monto-historial"
-                placeholder="0"
-                min="0"
-                step="any"
-                autocomplete="off"
-              />
-            </div>
-          </div>
-
-          <!-- Motivo (opcional) -->
-          <div class="form-group-historial">
-            <label for="select-motivo-historial">Motivo (opcional)</label>
-            <select id="select-motivo-historial" class="input-historial">
-              <option value="" disabled selected>Seleccioná un motivo</option>
-              <option value="falla">Falla de fábrica</option>
-              <option value="cambio">Cambio de opinión</option>
-              <option value="otro">Otro</option>
-            </select>
-          </div>
-
-          <!-- Observaciones (opcional) -->
-          <div class="form-group-historial">
-            <label for="input-obs-historial">Observaciones (opcional)</label>
-            <input
-              type="text"
-              id="input-obs-historial"
-              class="input-historial"
-              placeholder="Agregá una nota..."
-              autocomplete="off"
-            />
+          <div id="lista-cajas-abiertas-cierre" class="tabla-contenedor">
+            <p class="estado-vacio-pausa">Cargando cajas...</p>
           </div>
         </div>
 
-        <!-- Botones de Acción -->
         <footer class="modal-footer-acciones">
           <button
             type="button"
             class="btn-secundario"
-            data-accion="cerrar-modal-historial"
+            data-accion="cerrar-modal-seleccionar-caja"
           >
             Cancelar
-          </button>
-          <button
-            type="button"
-            class="btn-principal"
-            data-accion="confirmar-historial"
-          >
-            Confirmar
           </button>
         </footer>
       </div>
@@ -1433,7 +1352,7 @@
             </div>
             <div class="textos-cierre">
               <h2 id="titulo-cierre">Cerrar Caja</h2>
-              <p>Confirmá el cierre de la caja del cajero 1</p>
+              <p>Confirmá el cierre de la caja de <span data-campo="nombre-cajero-cierre">el cajero</span></p>
             </div>
           </div>
           <button
@@ -1451,15 +1370,15 @@
           <div class="cierre-resumen-grid">
             <div class="cierre-metrica">
               <span class="metrica-label">Total en ventas</span>
-              <strong class="metrica-valor">$ 12.450,00</strong>
+              <strong class="metrica-valor" id="cierre-total-ventas">$ 0,00</strong>
             </div>
             <div class="cierre-metrica metrica-central">
               <span class="metrica-label">Movimientos</span>
-              <strong class="metrica-valor">8</strong>
+              <strong class="metrica-valor" id="cierre-movimientos">0</strong>
             </div>
             <div class="cierre-metrica">
               <span class="metrica-label">Fecha y hora</span>
-              <strong class="metrica-valor">10/11/2026 • 19:15</strong>
+              <strong class="metrica-valor" id="cierre-fecha-hora">--</strong>
             </div>
           </div>
 
@@ -1493,6 +1412,18 @@
             <strong id="txt-diferencia-cierre" class="diferencia-valor texto-ok"
               >$ 0,00</strong
             >
+          </div>
+
+          <div class="cierre-ingreso-grupo">
+            <label for="input-observaciones-cierre" class="label-oscuro"
+              >Observaciones (opcional)</label
+            >
+            <textarea
+              id="input-observaciones-cierre"
+              class="input-historial"
+              rows="2"
+              placeholder="Detalle del cierre..."
+            ></textarea>
           </div>
         </div>
 

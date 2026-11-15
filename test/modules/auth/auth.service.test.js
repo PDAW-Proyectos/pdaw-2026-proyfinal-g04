@@ -12,6 +12,7 @@ describe("AuthService", () => {
         jest.restoreAllMocks();
         mockUserService = {
             buscarUsuarioPorEmail: jest.fn(),
+            buscarUsuario: jest.fn(),
             crearUsuario: jest.fn()
         };
         authService = new AuthService(mockUserService);
@@ -138,6 +139,31 @@ describe("AuthService", () => {
             expect(compareSpy).toHaveBeenCalledWith("123", "pass");
             expect(resultado.idUsuario).toBe(99);
             expect(resultado.rol).toBe("repositor");
+        });
+    });
+
+    describe("me", () => {
+        test("devuelve solo los datos publicos del usuario de la sesion", () => {
+            mockUserService.buscarUsuario.mockReturnValue({
+                id: 3,
+                nombre: "Juan",
+                apellido: "Perez",
+                email: "cajero@test.com",
+                rol: "cajero",
+                contraseña: "hash"
+            });
+
+            const resultado = authService.me(3);
+
+            expect(mockUserService.buscarUsuario).toHaveBeenCalledWith(3);
+            expect(resultado).toEqual({
+                id: 3,
+                nombre: "Juan",
+                apellido: "Perez",
+                email: "cajero@test.com",
+                rol: "cajero"
+            });
+            expect(resultado).not.toHaveProperty("contraseña");
         });
     });
 

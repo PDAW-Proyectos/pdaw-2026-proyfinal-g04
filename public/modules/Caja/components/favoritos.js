@@ -9,11 +9,21 @@ export function renderizarFavoritos(articulos) {
 
     articulos.forEach((prod) => {
         const html = `
-            <article class="card-producto-favorito" data-accion="agregar-al-carrito" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}">
+            <article
+                class="card-producto-favorito"
+                data-accion="agregar-al-carrito"
+                data-id="${prod.id}"
+                data-nombre="${prod.nombre}"
+                data-precio="${prod.precio}"
+                data-stock="${prod.stock ?? ""}"
+                data-peso="${Boolean(prod.peso)}"
+                data-unidad="${prod.unidadMedida ?? "u"}"
+            >
                 <div class="card-imagen">
-                <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy">
+                <img src="img/producto-bolsa.svg" alt="${prod.nombre}" loading="lazy">
                 </div>
                 <div class="card-info">
+                <span class="producto-categoria">${prod.categoria ?? ""}</span>
                 <h3>${prod.nombre}</h3>
                 <strong class="precio-destacado">${formatearPrecio(prod.precio)}</strong>
                 </div>

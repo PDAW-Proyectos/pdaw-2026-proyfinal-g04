@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from "../../common/errors/errors.classes.js";
+import { BadRequestError, NotFoundError, ConflictError } from "../../common/errors/errors.classes.js";
 
 export class ConfiguracionService {
     constructor(configuracionRepository, productoRepository = null) {
@@ -34,6 +34,63 @@ export class ConfiguracionService {
     obtenerNegocio = async () => ({
         negocio: (await this.obtenerConfiguracion()).configuracion.negocio
     });
+
+    obtenerCajas = async () => ({
+        cajas: (await this.obtenerConfiguracion()).configuracion.cajas ?? []
+    });
+
+    crearCajaConfiguracion = async (datos) => {
+        const nombre = String(datos?.nombre ?? datos?.nroCaja ?? "").trim();
+
+        if (!nombre) {
+            throw new BadRequestError("El nombre de la caja es obligatorio");
+        }
+
+        const configuracion = (await this.obtenerConfiguracion()).configuracion;
+        const cajas = [...(configuracion.cajas ?? [])];
+
+        if (cajas.some((caja) => String(caja.nombre ?? caja).trim() === nombre)) {
+            throw new ConflictError("Ya existe una caja con ese nombre");
+        }
+
+        cajas.push({ nombre });
+        await this.configuracionRepository.actualizarConfiguracion({ cajas });
+
+        return (await this.obtenerConfiguracion()).configuracion;
+    };
+
+    actualizarCajaConfiguracion = async (nombreActual, datos) => {
+        const nombreViejo = String(nombreActual ?? "").trim();
+        const nombreNuevo = String(datos?.nombre ?? datos?.nroCaja ?? "").trim();
+
+        if (!nombreViejo) {
+            throw new BadRequestError("El nombre actual de la caja es obligatorio");
+        }
+
+        if (!nombreNuevo) {
+            throw new BadRequestError("El nombre de la caja es obligatorio");
+        }
+
+        const configuracion = (await this.obtenerConfiguracion()).configuracion;
+        const cajas = [...(configuracion.cajas ?? [])];
+        const indice = cajas.findIndex((caja) => String(caja.nombre ?? caja).trim() === nombreViejo);
+
+        if (indice === -1) {
+            throw new NotFoundError("Caja");
+        }
+
+        if (
+            nombreViejo !== nombreNuevo &&
+            cajas.some((caja) => String(caja.nombre ?? caja).trim() === nombreNuevo)
+        ) {
+            throw new ConflictError("Ya existe una caja con ese nombre");
+        }
+
+        cajas[indice] = { nombre: nombreNuevo };
+        await this.configuracionRepository.actualizarConfiguracion({ cajas });
+
+        return (await this.obtenerConfiguracion()).configuracion;
+    };
 
     actualizarNegocio = async (datos) => {
 

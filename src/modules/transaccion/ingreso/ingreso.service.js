@@ -63,7 +63,8 @@ export class IngresoService {
             const articulos = [];
 
             for (const articulo of datos.articulos) {
-                const resultado = await this.productoService.disminuirStock(articulo.id, articulo.unidad || articulo.peso);
+                console.log(articulo);
+                const resultado = await this.productoService.disminuirStock(articulo.id, articulo.unidad || articulo.peso || articulo.cantidad);
                 articulos.push({ ...resultado, cantidad: articulo.unidad || articulo.peso });
             }
 

@@ -23,7 +23,7 @@ export class CajaController {
     };
 
     crearCaja = async (req, res) => {
-        const caja = await this.cajaService.crearCaja(req.body);
+        const caja = await this.cajaService.crearCaja(req.body, req.session.userId);
         res.status(201).json(caja);
     };
 

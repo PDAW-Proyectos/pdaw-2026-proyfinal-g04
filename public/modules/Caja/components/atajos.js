@@ -13,7 +13,8 @@ export function configurarAtajosTeclado() {
 
         if (event.key === "F2") {
             event.preventDefault();
-            document.getElementById("input-lector-barras")?.focus();
+            const vistaActiva = document.querySelector(".vista-tab.activa");
+            vistaActiva?.querySelector(".lector-input")?.focus();
         }
 
         if (event.key === "F3") {
