@@ -9,11 +9,21 @@ export function renderizarGrillaPrincipal(articulos) {
 
     articulos.forEach((prod) => {
         const html = `
-            <article class="card-producto" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}">
+            <article
+                class="card-producto"
+                data-id="${prod.id}"
+                data-nombre="${prod.nombre}"
+                data-precio="${prod.precio}"
+                data-stock="${prod.stock ?? ""}"
+                data-peso="${Boolean(prod.peso)}"
+                data-unidad="${prod.unidadMedida ?? "u"}"
+                data-categoria="${prod.idCategoria ?? ""}"
+            >
                 <div class="card-img">
                 <i data-lucide="package" aria-hidden="true"></i>
                 </div>
                 <div class="card-detalles">
+                <span class="producto-categoria">${prod.categoria ?? ""}</span>
                 <h3 class="producto-nombre">${prod.nombre}</h3>
                 <div class="producto-footer">
                     <strong class="producto-precio">${formatearPrecio(prod.precio)}</strong>

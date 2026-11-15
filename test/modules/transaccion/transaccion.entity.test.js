@@ -61,15 +61,21 @@ describe("Transaccion (Clase Abstracta)", () => {
             expect(() => new TransaccionConcreta({ ...datosValidosBase, id: valor })).toThrow("id no puede ser nulo");
         });
 
+        it("acepta un monto decimal", () => {
+            const transaccion = new TransaccionConcreta({ ...datosValidosBase, monto: 10.5 });
+
+            expect(transaccion.monto).toBe(10.5);
+        });
+
         it.each([
-            { desc: "es un número decimal (float)", valor: 10.5 },
             { desc: "es un string", valor: "100" },
             { desc: "es undefined", valor: undefined },
             { desc: "es null", valor: null },
-            { desc: "es NaN", valor: NaN }
+            { desc: "es NaN", valor: NaN },
+            { desc: "es Infinity", valor: Infinity }
         ])("arroja BadRequestError si el monto $desc", ({ valor }) => {
             expect(() => new TransaccionConcreta({ ...datosValidosBase, monto: valor })).toThrow(BadRequestError);
-            expect(() => new TransaccionConcreta({ ...datosValidosBase, monto: valor })).toThrow("monto debe ser un número entero");
+            expect(() => new TransaccionConcreta({ ...datosValidosBase, monto: valor })).toThrow("monto debe ser un número finito");
         });
     });
 });

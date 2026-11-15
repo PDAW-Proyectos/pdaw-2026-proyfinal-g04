@@ -62,6 +62,28 @@ describe('ProductoService', () => {
         });
     });
 
+    describe('filtrarProductos()', () => {
+        it('debe inyectar la cotización en los productos filtrados', () => {
+            mockProductoRepository.listarPorPropiedades.mockReturnValue({
+                datos: [{ id: 1, nombre: 'Coca', idCotizacion: 2 }],
+                total: 1,
+                pagina: 1,
+                limite: 10
+            });
+            mockCotizacionService.buscarCotizacion.mockReturnValue({
+                venta: 1200,
+                fechaActualizacion: '2026-11-15'
+            });
+
+            const resultado = productoService.filtrarProductos({ nombre: 'coca' }, 1, 10);
+
+            expect(mockProductoRepository.listarPorPropiedades).toHaveBeenCalledWith({ nombre: 'coca' }, 1, 10);
+            expect(resultado.productos[0].cotizacion).toBe(1200);
+            expect(resultado.productos[0].cotizacionFecha).toBe('2026-11-15');
+            expect(resultado.productos[0]).not.toHaveProperty('idCotizacion');
+        });
+    });
+
     describe('buscarProducto()', () => {
         test('debe lanzar NotFoundError si el producto no existe', () => {
             // Arrange

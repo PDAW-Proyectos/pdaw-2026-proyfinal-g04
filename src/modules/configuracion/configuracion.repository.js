@@ -12,7 +12,8 @@ export class ConfiguracionRepository extends Repository {
         stock: {
             critico: 5,
             medio: 15
-        }
+        },
+        cajas: []
     };
 
     constructor(ruta, factory) {
@@ -40,7 +41,8 @@ export class ConfiguracionRepository extends Repository {
             stock: {
                 ...this.#configuracion.stock,
                 ...datos.stock
-            }
+            },
+            cajas: datos.cajas ?? this.#configuracion.cajas
         };
         await this.guardar();
     }
@@ -64,11 +66,12 @@ export class ConfiguracionRepository extends Repository {
                     ...this.#configuracion.negocio,
                     ...datos?.configuracion?.negocio
                 },
-                stock: {
-                    ...this.#configuracion.stock,
-                    ...datos?.configuracion?.stock
-                }
-            };
+            stock: {
+                ...this.#configuracion.stock,
+                ...datos?.configuracion?.stock
+            },
+            cajas: datos?.configuracion?.cajas ?? this.#configuracion.cajas
+        };
             this.proximoId = Math.max(0, ...this.entidades.map((e) => e.id)) + 1;
         } catch (error) {
             if (error.code !== "ENOENT") {

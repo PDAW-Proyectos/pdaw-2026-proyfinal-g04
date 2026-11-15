@@ -25,6 +25,8 @@ import { ConfiguracionService } from "../../modules/configuracion/configuracion.
 import { ConfiguracionController } from "../../modules/configuracion/configuracion.controller.js";
 import { CategoriasService } from "../../modules/categorias/categorias.service.js";
 import { CategoriasController } from "../../modules/categorias/categorias.controller.js";
+import { TransaccionesService } from "../../modules/transaccion/transaccion.service.js";
+import { TransaccionesController } from "../../modules/transaccion/transaccion.controller.js";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -169,4 +171,14 @@ dependencyInjector.registerSingleton("categoriaService", async () => {
 dependencyInjector.registerSingleton("categoriaController", async () => {
   const categoriaService = await dependencyInjector.resolve("categoriaService");
   return new CategoriasController(categoriaService);
+});
+
+dependencyInjector.registerSingleton("transaccionService", async () => {
+  const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
+  return new TransaccionesService(transaccionRepository);
+});
+
+dependencyInjector.registerSingleton("transaccionController", async () => {
+  const transaccionService = await dependencyInjector.resolve("transaccionService");
+  return new TransaccionesController(transaccionService);
 });

@@ -18,7 +18,7 @@ export const cajasSeed = [
             "Se detectó un faltante de $200 al realizar el arqueo"
         ],
         historialDeTransacciones: [6, 7, 11, 12, 16, 17],
-        nroCaja: 1
+        nroCaja: "Caja 1"
     },
     {
         id: 2,
@@ -38,7 +38,7 @@ export const cajasSeed = [
             "Se detectó un sobrante de $500 al realizar el arqueo"
         ],
         historialDeTransacciones: [8, 9, 13, 14, 18, 19],
-        nroCaja: 2
+        nroCaja: "Caja 2"
     },
     {
         id: 3,
@@ -58,6 +58,6 @@ export const cajasSeed = [
             "El arqueo de caja coincidió con el total esperado"
         ],
         historialDeTransacciones: [10, 15, 20],
-        nroCaja: 3
+        nroCaja: "Caja 3"
     }
 ];
