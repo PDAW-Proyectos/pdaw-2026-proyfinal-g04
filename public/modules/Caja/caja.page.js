@@ -14,9 +14,11 @@ import { iniciarModalCantidad } from "./modales/cantidad.js";
 import { iniciarModalApertura } from "./modales/apertura.js";
 import { iniciarModalCierre } from "./modales/cierre.js";
 import { iniciarTransacciones } from "../Transacciones/transacciones.page.js";
+import { iniciarPerfil } from "../Perfil/perfil.page.js";
 
 export function iniciarCaja() {
     renderizarIconos();
+    iniciarPerfil();
 
     const store = crearCajaStore();
 

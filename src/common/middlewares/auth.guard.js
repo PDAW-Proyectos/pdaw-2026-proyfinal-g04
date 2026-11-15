@@ -4,7 +4,7 @@ import path from "node:path";
 export function requireAuth(req, res, next) {
   if (!req.session || !req.session.userId) {
     // Si viene desde el navegador por URL, redirige al login
-    if (req.accepts("html")) {
+    if (!req.originalUrl.startsWith("/api/") && req.accepts("html")) {
       return res.redirect("/login.html");
     }
     return res.status(401).json({ error: "Es necesario iniciar sesión" });
@@ -17,7 +17,7 @@ export function allowRoles(...rolesPermitidos) {
   return (req, res, next) => {
     // Si no está autenticado, va al login
     if (!req.session || !req.session.userId) {
-      if (req.accepts("html")) {
+      if (!req.originalUrl.startsWith("/api/") && req.accepts("html")) {
         return res.redirect("/login.html");
       }
       return res.status(401).json({ error: "Es necesario iniciar sesión" });
@@ -31,7 +31,7 @@ export function allowRoles(...rolesPermitidos) {
     }
 
     // Si fallan los permisos: 403 Forbidden
-    if (req.accepts("html")) {
+    if (!req.originalUrl.startsWith("/api/") && req.accepts("html")) {
       return res
         .status(403)
         .sendFile(path.join(process.cwd(), "public", "accesoDenegado.html"));

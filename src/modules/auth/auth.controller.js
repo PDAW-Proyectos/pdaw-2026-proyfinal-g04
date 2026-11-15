@@ -51,6 +51,21 @@ export class AuthController {
         return res.status(200).json(user);
     };
 
+    me = async (req, res) => {
+        const user = await this.authService.me(req.session.userId);
+
+        return res.status(200).json(user);
+    };
+
+    actualizarPerfil = async (req, res) => {
+        const user = await this.authService.actualizarPerfil(
+            req.session.userId,
+            req.body
+        );
+
+        return res.status(200).json(user);
+    };
+
     logout = async (req, res, next) => {
         try {
             await this.authService.logout(req.session);

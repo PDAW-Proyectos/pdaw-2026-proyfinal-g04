@@ -11,9 +11,11 @@ import { conectarFiltrosInventario } from "./components/filtrosInventario.js";
 import { crearPaginacionInventario, crearPaginacionProveedores } from "./components/paginacion.js";
 import { crearModalStock } from "./modales/stock.js";
 import { crearModalEscaner } from "./modales/escaner.js";
+import { iniciarPerfil } from "../Perfil/perfil.page.js";
 
 export function iniciarArticulos() {
     renderizarIconos();
+    iniciarPerfil();
 
     const api = crearArticulosApi();
     const store = crearArticulosStore({

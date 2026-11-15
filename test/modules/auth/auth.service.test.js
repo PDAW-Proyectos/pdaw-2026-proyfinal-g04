@@ -1,7 +1,12 @@
 import { jest } from '@jest/globals';
 import bcrypt from "bcrypt";
 import { AuthService } from "../../../src/modules/auth/auth.service.js";
-import { ConflictError, ForbiddenError, UnauthorizedError } from "../../../src/common/errors/errors.classes.js";
+import {
+    BadRequestError,
+    ConflictError,
+    ForbiddenError,
+    UnauthorizedError
+} from "../../../src/common/errors/errors.classes.js";
 
 describe("AuthService", () => {
     let mockUserService;
@@ -12,6 +17,8 @@ describe("AuthService", () => {
         jest.restoreAllMocks();
         mockUserService = {
             buscarUsuarioPorEmail: jest.fn(),
+            buscarUsuario: jest.fn(),
+            actualizarUsuario: jest.fn(),
             crearUsuario: jest.fn()
         };
         authService = new AuthService(mockUserService);
@@ -138,6 +145,102 @@ describe("AuthService", () => {
             expect(compareSpy).toHaveBeenCalledWith("123", "pass");
             expect(resultado.idUsuario).toBe(99);
             expect(resultado.rol).toBe("repositor");
+        });
+    });
+
+    describe("me", () => {
+        test("devuelve el perfil público de la sesión sin exponer la contraseña", () => {
+            mockUserService.buscarUsuario.mockReturnValue({
+                id: 7,
+                nombre: "Ana",
+                apellido: "Pérez",
+                email: "ana@test.com",
+                contraseña: "hash-secreto",
+                rol: "repositor"
+            });
+
+            expect(authService.me(7)).toEqual({
+                idUsuario: 7,
+                nombre: "Ana",
+                apellido: "Pérez",
+                email: "ana@test.com",
+                rol: "repositor"
+            });
+            expect(mockUserService.buscarUsuario).toHaveBeenCalledWith(7);
+        });
+    });
+
+    describe("actualizarPerfil", () => {
+        const datosPerfil = {
+            nombre: " Ana ",
+            apellido: " Pérez ",
+            email: "ana@test.com"
+        };
+
+        test("actualiza los campos editables y devuelve datos sin contraseña", async () => {
+            mockUserService.buscarUsuario.mockReturnValue({
+                id: 7,
+                nombre: "Ana",
+                apellido: "Pérez",
+                email: "ana@test.com",
+                contraseña: "hash-secreto",
+                rol: "repositor"
+            });
+            mockUserService.buscarUsuarioPorEmail.mockReturnValue({ id: 7 });
+            mockUserService.actualizarUsuario.mockResolvedValue({
+                id: 7,
+                nombre: "Ana",
+                apellido: "Pérez",
+                email: "ana@test.com",
+                contraseña: "hash-secreto",
+                rol: "repositor"
+            });
+
+            await expect(authService.actualizarPerfil(7, datosPerfil)).resolves.toEqual({
+                idUsuario: 7,
+                nombre: "Ana",
+                apellido: "Pérez",
+                email: "ana@test.com",
+                rol: "repositor"
+            });
+            expect(mockUserService.actualizarUsuario).toHaveBeenCalledWith(7, {
+                nombre: "Ana",
+                apellido: "Pérez",
+                email: "ana@test.com"
+            });
+        });
+
+        test("rechaza un email que pertenece a otro usuario", async () => {
+            mockUserService.buscarUsuario.mockReturnValue({ id: 7 });
+            mockUserService.buscarUsuarioPorEmail.mockReturnValue({ id: 8 });
+
+            await expect(
+                authService.actualizarPerfil(7, datosPerfil)
+            ).rejects.toThrow(ConflictError);
+            expect(mockUserService.actualizarUsuario).not.toHaveBeenCalled();
+        });
+
+        test("rechaza campos no editables y datos incompletos", async () => {
+            await expect(
+                authService.actualizarPerfil(7, { ...datosPerfil, rol: "admin" })
+            ).rejects.toThrow(BadRequestError);
+            await expect(
+                authService.actualizarPerfil(7, {
+                    nombre: "Ana",
+                    email: "ana@test.com"
+                })
+            ).rejects.toThrow(BadRequestError);
+            expect(mockUserService.actualizarUsuario).not.toHaveBeenCalled();
+        });
+
+        test("rechaza un email con formato inválido", async () => {
+            await expect(
+                authService.actualizarPerfil(7, {
+                    ...datosPerfil,
+                    email: "email-invalido"
+                })
+            ).rejects.toThrow(BadRequestError);
+            expect(mockUserService.actualizarUsuario).not.toHaveBeenCalled();
         });
     });
 
