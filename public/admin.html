@@ -7,7 +7,7 @@
     <link href="common/styles/sidebar.css" rel="stylesheet" />
     <link href="common/styles/tablas.css" rel="stylesheet" />
     <link href="common/styles/componentes.css" rel="stylesheet" />
-    <link href="common/styles/perfil.css" rel="stylesheet">
+    <link href="common/styles/perfil.css" rel="stylesheet" />
     <title>KCHIN | Administración</title>
   </head>
   <body>
@@ -69,13 +69,13 @@
         </header>
 
         <div id="contenedor-perfil"></div>
-
       </section>
 
       <section id="inicio" class="vista active">
         <header class="vista-header">
           <h2>Dashboard Financiero</h2>
         </header>
+
         <div class="vista-cuerpo">
           <div class="dashboard-grid">
             <!-- Ventas Monetarias -->
@@ -266,6 +266,13 @@
                 <canvas id="grafico-precios"></canvas>
               </div>
             </div>
+          </div>
+
+          <!-- Switch de vistas solo para Admin -->
+          <div class="admin-switch-vistas">
+            <span class="switch-label">Ir a vista:</span>
+            <a href="/caja.html" class="btn-switch-vista">Caja</a>
+            <a href="/repositor.html" class="btn-switch-vista">Repositor</a>
           </div>
         </div>
       </section>

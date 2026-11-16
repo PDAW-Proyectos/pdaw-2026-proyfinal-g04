@@ -23,7 +23,11 @@ export function crearPreciosStore(api) {
     };
 
     const mapearProducto = (producto) => {
-        const precioUsd = producto.precioUsd ?? 0;
+        if (typeof producto.precioUsd !== "number" || !Number.isFinite(producto.precioUsd) || producto.precioUsd < 0) {
+            throw new Error(`El producto ${producto.id} no tiene un precio USD válido`);
+        }
+
+        const precioUsd = producto.precioUsd;
         const cotizacion = Number(producto.cotizacion ?? 0);
 
         return {

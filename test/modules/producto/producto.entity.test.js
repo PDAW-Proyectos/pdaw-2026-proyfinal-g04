@@ -11,6 +11,10 @@ describe("Producto", () => {
             expect(() => {new ProductoPeso({ id: 1, nombre: "Manzana", categoria: "Fruta", descripcion: "Manzana roja", precioUsd: 100, peso: 1, unidadMedida: "g" })}).not.toThrow();
         });
 
+        test("precioUsd es obligatorio", () => {
+            expect(() => {new ProductoUnidad({ id: 1, nombre: "Manzana", unidad: 1 })}).toThrow("precioUsd debe ser un número válido mayor o igual a 0");
+        });
+
         test("al instanciar un objeto de tipo hijo de Producto con id nulo devuelve excepcion", async () => {
             expect(() => {new ProductoPeso({ id: null, nombre: "Manzana", categoria: "Fruta", descripcion: "Manzana roja", precioUsd: 100, peso: 1, unidadMedida: "g" })}).toThrow("id no puede ser nulo");
         });

@@ -3,8 +3,6 @@ import { mostrarToast } from "../../common/utils/alertas.js";
 import { renderizarIconos } from "../../common/utils/iconos.js";
 import { crearArticulosApi } from "./articulos.api.js";
 import { crearArticulosStore } from "./articulos.store.js";
-import { inventarioMock } from "./data/inventario.mock.js";
-import { proveedoresMock } from "./data/proveedores.mock.js";
 import { crearTablaInventario } from "./components/tablaInventario.js";
 import { crearTablaProveedores } from "./components/tablaProveedores.js";
 import { conectarFiltrosInventario } from "./components/filtrosInventario.js";
@@ -18,10 +16,7 @@ export function iniciarArticulos() {
     iniciarPerfil();
 
     const api = crearArticulosApi();
-    const store = crearArticulosStore({
-        inventario: inventarioMock,
-        proveedores: proveedoresMock,
-    });
+    const store = crearArticulosStore();
 
     const inputBuscador = document.getElementById("buscar-producto");
     const selectSemaforo = document.getElementById("select-semaforo");
@@ -59,8 +54,17 @@ export function iniciarArticulos() {
     });
 
     const modalStock = crearModalStock({
-        store,
-        onActualizado: () => aplicarFiltros(),
+        onGuardar: async (id, cambios) => {
+            const producto = store.buscarProducto(id);
+
+            if (!producto) {
+                throw new Error("No se encontró el producto seleccionado");
+            }
+
+            const actualizado = await api.actualizarProducto(producto, cambios);
+            store.actualizarProducto(id, actualizado);
+            aplicarFiltros();
+        },
     });
 
     crearModalEscaner({
@@ -121,6 +125,26 @@ export function iniciarArticulos() {
 
     renderizarInventario();
     renderizarProveedores();
+
+    api.listarProductos()
+        .then((productos) => {
+            store.establecerInventario(productos);
+            aplicarFiltros();
+        })
+        .catch((error) => {
+            console.error("Error cargando los productos:", error);
+            mostrarToast("No se pudieron cargar los productos", true);
+        });
+
+    api.listarProveedores()
+        .then((proveedores) => {
+            store.establecerProveedores(proveedores);
+            aplicarFiltroProveedores();
+        })
+        .catch((error) => {
+            console.error("Error cargando los proveedores:", error);
+            mostrarToast("No se pudieron cargar los proveedores", true);
+        });
 
     api.cargarUmbralesStock()
         .then((umbrales) => {

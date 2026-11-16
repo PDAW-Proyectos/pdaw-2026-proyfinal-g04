@@ -125,7 +125,7 @@
                   <th>Categoría</th>
                   <th>Descripción</th>
                   <th class="sortable" data-sort="precio">
-                    Precio
+                    Precio (ARS)
                     <i data-lucide="arrow-up-down" class="icono-sort"></i>
                   </th>
                   <th class="sortable" data-sort="stock">
@@ -237,27 +237,6 @@
             <strong id="modal-nombre-producto">Nombre del producto</strong>
           </p>
 
-          <div class="modal-foto-container">
-            <img
-              id="modal-preview-foto"
-              src=""
-              alt="Vista previa"
-              class="modal-preview-foto"
-            />
-            <div class="modal-foto-acciones">
-              <label for="nueva-foto" class="btn-secundario">
-                <i data-lucide="upload" aria-hidden="true"></i> Cambiar Foto
-              </label>
-              <input
-                type="file"
-                id="nueva-foto"
-                name="foto"
-                accept="image/*"
-                class="input-file-oculto"
-              />
-            </div>
-          </div>
-
           <div class="modal-input-group">
             <label for="nueva-descripcion">Descripción del producto:</label>
             <textarea
@@ -275,6 +254,7 @@
               id="nuevo-stock"
               name="stock"
               min="0"
+              step="any"
               required
             />
           </div>
