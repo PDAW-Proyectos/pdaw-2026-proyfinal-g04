@@ -4,7 +4,7 @@ import {
 } from "../../common/errors/errors.classes.js";
 
 export class Producto {
-  constructor({ id, idCotizacion, nombre, categoria, descripcion, precioUsd }) {
+  constructor({ id, idCotizacion, nombre, idCategoria, descripcion, precioUsd }) {
     if (new.target === Producto)
       throw new TypeError("Producto es una clase abstracta");
     if (!id) throw new ValidationError("id no puede ser nulo");
@@ -20,7 +20,7 @@ export class Producto {
     this.id = id;
     this.idCotizacion = idCotizacion;
     this.nombre = nombre;
-    this.categoria = categoria;
+    this.idCategoria = idCategoria;
     this.descripcion = descripcion;
     this.precioUsd = precioUsd;
   }

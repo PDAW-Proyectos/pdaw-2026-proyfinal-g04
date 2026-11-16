@@ -1,36 +1,47 @@
+import { formatearPrecio } from "../../../common/utils/formato.js";
+
+const etiquetasMetodo = {
+    efectivo: "Efectivo",
+    debito: "Débito",
+    credito: "Crédito",
+    transferencia: "Transferencia",
+};
+
+const formatearFecha = (fecha) => {
+    const valor = new Date(fecha);
+    if (Number.isNaN(valor.getTime())) return "--";
+    return valor.toLocaleString("es-AR", {
+        dateStyle: "short",
+        timeStyle: "short",
+    });
+};
+
 export function crearTablaHistorial({ tbody }) {
     return {
-        render(ventas) {
+        render(transacciones) {
             if (!tbody) return;
 
             tbody.innerHTML = "";
 
-            if (ventas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6">No se encontraron tickets.</td></tr>`;
+            if (transacciones.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5">No se encontraron tickets.</td></tr>`;
                 return;
             }
 
-            ventas.forEach((venta) => {
-                const estaDevuelto = venta.estado === "Devuelto";
-                const badgeEstado = estaDevuelto ? `<span class="badge-movimiento badge-retiro">Devuelto</span>` : `<span class="badge-movimiento badge-ingreso">Cobrado</span>`;
+            transacciones.forEach((transaccion) => {
+                const esIngreso = Number(transaccion.monto) > 0;
+                const estado = esIngreso ? "Cobrado" : "Egreso";
+                const claseEstado = esIngreso ? "badge-ingreso" : "badge-retiro";
 
                 tbody.insertAdjacentHTML(
                     "beforeend",
                     `
                         <tr>
-                        <td>${venta.fecha}</td>
-                        <td><strong>${venta.ticket}</strong></td>
-                        <td><strong>$ ${venta.total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</strong></td>
-                        <td>${venta.metodo}</td>
-                        <td>${badgeEstado}</td>
-                        <td class="acciones-comprobante">
-                            <button type="button" class="btn-tabla-accion btn-accion-reimprimir" data-accion="reimprimir-ticket">
-                            Reimprimir
-                            </button>
-                            <button type="button" class="btn-tabla-accion btn-accion-cambio" data-accion="abrir-modal-historial" ${estaDevuelto ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ""}>
-                            Acciones
-                            </button>
-                        </td>
+                        <td>${formatearFecha(transaccion.fecha)}</td>
+                        <td><strong>#${String(transaccion.id).padStart(4, "0")}</strong></td>
+                        <td><strong>${formatearPrecio(transaccion.monto)}</strong></td>
+                        <td>${etiquetasMetodo[transaccion.metodoDePago] ?? transaccion.metodoDePago}</td>
+                        <td><span class="badge-movimiento ${claseEstado}">${estado}</span></td>
                         </tr>
                     `,
                 );

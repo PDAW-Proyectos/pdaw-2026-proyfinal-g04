@@ -1,10 +1,11 @@
-export function crearFiltrosHistorial({ store, onFiltrar }) {
+export function crearFiltrosHistorial({ store, onFiltrar, onBuscarTicket }) {
     const chips = document.querySelectorAll("#filtros-tiempo-historial .chip-historial");
     const inputDesde = document.getElementById("input-fecha-desde");
     const inputHasta = document.getElementById("input-fecha-hasta");
     const textoDesde = document.getElementById("texto-fecha-desde");
     const textoHasta = document.getElementById("texto-fecha-hasta");
-    const buscador = document.getElementById("buscador-historial-ticket") || document.querySelector("#historial .lector-caja input");
+    const formulario = document.querySelector("#historial .lector-form");
+    const buscador = formulario?.querySelector("input");
 
     const obtenerFiltros = () => {
         const chipActivo = document.querySelector("#filtros-tiempo-historial .chip-historial.activo");
@@ -22,19 +23,20 @@ export function crearFiltrosHistorial({ store, onFiltrar }) {
     };
 
     const filtrar = () => {
-        const { desde, hasta } = obtenerFiltros();
-        onFiltrar(
-            store.filtrarHistorial({
-                termino: buscador?.value.trim() || "",
-                desde,
-                hasta,
-            }),
-        );
+        onFiltrar(obtenerFiltros());
     };
 
-    if (buscador) {
-        buscador.addEventListener("input", filtrar);
-    }
+    formulario?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const termino = buscador?.value.trim() ?? "";
+        if (!termino) {
+            filtrar();
+            return;
+        }
+
+        await onBuscarTicket(termino);
+    });
 
     document.addEventListener("click", (event) => {
         const chipHistorial = event.target.closest("#filtros-tiempo-historial .chip-historial");
@@ -53,6 +55,7 @@ export function crearFiltrosHistorial({ store, onFiltrar }) {
         }
         if (inputDesde) inputDesde.value = "";
         if (inputHasta) inputHasta.value = "";
+        if (buscador) buscador.value = "";
 
         filtrar();
     });

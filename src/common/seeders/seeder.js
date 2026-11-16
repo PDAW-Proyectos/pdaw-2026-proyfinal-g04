@@ -4,12 +4,14 @@ import { insumosSeed } from "./data/insumos.seed.js";
 import { cotizacionesSeed } from "./data/cotizaciones.seed.js";
 import { transaccionesSeed } from "./data/transacciones.seed.js";
 import { cajasSeed } from "./data/caja.seed.js";
+import { categoriasSeed } from "./data/categorias.seed.js";
 
 export class Seeder {
-    constructor({ usuarioRepository, productoRepository, insumoRepository, transaccionRepository, cotizacionRepository, cajaRepository, configuracionRepository }) {
+    constructor({ usuarioRepository, productoRepository, categoriaRepository, insumoRepository, transaccionRepository, cotizacionRepository, cajaRepository, configuracionRepository }) {
         this.repositorios = {
             usuarioRepository,
             productoRepository,
+            categoriaRepository,
             insumoRepository,
             transaccionRepository,
             cotizacionRepository,
@@ -22,6 +24,7 @@ export class Seeder {
         const mocks = {
             usuarioRepository: usuariosSeed,
             productoRepository: productosSeed,
+            categoriaRepository: categoriasSeed,
             insumoRepository: insumosSeed,
             transaccionRepository: transaccionesSeed,
             cotizacionRepository: cotizacionesSeed,

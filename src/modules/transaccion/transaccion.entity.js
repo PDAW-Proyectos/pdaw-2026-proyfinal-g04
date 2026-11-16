@@ -11,7 +11,7 @@ export class Transaccion {
     constructor({ id, idCaja, monto, idUsuario, fecha, metodoDePago, articulos }) {
         if (new.target === Transaccion) throw new TypeError("Transaccion es una clase abstracta");
         if (!id) throw new ValidationError("id no puede ser nulo");
-        if (!Number.isInteger(monto)) throw new BadRequestError('monto debe ser un número entero');
+        if (!Number.isFinite(monto)) throw new BadRequestError('monto debe ser un número finito');
         this.id = id
         this.idUsuario = idUsuario
         this.idCaja = idCaja

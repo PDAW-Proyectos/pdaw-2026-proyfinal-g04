@@ -4,6 +4,7 @@ import { Seeder } from "./seeder.js";
 export const crearSeeder = async () => {
     const usuarioRepository = await dependencyInjector.resolve("userRepository");
     const productoRepository = await dependencyInjector.resolve("productoRepository");
+    const categoriaRepository = await dependencyInjector.resolve("categoriaRepository");
     const insumoRepository = await dependencyInjector.resolve("insumoRepository");
     const transaccionRepository = await dependencyInjector.resolve("transaccionRepository");
     const cotizacionRepository = await dependencyInjector.resolve("cotizacionRepository");
@@ -13,6 +14,7 @@ export const crearSeeder = async () => {
     return new Seeder({
         usuarioRepository,
         productoRepository,
+        categoriaRepository,
         insumoRepository,
         transaccionRepository,
         cotizacionRepository,

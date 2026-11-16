@@ -41,5 +41,20 @@ export class ConfiguracionController {
     obtenerStock = async (_req, res) => {
         const stock = await this.configuracionService.obtenerStock();
         res.status(200).json(stock);
-    }; 
+    };
+
+    obtenerCajas = async (_req, res) => {
+        const cajas = await this.configuracionService.obtenerCajas();
+        res.status(200).json(cajas);
+    };
+
+    crearCaja = async (req, res) => {
+        const configuracion = await this.configuracionService.crearCajaConfiguracion(req.body);
+        res.status(201).json({ configuracion });
+    };
+
+    actualizarCaja = async (req, res) => {
+        const configuracion = await this.configuracionService.actualizarCajaConfiguracion(req.params.nombre, req.body);
+        res.status(200).json({ configuracion });
+    };
 }
