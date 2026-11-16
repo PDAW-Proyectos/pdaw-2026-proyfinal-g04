@@ -5,9 +5,10 @@ import { cotizacionesSeed } from "./data/cotizaciones.seed.js";
 import { transaccionesSeed } from "./data/transacciones.seed.js";
 import { cajasSeed } from "./data/caja.seed.js";
 import { categoriasSeed } from "./data/categorias.seed.js";
+import { proveedoresSeed } from "./data/proveedores.seed.js";
 
 export class Seeder {
-    constructor({ usuarioRepository, productoRepository, categoriaRepository, insumoRepository, transaccionRepository, cotizacionRepository, cajaRepository, configuracionRepository }) {
+    constructor({ usuarioRepository, productoRepository, categoriaRepository, insumoRepository, transaccionRepository, cotizacionRepository, cajaRepository, configuracionRepository, proveedorRepository }) {
         this.repositorios = {
             usuarioRepository,
             productoRepository,
@@ -16,7 +17,8 @@ export class Seeder {
             transaccionRepository,
             cotizacionRepository,
             cajaRepository,
-            configuracionRepository
+            configuracionRepository,
+            proveedorRepository,
         };
     }
 
@@ -29,7 +31,8 @@ export class Seeder {
             transaccionRepository: transaccionesSeed,
             cotizacionRepository: cotizacionesSeed,
             cajaRepository: cajasSeed,
-            configuracionRepository: []
+            configuracionRepository: [],
+            proveedorRepository: proveedoresSeed,
         };
 
         for (const [nombre, repositorio] of Object.entries(this.repositorios)) {
