@@ -9,7 +9,7 @@ import { crearPaginacionPrecios } from "./components/paginacionPrecios.js";
 import { crearModalEditarProducto } from "./modales/editarProducto.js";
 import { crearModalCrearProducto } from "./modales/crearProducto.js";
 
-export async function iniciarPrecios() {
+export async function iniciarPrecios(storeCategorias) {
     renderizarIconos();
 
     const api = crearPreciosApi();
@@ -31,7 +31,7 @@ export async function iniciarPrecios() {
 
     const modalEditar = crearModalEditarProducto({ store, notificar });
 
-    crearModalCrearProducto({ store, notificar });
+    crearModalCrearProducto({ store, storeCategorias, notificar });
 
     const paginacion = crearPaginacionPrecios({
         store,
