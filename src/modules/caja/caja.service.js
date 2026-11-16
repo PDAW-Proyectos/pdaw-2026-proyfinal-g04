@@ -33,8 +33,26 @@ export class CajaService {
         return caja;
     };
 
-    crearCaja = async (datos) => {
-        return await this.cajaRepository.crear(datos);
+    crearCaja = async (datos, usuarioAbre) => {
+        const nroCaja = typeof datos?.nroCaja === "string"
+            ? datos.nroCaja.trim()
+            : datos?.nroCaja;
+
+        if (typeof nroCaja === "string" && !nroCaja) {
+            throw new BadRequestError("nroCaja no puede estar vacío");
+        }
+
+        const { datos: cajasAbiertas } = this.cajaRepository.listarPorPropiedades(
+            { estado: "abierta" },
+            1,
+            100
+        );
+
+        if (cajasAbiertas.some((caja) => String(caja.nroCaja).trim() === String(nroCaja).trim())) {
+            throw new BadRequestError(`La caja ${nroCaja} ya se encuentra abierta`);
+        }
+
+        return await this.cajaRepository.crear({ ...datos, nroCaja, usuarioAbre });
     };
 
 
@@ -112,6 +130,10 @@ export class CajaService {
 
         if (caja.estado !== "abierta") {
             throw new BadRequestError("No se pueden registrar retiros en una caja cerrada");
+        }
+
+        if (!Number.isFinite(datos.monto) || datos.monto <= 0) {
+            throw new BadRequestError("El monto del retiro debe ser mayor a cero");
         }
 
         if (datos.monto > caja.totalEsperado) {

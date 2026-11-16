@@ -75,7 +75,6 @@ export class AuthService {
 
     me = (idUsuario) => {
         const usuario = this.userService.buscarUsuario(idUsuario);
-
         return perfilPublico(usuario);
     };
 

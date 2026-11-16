@@ -1,48 +1,46 @@
-export function crearTransaccionesStore({ ventas, historial }) {
-    const convertirFechaVenta = (fecha) => {
-        const [fechaTexto] = fecha.split(" ");
-        const [dia, mes, anio] = fechaTexto.split("/").map(Number);
-        return new Date(anio, mes - 1, dia);
-    };
+const inicioDelDia = (fecha) => new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+const finDelDia = (fecha) => new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate(), 23, 59, 59, 999);
 
+export function crearTransaccionesStore() {
     const obtenerRangoRapido = (filtro) => {
+        const hoy = new Date();
+        const inicio = inicioDelDia(hoy);
+
         if (filtro === "todos") {
             return { desde: null, hasta: null };
         }
 
-        const hoy = new Date();
-        const inicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-
         if (filtro === "ayer") {
             inicio.setDate(inicio.getDate() - 1);
-            return { desde: inicio, hasta: new Date(inicio) };
+            return { desde: inicio, hasta: finDelDia(inicio) };
         }
 
         if (filtro === "semana") {
             const diaSemana = inicio.getDay();
             const diasDesdeLunes = diaSemana === 0 ? 6 : diaSemana - 1;
             inicio.setDate(inicio.getDate() - diasDesdeLunes);
-            const hasta = new Date(inicio);
-            hasta.setDate(hasta.getDate() + 6);
-            return { desde: inicio, hasta };
+            return { desde: inicio, hasta: finDelDia(hoy) };
         }
 
-        return { desde: inicio, hasta: new Date(inicio) };
+        return { desde: inicio, hasta: finDelDia(hoy) };
     };
 
     return {
-        filtrarVentas(metodo = "Todos") {
+        filtrarVentas(ventas, metodo = "Todos") {
             if (metodo === "Todos") return [...ventas];
-            return ventas.filter((venta) => venta.metodo === metodo);
+            return ventas.filter((venta) => venta.metodoDePago === metodo);
         },
 
-        filtrarHistorial({ termino = "", desde = null, hasta = null } = {}) {
-            const busqueda = termino.toLowerCase();
-
-            return historial.filter((venta) => venta.ticket.toLowerCase().includes(busqueda) && (!desde || convertirFechaVenta(venta.fecha) >= desde) && (!hasta || convertirFechaVenta(venta.fecha) <= hasta));
+        filtrarHistorial(historial, { desde = null, hasta = null } = {}) {
+            return historial.filter((transaccion) => {
+                const fecha = new Date(transaccion.fecha);
+                if (Number.isNaN(fecha.getTime())) return false;
+                if (desde && fecha < inicioDelDia(desde)) return false;
+                if (hasta && fecha > finDelDia(hasta)) return false;
+                return true;
+            });
         },
 
         obtenerRangoRapido,
-        convertirFechaVenta,
     };
 }

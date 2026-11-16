@@ -55,7 +55,7 @@ describe("EgresoService", () => {
     describe("listarEgresos", () => {
         it("retorna los egresos mapeados y la paginación correctamente", () => {
             const mockResultadoRepo = {
-                datos: [{ id: 1 }, { id: 2 }],
+                datos: [{ id: 1, monto: -100 }, { id: 2, monto: -200 }],
                 total: 2,
                 pagina: 1,
                 limite: 10
@@ -66,7 +66,7 @@ describe("EgresoService", () => {
 
             expect(transaccionRepository.listar).toHaveBeenCalledWith(1, 10);
             expect(resultado).toEqual({
-                egresos: [{ id: 1 }, { id: 2 }],
+                egresos: [{ id: 1, monto: -100 }, { id: 2, monto: -200 }],
                 total: 2,
                 pagina: 1,
                 limite: 10
@@ -78,7 +78,7 @@ describe("EgresoService", () => {
         it("retorna los egresos filtrados mapeados y la paginación correctamente", () => {
             const filtros = { metodoDePago: "efectivo" };
             const mockResultadoRepo = {
-                datos: [{ id: 1, metodoDePago: "efectivo" }],
+                datos: [{ id: 1, monto: -100, metodoDePago: "efectivo" }],
                 total: 1,
                 pagina: 1,
                 limite: 10
@@ -89,7 +89,7 @@ describe("EgresoService", () => {
 
             expect(transaccionRepository.listarPorPropiedades).toHaveBeenCalledWith(filtros, 1, 10);
             expect(resultado).toEqual({
-                egresos: [{ id: 1, metodoDePago: "efectivo" }],
+                egresos: [{ id: 1, monto: -100, metodoDePago: "efectivo" }],
                 total: 1,
                 pagina: 1,
                 limite: 10

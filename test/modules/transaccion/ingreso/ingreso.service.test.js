@@ -40,7 +40,7 @@ describe("IngresoService", () => {
     describe("listarIngresos", () => {
         it("retorna los ingresos mapeados y la paginación correctamente", () => {
             const mockResultadoRepo = {
-                datos: [{ id: 1 }, { id: 2 }],
+                datos: [{ id: 1, monto: 100 }, { id: 2, monto: 200 }],
                 total: 2,
                 pagina: 1,
                 limite: 10
@@ -51,7 +51,7 @@ describe("IngresoService", () => {
 
             expect(transaccionRepository.listar).toHaveBeenCalledWith(1, 10);
             expect(resultado).toEqual({
-                ingresos: [{ id: 1 }, { id: 2 }],
+                ingresos: [{ id: 1, monto: 100 }, { id: 2, monto: 200 }],
                 total: 2,
                 pagina: 1,
                 limite: 10
@@ -63,7 +63,7 @@ describe("IngresoService", () => {
         it("retorna los ingresos filtrados mapeados y la paginación correctamente", () => {
             const filtros = { metodoDePago: "efectivo" };
             const mockResultadoRepo = {
-                datos: [{ id: 1, metodoDePago: "efectivo" }],
+                datos: [{ id: 1, monto: 100, metodoDePago: "efectivo" }],
                 total: 1,
                 pagina: 1,
                 limite: 10
@@ -74,7 +74,7 @@ describe("IngresoService", () => {
 
             expect(transaccionRepository.listarPorPropiedades).toHaveBeenCalledWith(filtros, 1, 10);
             expect(resultado).toEqual({
-                ingresos: [{ id: 1, metodoDePago: "efectivo" }],
+                ingresos: [{ id: 1, monto: 100, metodoDePago: "efectivo" }],
                 total: 1,
                 pagina: 1,
                 limite: 10

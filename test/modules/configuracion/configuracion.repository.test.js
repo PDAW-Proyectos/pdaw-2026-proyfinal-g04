@@ -17,7 +17,8 @@ describe("ConfiguracionRepository", () => {
         stock: {
             critico: 5,
             medio: 15
-        }
+        },
+        cajas: []
     };
 
     beforeEach(async () => {
