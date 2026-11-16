@@ -10,13 +10,13 @@ import { crearGridCategorias } from "../Categorias/components/gridCategorias.js"
 export async function iniciarConfiguracion() {
     const api = crearConfiguracionApi();
     const apiCategorias = crearCategoriasApi();
-    const categoriasStore = crearCategoriasStore();
+    const storeCategorias = crearCategoriasStore();
     const notificar = mostrarToast;
 
     const formNegocio = crearFormNegocio({ api, notificar });
     const formSesion = crearFormSesion({ api, notificar });
     const formStock = crearFormStock({ api, notificar });
-    const gridCategorias = crearGridCategorias({ categoriasStore, apiCategorias, notificar });
+    const gridCategorias = crearGridCategorias({ storeCategorias, apiCategorias, notificar });
 
     const formNuevaCategoria = document.getElementById("form-nueva-categoria");
     const inputNuevaCategoria = document.getElementById("nueva-categoria-nombre");
@@ -29,7 +29,7 @@ export async function iniciarConfiguracion() {
 
         try {
             const resultado = await apiCategorias.crear(nombre);
-            categoriasStore.agregar(resultado);
+            storeCategorias.agregar(resultado);
             inputNuevaCategoria.value = "";
             gridCategorias.renderizar();
             notificar("Categoría agregada");
@@ -51,7 +51,7 @@ export async function iniciarConfiguracion() {
 
     try {
         const resultado = await apiCategorias.listar();
-        categoriasStore.establecerCategorias(resultado.categorias);
+        storeCategorias.establecerCategorias(resultado.categorias);
         gridCategorias.renderizar();
     } catch (error) {
         console.error("Error cargando las categorías:", error);

@@ -1,12 +1,12 @@
 import { confirmarAccion } from "../../../common/utils/confirmar.js";
 
-export function crearGridCategorias({ categoriasStore, apiCategorias, notificar }) {
+export function crearGridCategorias({ storeCategorias, apiCategorias, notificar }) {
     const gridCategorias = document.getElementById("grid-categorias");
 
     const renderizar = () => {
         gridCategorias.replaceChildren();
 
-        for (const categoria of categoriasStore.listar()) {
+        for (const categoria of storeCategorias.listar()) {
             const card = document.createElement("article");
             card.className = "cat-card";
 
@@ -64,7 +64,7 @@ export function crearGridCategorias({ categoriasStore, apiCategorias, notificar 
         const button = event.target.closest(".btn-eliminar-cat");
         if (!button || button.disabled) return;
 
-        const categoria = categoriasStore.obtener(button.dataset.id);
+        const categoria = storeCategorias.obtener(button.dataset.id);
 
         if (!categoria) return;
 
@@ -79,7 +79,7 @@ export function crearGridCategorias({ categoriasStore, apiCategorias, notificar 
 
         try {
             await apiCategorias.eliminar(categoria.id);
-            categoriasStore.eliminar(categoria.id);
+            storeCategorias.eliminar(categoria.id);
             renderizar();
             notificar("Categoría eliminada");
         } catch (error) {
