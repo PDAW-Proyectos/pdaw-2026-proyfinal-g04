@@ -80,8 +80,11 @@ export function crearArticulosApi(base = "/api") {
             });
 
             return {
-                ...mapearProducto(actualizado),
+                ...producto,
+                ...actualizado,
                 categoria: producto.categoria,
+                precio: producto.precio,
+                stock: Number(actualizado[campoStock] ?? cambios.stock),
             };
         },
     };

@@ -10,6 +10,7 @@ export const crearSeeder = async () => {
     const cotizacionRepository = await dependencyInjector.resolve("cotizacionRepository");
     const cajaRepository = await dependencyInjector.resolve("cajaRepository");
     const configuracionRepository = await dependencyInjector.resolve("configuracionRepository");
+    const proveedorRepository = await dependencyInjector.resolve("proveedorRepository");
 
     return new Seeder({
         usuarioRepository,
@@ -19,6 +20,7 @@ export const crearSeeder = async () => {
         transaccionRepository,
         cotizacionRepository,
         cajaRepository,
-        configuracionRepository
+        configuracionRepository,
+        proveedorRepository,
     });
 };

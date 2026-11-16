@@ -1,0 +1,240 @@
+.repo-inicio-layout {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.repo-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.repo-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e4dc;
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.repo-kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #777b70;
+  text-transform: uppercase;
+}
+
+.repo-kpi-valor {
+  font-size: 20px;
+  font-weight: 700;
+  color: #171914;
+}
+
+.repo-kpi-valor.texto-alerta {
+  color: #dc2626;
+}
+
+/* Grid de las 2 cards con swap */
+.repo-swaps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 780px) {
+  .repo-kpis-grid,
+  .repo-swaps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.repo-swap-card {
+  background: #ffffff;
+  border: 1px solid #e2e4dc;
+  border-radius: 16px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.repo-swap-card.es-critico {
+  border-left: 4px solid #ef4444;
+}
+
+.repo-swap-card.es-bajo {
+  border-left: 4px solid #f59e0b;
+}
+
+.swap-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.swap-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.es-critico .swap-badge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.es-bajo .swap-badge {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* Puntitos del carrusel */
+.swap-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.swap-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background-color: #d1d5db;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.swap-dot.activo {
+  background-color: #171914;
+  transform: scale(1.25);
+}
+
+.swap-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.swap-cat {
+  font-size: 12px;
+  color: #777b70;
+  font-weight: 500;
+}
+
+.swap-prod-nombre {
+  margin: 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #171914;
+}
+
+.swap-stock-dato {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.btn-reponer-rapido {
+  background-color: #c2ff38;
+  color: #171914;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-reponer-rapido:hover {
+  filter: brightness(0.95);
+}
+
+/* Lista Top 5 Urgentes */
+.repo-urgentes-card {
+  background: #ffffff;
+  border: 1px solid #e2e4dc;
+  border-radius: 16px;
+  padding: 22px 24px;
+}
+
+.repo-urgentes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.repo-urgentes-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #171914;
+}
+
+.repo-lista-urgentes {
+  display: flex;
+  flex-direction: column;
+}
+
+.repo-urgente-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid #f0f1ec;
+  gap: 12px;
+}
+
+.urgente-nombre {
+  font-size: 14px;
+  color: #171914;
+}
+
+.urgente-cat {
+  font-size: 13px;
+  color: #777b70;
+}
+
+.urgente-derecha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.urgente-stock-pill {
+  font-size: 12px;
+  font-weight: 700;
+  background: #f4f5f0;
+  color: #171914;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+@keyframes swapEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swap-info.animando {
+  animation: swapEntrada 0.28s ease-out;
+}

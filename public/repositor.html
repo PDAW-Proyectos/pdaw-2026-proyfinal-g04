@@ -7,6 +7,7 @@
     <link href="common/styles/sidebar.css" rel="stylesheet" />
     <link href="common/styles/tablas.css" rel="stylesheet" />
     <link href="common/styles/componentes.css" rel="stylesheet" />
+    <link href="common/styles/repositor.css" rel="stylesheet">
     <link href="common/styles/perfil.css" rel="stylesheet" />
 
     <title>KCHIN | Gestor de Stock</title>
@@ -21,7 +22,7 @@
         <i data-lucide="user-round" aria-hidden="true"></i>
         <span>Perfil</span>
       </a>
-      
+
       <nav class="sidebar-nav" aria-label="Navegación principal">
         <a href="#" class="nav-enlace active" data-nav="inicio">
           <i data-lucide="house" aria-hidden="true"></i>
@@ -69,7 +70,113 @@
         </section>
 
         <section id="inicio" class="vista active">
-          <h2>Inicio</h2>
+            <div class="repo-inicio-layout">
+              <div class="inicio-header-bar">
+                <div>
+                  <p class="perfil-subtitulo">
+                    Estado actual de góndolas y prioridades de reposición.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  id="btn-repo-ver-todo"
+                  class="btn-primario"
+                >
+                  Ir a Inventario Completo
+                </button>
+              </div>
+
+              <div class="repo-kpis-grid">
+                <div class="repo-kpi-card">
+                  <span class="repo-kpi-label">Catálogo Activo</span>
+                  <strong id="repo-kpi-total" class="repo-kpi-valor">--</strong>
+                </div>
+                <div class="repo-kpi-card">
+                  <span class="repo-kpi-label">Requieren Reposición</span>
+                  <strong
+                    id="repo-kpi-alertas"
+                    class="repo-kpi-valor texto-alerta"
+                    >--</strong
+                  >
+                </div>
+                <div class="repo-kpi-card">
+                  <span class="repo-kpi-label">Góndola más afectada</span>
+                  <strong id="repo-kpi-categoria" class="repo-kpi-valor"
+                    >--</strong
+                  >
+                </div>
+              </div>
+
+              <!-- Cards con swaps -->
+              <div class="repo-swaps-grid">
+                <!-- Card Críticos -->
+                <div id="swap-card-criticos" class="repo-swap-card es-critico">
+                  <div class="swap-top">
+                    <span id="badge-criticos" class="swap-badge"
+                      >Stock Crítico (0)</span
+                    >
+                    <div id="dots-criticos" class="swap-dots"></div>
+                  </div>
+                  <div class="swap-body">
+                    <div class="swap-info">
+                      <span id="cat-criticos" class="swap-cat">---</span>
+                      <h4 id="nombre-criticos" class="swap-prod-nombre">
+                        Sin alertas críticas
+                      </h4>
+                      <p id="stock-criticos" class="swap-stock-dato">
+                        No hay productos agotados o críticos.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      id="btn-reponer-criticos"
+                      class="btn-reponer-rapido oculto"
+                    >
+                      + Reponer
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Card Stock Bajo -->
+                <div id="swap-card-bajos" class="repo-swap-card es-bajo">
+                  <div class="swap-top">
+                    <span id="badge-bajos" class="swap-badge"
+                      >Stock Bajo (0)</span
+                    >
+                    <div id="dots-bajos" class="swap-dots"></div>
+                  </div>
+                  <div class="swap-body">
+                    <div class="swap-info">
+                      <span id="cat-bajos" class="swap-cat">---</span>
+                      <h4 id="nombre-bajos" class="swap-prod-nombre">
+                        Stock estable
+                      </h4>
+                      <p id="stock-bajos" class="swap-stock-dato">
+                        Todos los demás productos tienen buen margen.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      id="btn-reponer-bajos"
+                      class="btn-reponer-rapido oculto"
+                    >
+                      + Reponer
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lista urgente -->
+              <div class="repo-urgentes-card">
+                <div class="repo-urgentes-header">
+                  <h3>Top 5 Prioridades del Turno</h3>
+                  <span class="perfil-ayuda-texto"
+                    >Ordenados del stock más bajo al más alto</span
+                  >
+                </div>
+                <div id="repo-lista-urgentes" class="repo-lista-urgentes"></div>
+              </div>
+            </div>
         </section>
 
         <section id="inventario" class="vista">

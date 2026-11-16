@@ -3,6 +3,7 @@ import { mostrarToast } from "../../common/utils/alertas.js";
 import { renderizarIconos } from "../../common/utils/iconos.js";
 import { crearArticulosApi } from "./articulos.api.js";
 import { crearArticulosStore } from "./articulos.store.js";
+import { renderizarInicioRepositor } from "./inicio.repositor.pages.js";
 import { crearTablaInventario } from "./components/tablaInventario.js";
 import { crearTablaProveedores } from "./components/tablaProveedores.js";
 import { conectarFiltrosInventario } from "./components/filtrosInventario.js";
@@ -64,6 +65,7 @@ export function iniciarArticulos() {
             const actualizado = await api.actualizarProducto(producto, cambios);
             store.actualizarProducto(id, actualizado);
             aplicarFiltros();
+            renderizarInicio();
         },
     });
 
@@ -80,6 +82,16 @@ export function iniciarArticulos() {
     function renderizarProveedores() {
         tablaProveedores.render(store.obtenerPaginaProveedores());
         paginacionProveedores.render(store.obtenerPaginaProvActual(), store.obtenerTotalPaginasProv());
+    }
+
+    function renderizarInicio() {
+        renderizarInicioRepositor({
+            productos: store.obtenerProductos(),
+            umbralesStock: store.obtenerUmbrales(),
+            nombreUsuario: document.getElementById("nombre-rol")?.textContent?.trim() || "Repositor",
+            onReponerClick: (producto) => modalStock.abrir(producto),
+            onIrAInventario: () => document.querySelector('[data-nav="inventario"]')?.click(),
+        });
     }
 
     function aplicarFiltros() {
@@ -125,11 +137,13 @@ export function iniciarArticulos() {
 
     renderizarInventario();
     renderizarProveedores();
+    renderizarInicio();
 
     api.listarProductos()
         .then((productos) => {
             store.establecerInventario(productos);
             aplicarFiltros();
+            renderizarInicio();
         })
         .catch((error) => {
             console.error("Error cargando los productos:", error);
@@ -150,6 +164,7 @@ export function iniciarArticulos() {
         .then((umbrales) => {
             store.establecerUmbrales(umbrales);
             aplicarFiltros();
+            renderizarInicio();
         })
         .catch((error) => {
             console.error("Error cargando los umbrales de stock:", error);

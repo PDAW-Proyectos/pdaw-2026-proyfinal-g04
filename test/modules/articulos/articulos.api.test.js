@@ -64,7 +64,7 @@ describe("crearArticulosApi", () => {
         const fetch = jest.spyOn(globalThis, "fetch").mockResolvedValue({
             ok: true,
             status: 200,
-            json: async () => ({ id: 9, nombre: "Producto", peso: 3.5, precioUsd: 2, cotizacion: 100 }),
+            json: async () => ({ id: 9, nombre: "Producto", peso: 3.5, precioUsd: 2 }),
         });
 
         const actualizado = await crearArticulosApi().actualizarProducto(
