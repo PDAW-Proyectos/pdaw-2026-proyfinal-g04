@@ -26,8 +26,6 @@ export class CategoriasService {
     };
 
     filtrarCategorias = (filtros, pagina, limite) => {
-        console.log(filtros);
-        
         return this.categoriaRepository.listarPorPropiedades(filtros, pagina, limite);
     };
 
