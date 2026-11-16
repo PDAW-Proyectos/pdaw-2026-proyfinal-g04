@@ -16,7 +16,7 @@ import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.j
 import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
 import { crearRouterConfiguracion } from "./src/modules/configuracion/configuracion.routes.js";
 import { crearRouterCategorias } from "./src/modules/categorias/categorias.routes.js";
-import { crearRouterProveedores } from "./src/modules/proveedor/proveedor.routes.js";
+import crearRouterProveedores from "./src/modules/proveedor/proveedor.routes.js";
 import { crearRouterTransaccion } from "./src/modules/transaccion/transaccion.routes.js";
 
 const app = express();

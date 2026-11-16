@@ -45,7 +45,7 @@ export function crearArticulosApi(base = "/api") {
                 listarTodos("productos/", "productos"),
                 solicitarJson(`${base}/categorias/?pagina=1&limite=50`),
             ]);
-            const categorias = respuestaCategorias?.categorias?.categorias;
+            const categorias = respuestaCategorias?.categorias;
 
             if (!Array.isArray(categorias)) {
                 throw new Error("El backend devolvió una lista inválida para categorías");

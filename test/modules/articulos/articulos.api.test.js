@@ -31,9 +31,7 @@ describe("crearArticulosApi", () => {
                 ok: true,
                 status: 200,
                 json: async () => ({
-                    categorias: {
-                        categorias: [{ id: 2, nombre: "Almacén" }],
-                    },
+                    categorias: [{ id: 2, nombre: "Almacén" }],
                 }),
             };
         });
@@ -54,7 +52,7 @@ describe("crearArticulosApi", () => {
             status: 200,
             json: async () => String(url).includes("/productos/")
                 ? { productos: [{ id: 10, nombre: "Sin precio" }], totalPaginas: 1 }
-                : { categorias: { categorias: [] } },
+                : { categorias: [] },
         }));
 
         await expect(crearArticulosApi().listarProductos()).rejects.toThrow("no tiene un precio USD válido");
