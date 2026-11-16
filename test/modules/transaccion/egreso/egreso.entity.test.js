@@ -12,7 +12,7 @@ describe("Egreso", () => {
         expect(egresoCero.monto).toBe(0);
     });
 
-    it("crea una instancia de Egreso con todos los parámetros completos", () => {
+    it("crea una instancia de Egreso con todos los parametros completos", () => {
         const fechaCustom = "2026-10-01T10:00:00.000Z";
         const datosCompletos = {
             id: 3,
@@ -41,9 +41,14 @@ describe("Egreso", () => {
             expect(() => new Egreso({ id: 1, monto: 50 })).toThrow("El monto debe ser menor o igual a cero para un egreso");
         });
 
-        it("arroja BadRequestError si el monto no es un número entero (heredado de Transaccion)", () => {
-            expect(() => new Egreso({ id: 1, monto: -10.5 })).toThrow(BadRequestError);
-            expect(() => new Egreso({ id: 1, monto: -10.5 })).toThrow("monto debe ser un número entero");
+        it("acepta un monto decimal (heredado de Transaccion)", () => {
+            const egreso = new Egreso({ id: 1, monto: -10.5 });
+            expect(egreso.monto).toBe(-10.5);
+        });
+
+        it("arroja BadRequestError si el monto no es finito (heredado de Transaccion)", () => {
+            expect(() => new Egreso({ id: 1, monto: -Infinity })).toThrow(BadRequestError);
+            expect(() => new Egreso({ id: 1, monto: -Infinity })).toThrow("monto debe ser un número finito");
         });
 
         it("arroja ValidationError si el id es nulo o indefinido (heredado de Transaccion)", () => {

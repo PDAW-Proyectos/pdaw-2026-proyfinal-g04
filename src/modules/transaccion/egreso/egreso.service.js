@@ -10,7 +10,7 @@ export class EgresoService {
     listarEgresos = (pagina, limite) => {
         const { datos, ...paginacion } = this.transaccionRepository.listar(pagina, limite);
         return {
-            egresos: datos,
+            egresos: datos.filter(({ monto }) => monto < 0),
             ...paginacion
         };
     };
@@ -18,7 +18,7 @@ export class EgresoService {
     filtrarEgresos = (filtros, pagina, limite) => {
         const { datos, ...paginacion } = this.transaccionRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
-            egresos: datos,
+            egresos: datos.filter(({ monto }) => monto < 0),
             ...paginacion
         };
     };
@@ -26,7 +26,7 @@ export class EgresoService {
     buscarEgreso = (id) => {
         const egreso = this.transaccionRepository.buscarPorId(id);
 
-        if (!egreso) {
+        if (!egreso || egreso.monto >= 0) {
             throw new NotFoundError("Egreso");
         }
 
@@ -67,7 +67,7 @@ export class EgresoService {
 
                 if (articulo.tipo === "producto") {
                     resultado = articulo.id
-                        ? await this.productoService.aumentarStock(articulo.id, articulo.unidad || articulo.peso)
+                        ? await this.productoService.aumentarStock(articulo.id, articulo.unidad || articulo.peso || articulo.cantidad)
                         : await this.productoService.crearProducto(articulo);
                 } else if (articulo.tipo === "insumo") {
                     resultado = articulo.id

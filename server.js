@@ -16,7 +16,8 @@ import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.j
 import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
 import { crearRouterConfiguracion } from "./src/modules/configuracion/configuracion.routes.js";
 import { crearRouterCategorias } from "./src/modules/categorias/categorias.routes.js";
-import crearRouterProveedores from "./src/modules/proveedor/proveedor.routes.js";
+import { crearRouterProveedores } from "./src/modules/proveedor/proveedor.routes.js";
+import { crearRouterTransaccion } from "./src/modules/transaccion/transaccion.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -55,6 +56,7 @@ const authController = await dependencyInjector.resolve("authController");
 const cajaController = await dependencyInjector.resolve("cajaController");
 const categoriasController = await dependencyInjector.resolve("categoriaController");
 const configuracionController = await dependencyInjector.resolve("configuracionController");
+const transaccionController = await dependencyInjector.resolve("transaccionController");
 const egresoController = await dependencyInjector.resolve("egresoController");
 const ingresoController = await dependencyInjector.resolve("ingresoController");
 const productoController = await dependencyInjector.resolve("productoController");
@@ -68,6 +70,7 @@ app.use("/api/auth", crearRouterAuth(authController));
 app.use("/api/caja", allowRoles("cajero"), crearRouterCaja(cajaController));
 app.use("/api/categorias", requireAuth, crearRouterCategorias(categoriasController));
 app.use("/api/configuracion", requireAuth, crearRouterConfiguracion(configuracionController));
+app.use("/api/transacciones",  requireAuth, crearRouterTransaccion(transaccionController));
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", requireAuth, crearRouterProductos(productoController));

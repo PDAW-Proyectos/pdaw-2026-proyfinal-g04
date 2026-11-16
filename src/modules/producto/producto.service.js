@@ -6,15 +6,16 @@ export class ProductoService {
         this.cotizacionService = cotizacionService;
     }
 
+    agregarCotizacion = (producto) => {
+        const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
+        const { idCotizacion, ...productoSinCotizacion } = producto;
+        return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
+    };
+
     listarProductos(pagina, limite) {
         const { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
-        const datosConCotizacion = datos.map(producto => {
-            const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
-            const { idCotizacion, ...productoSinCotizacion } = producto;
-            return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
-        });
         return {
-            productos: datosConCotizacion,
+            productos: datos.map(this.agregarCotizacion),
             ...paginacion
         };
     }
@@ -22,7 +23,7 @@ export class ProductoService {
     filtrarProductos(filtros, pagina, limite) {
         const { datos, ...paginacion } = this.productoRepository.listarPorPropiedades(filtros, pagina, limite);
         return {
-            productos: datos,
+            productos: datos.map(this.agregarCotizacion),
             ...paginacion
         };
     }
@@ -34,10 +35,7 @@ export class ProductoService {
             throw new NotFoundError("Producto");
         }
 
-        const cotizacion = this.cotizacionService.buscarCotizacion(producto.idCotizacion);
-
-        const { idCotizacion, ...productoSinCotizacion } = producto;
-        return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
+        return this.agregarCotizacion(producto);
     }
 
     async crearProducto(datos) {
@@ -118,6 +116,8 @@ export class ProductoService {
     }
 
     async disminuirStock(id, cantidad) {
+        console.log(cantidad);
+        console.log(typeof cantidad);        
         if (typeof cantidad !== "number" || !Number.isFinite(cantidad) || cantidad <= 0) {
             throw new BadRequestError("La cantidad debe ser un número positivo");
         }

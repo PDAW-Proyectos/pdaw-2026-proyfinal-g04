@@ -50,6 +50,8 @@ describe("CajaService", () => {
             crearEgreso: jest.fn()
         };
 
+        cajaRepository.listarPorPropiedades.mockReturnValue({ datos: [], total: 0, pagina: 1, limite: 1, totalPaginas: 0 });
+
         service = new CajaService(cajaRepository, ingresoService, egresoService);
     });
 
@@ -118,15 +120,36 @@ describe("CajaService", () => {
     });
 
     describe("crearCaja", () => {
-        it("crea y retorna la nueva caja", async () => {
-            const datosNuevos = { nroCaja: 1, montoInicial: 100 };
-            const cajaCreada = { id: 1, ...datosNuevos };
+        it("crea y retorna la nueva caja con el usuario de la sesión", async () => {
+            const datosNuevos = { nroCaja: 1, montoInicial: 100, usuarioAbre: 99 };
+            const cajaCreada = { id: 1, ...datosNuevos, usuarioAbre: 5 };
             cajaRepository.crear.mockResolvedValue(cajaCreada);
 
-            const resultado = await service.crearCaja(datosNuevos);
+            const resultado = await service.crearCaja(datosNuevos, 5);
 
-            expect(cajaRepository.crear).toHaveBeenCalledWith(datosNuevos);
+            expect(cajaRepository.listarPorPropiedades).toHaveBeenCalledWith(
+                { estado: "abierta" },
+                1,
+                100
+            );
+            expect(cajaRepository.crear).toHaveBeenCalledWith({ ...datosNuevos, nroCaja: 1, usuarioAbre: 5 });
             expect(resultado).toEqual(cajaCreada);
+        });
+
+        it("rechaza la apertura si la caja física ya está abierta", async () => {
+            cajaRepository.listarPorPropiedades.mockReturnValue({
+                datos: [{ id: 10, nroCaja: 1, estado: "abierta" }],
+                total: 1,
+                pagina: 1,
+                limite: 1,
+                totalPaginas: 1
+            });
+
+            await expect(service.crearCaja({ nroCaja: 1, montoInicial: 100 }, 5)).rejects.toThrow(BadRequestError);
+            await expect(service.crearCaja({ nroCaja: 1, montoInicial: 100 }, 5)).rejects.toThrow(
+                "La caja 1 ya se encuentra abierta"
+            );
+            expect(cajaRepository.crear).not.toHaveBeenCalled();
         });
     });
 

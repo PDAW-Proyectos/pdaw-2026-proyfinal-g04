@@ -1,11 +1,14 @@
 import { abrirModalOverlay, cerrarModalOverlay } from "../../../common/components/modalOverlay.js";
 import { formatearPrecio } from "../../../common/utils/formato.js";
 
-export function iniciarModalApertura() {
+export function iniciarModalApertura({ store, api, notificar, cajas = [], alAbrir }) {
     const modalApertura = document.getElementById("modal-inicio-turno");
     const inputsBilletes = document.querySelectorAll(".input-billete");
     const textoTotalApertura = document.getElementById("total-apertura");
-    let turnoIniciado = false;
+    const selectNroCaja = document.getElementById("select-nro-caja");
+    const btnConfirmar = document.getElementById("btn-confirmar-apertura");
+    let cajasConfiguradas = [...cajas];
+    let enviando = false;
 
     const calcularTotalBilletes = () => {
         let total = 0;
@@ -19,6 +22,49 @@ export function iniciarModalApertura() {
         if (textoTotalApertura) {
             textoTotalApertura.textContent = formatearPrecio(total);
         }
+
+        return total;
+    };
+
+    const actualizarOpciones = () => {
+        if (!selectNroCaja) return;
+
+        const abiertas = new Set(
+            store.obtenerCajasAbiertas().map((caja) => String(caja.nroCaja).trim())
+        );
+
+        selectNroCaja.innerHTML = "";
+
+        const disponibles = cajasConfiguradas.filter((caja) => {
+            const nombre = String(caja.nombre ?? caja).trim();
+            return !abiertas.has(nombre);
+        });
+
+        if (!disponibles.length) {
+            const opcion = document.createElement("option");
+            opcion.value = "";
+            opcion.textContent = "No hay cajas disponibles";
+            opcion.disabled = true;
+            selectNroCaja.appendChild(opcion);
+            if (btnConfirmar) btnConfirmar.disabled = true;
+            return;
+        }
+
+        disponibles.forEach((caja) => {
+            const nombre = String(caja.nombre ?? caja).trim();
+            const opcion = document.createElement("option");
+            opcion.value = nombre;
+            opcion.textContent = nombre;
+            selectNroCaja.appendChild(opcion);
+        });
+
+        if (selectNroCaja.options.length) selectNroCaja.selectedIndex = 0;
+        if (btnConfirmar) btnConfirmar.disabled = false;
+    };
+
+    const actualizarOpcionesCajas = (nuevasCajas) => {
+        cajasConfiguradas = [...(nuevasCajas ?? [])];
+        actualizarOpciones();
     };
 
     const resetearApertura = () => {
@@ -26,41 +72,50 @@ export function iniciarModalApertura() {
             input.value = "";
         });
         calcularTotalBilletes();
+        actualizarOpciones();
+    };
+
+    const abrirModal = () => {
+        resetearApertura();
+        abrirModalOverlay(modalApertura);
+        setTimeout(() => inputsBilletes[0]?.focus(), 100);
+    };
+
+    const confirmarApertura = async () => {
+        if (enviando || !selectNroCaja) return;
+
+        const opcionSeleccionada = selectNroCaja.value || selectNroCaja.options[0]?.value;
+        const nroCaja = String(opcionSeleccionada ?? "").trim();
+        const montoInicial = calcularTotalBilletes();
+
+        if (!nroCaja) {
+            notificar("Selecciona una caja fisica valida.", "error");
+            return;
+        }
+
+        enviando = true;
+        if (btnConfirmar) btnConfirmar.disabled = true;
+
+        try {
+            const caja = await api.crearCaja({ nroCaja, montoInicial });
+            await alAbrir(caja);
+            cerrarModalOverlay(modalApertura);
+            notificar(`Caja ${nroCaja} abierta correctamente.`);
+        } catch (error) {
+            notificar(error.message, "error");
+        } finally {
+            enviando = false;
+            if (btnConfirmar) btnConfirmar.disabled = false;
+        }
     };
 
     inputsBilletes.forEach((input) => {
         input.addEventListener("input", calcularTotalBilletes);
     });
 
-    const confirmarApertura = () => {
-        const responsableNombre = document.getElementById("input-nombre-responsable").value;
-        const idPerfil = document.getElementById("select-id-responsable").value;
-        const totalStr = textoTotalApertura?.textContent || "$ 0,00";
-
-        console.log(`Abriendo turno para ${responsableNombre} (${idPerfil}) con fondo inicial de ${totalStr}`);
-
-        turnoIniciado = true;
-        cerrarModalOverlay(modalApertura);
-        alert(`Turno abierto correctamente con ${totalStr}`);
-
-        const elNombreRol = document.getElementById("nombre-rol");
-        const elHoraApertura = document.getElementById("hora-apertura");
-
-        if (elNombreRol) elNombreRol.textContent = responsableNombre;
-
-        if (elHoraApertura) {
-            const horaActual = new Date().toLocaleTimeString("es-AR", {
-                hour: "2-digit",
-                minute: "2-digit",
-            });
-            elHoraApertura.textContent = `${horaActual} hs`;
-        }
-    };
-
     document.addEventListener("click", (event) => {
         if (event.target.closest('[data-accion="abrir-modal-apertura"]')) {
-            abrirModalOverlay(modalApertura);
-            resetearApertura();
+            abrirModal();
             return;
         }
 
@@ -79,10 +134,5 @@ export function iniciarModalApertura() {
         }
     });
 
-    if (!turnoIniciado && modalApertura) {
-        setTimeout(() => {
-            abrirModalOverlay(modalApertura);
-            resetearApertura();
-        }, 150);
-    }
+    return { abrirModal, actualizarOpciones, actualizarOpcionesCajas };
 }
