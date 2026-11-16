@@ -1033,3 +1033,52 @@ input:disabled + .slider {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.inicio-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.inicio-header-bar h2 {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #171914;
+}
+
+.admin-switch-vistas {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  border: 1px solid #e2e4dc;
+  padding: 6px 8px 6px 14px;
+  border-radius: 12px;
+}
+
+.switch-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #777b70;
+  margin-right: 4px;
+}
+
+.btn-switch-vista {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #171914;
+  background-color: #f4f5f0;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-switch-vista:hover {
+  background-color: #c2ff38;
+  color: #171914;
+}

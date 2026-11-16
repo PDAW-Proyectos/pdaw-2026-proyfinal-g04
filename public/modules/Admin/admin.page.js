@@ -5,13 +5,14 @@ import { iniciarUsuarios } from "../Usuarios/usuarios.page.js";
 import { iniciarFinanzas } from "../Finanzas/finanzas.page.js";
 import { iniciarConfiguracion } from "../Configuracion/configuracion.page.js";
 import { crearCategoriasStore } from "../Categorias/categorias.store.js";
+import { iniciarPerfil } from "../Perfil/perfil.page.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const storeCategorias = crearCategoriasStore();
 
     iniciarSidebar();
     iniciarNavegacionVistas();
-
+    iniciarPerfil();
     iniciarFinanzas();
     iniciarUsuarios();
     iniciarConfiguracion(storeCategorias);
