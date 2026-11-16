@@ -8,16 +8,12 @@ import { crearDashboardPrecios } from "./components/dashboardPrecios.js";
 import { crearPaginacionPrecios } from "./components/paginacionPrecios.js";
 import { crearModalEditarProducto } from "./modales/editarProducto.js";
 import { crearModalCrearProducto } from "./modales/crearProducto.js";
-import { crearCategoriasStore } from "../Categorias/categorias.store.js";
-import { crearCategoriasApi } from "../Categorias/categorias.api.js";
 
-export async function iniciarPrecios() {
+export async function iniciarPrecios(storeCategorias) {
     renderizarIconos();
 
     const api = crearPreciosApi();
     const store = crearPreciosStore(api);
-    const apiCategorias = crearCategoriasApi();
-    const storeCategorias = crearCategoriasStore(apiCategorias);
     const notificar = mostrarToast;
     const inputBuscador = document.getElementById("buscar-producto");
     const inputPorcentaje = document.getElementById("input-porcentaje");

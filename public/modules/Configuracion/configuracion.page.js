@@ -1,16 +1,14 @@
 import { mostrarToast } from "../../common/utils/alertas.js";
 import { crearCategoriasApi } from "../Categorias/categorias.api.js";
 import { crearConfiguracionApi } from "./configuracion.api.js";
-import { crearCategoriasStore } from "../Categorias/categorias.store.js";
 import { crearFormNegocio } from "./components/formNegocio.js";
 import { crearFormSesion } from "./components/formSesion.js";
 import { crearFormStock } from "./components/formStock.js";
 import { crearGridCategorias } from "../Categorias/components/gridCategorias.js";
 
-export async function iniciarConfiguracion() {
+export async function iniciarConfiguracion(storeCategorias) {
     const api = crearConfiguracionApi();
     const apiCategorias = crearCategoriasApi();
-    const storeCategorias = crearCategoriasStore();
     const notificar = mostrarToast;
 
     const formNegocio = crearFormNegocio({ api, notificar });

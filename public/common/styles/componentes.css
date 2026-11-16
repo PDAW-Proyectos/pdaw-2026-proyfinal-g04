@@ -436,7 +436,8 @@
   font-weight: 600;
 }
 
-.modal-input-group input {
+.modal-input-group input,
+.modal-input-group select {
   padding: 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -445,7 +446,8 @@
   font-family: inherit;
 }
 
-.modal-input-group input:focus {
+.modal-input-group input:focus,
+.modal-input-group select:focus {
   outline: none;
   border-color: #c2ff38;
   box-shadow: 0 0 0 3px rgba(194, 255, 56, 0.2);
