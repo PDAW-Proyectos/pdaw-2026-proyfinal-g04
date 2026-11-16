@@ -16,6 +16,7 @@ import { errorHandler } from "./src/common/middlewares/errorHandler.middleware.j
 import { crearRouterCaja } from "./src/modules/caja/caja.routes.js";
 import { crearRouterConfiguracion } from "./src/modules/configuracion/configuracion.routes.js";
 import { crearRouterCategorias } from "./src/modules/categorias/categorias.routes.js";
+import { crearRouterProveedores } from "./src/modules/proveedor/proveedor.routes.js";
 import { crearRouterTransaccion } from "./src/modules/transaccion/transaccion.routes.js";
 
 const app = express();
@@ -60,6 +61,7 @@ const egresoController = await dependencyInjector.resolve("egresoController");
 const ingresoController = await dependencyInjector.resolve("ingresoController");
 const productoController = await dependencyInjector.resolve("productoController");
 const insumoController = await dependencyInjector.resolve("insumoController");
+const proveedorController = await dependencyInjector.resolve("proveedorController");
 const cotizacionController = await dependencyInjector.resolve("cotizacionController");
 
 // 4. Rutas de la API
@@ -72,6 +74,7 @@ app.use("/api/transacciones",  requireAuth, crearRouterTransaccion(transaccionCo
 app.use("/api/egreso",  allowRoles("repositor"), crearRouterEgreso(egresoController));
 app.use("/api/ingreso", allowRoles("cajero"), crearRouterIngreso(ingresoController));
 app.use("/api/productos", requireAuth, crearRouterProductos(productoController));
+app.use("/api/proveedores", requireAuth, crearRouterProveedores(proveedorController));
 app.use("/api/insumos", allowRoles("repositor"), crearRouterInsumos(insumoController));
 app.use("/api/cotizacion", requireAuth, crearRouterCotizacion(cotizacionController));
 

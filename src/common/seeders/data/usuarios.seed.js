@@ -28,7 +28,7 @@ export const usuariosSeed = [
     },
     {
         id: 4,
-        email: "deshailitado@kchin.com",
+        email: "deshabilitado@kchin.com",
         contraseña: "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
         nombre: "Luis",
         apellido: "Luis",

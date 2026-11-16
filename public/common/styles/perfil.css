@@ -1,0 +1,261 @@
+.perfil-layout {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.perfil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.perfil-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #171914;
+  margin: 0 0 4px 0;
+}
+
+.perfil-subtitulo {
+  font-size: 14px;
+  color: #777b70;
+  margin: 0;
+}
+
+/* Grilla 2 columnas (Formulario izq + Preview der) */
+.perfil-grid-principal {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 820px) {
+  .perfil-grid-principal {
+    grid-template-columns: 1fr;
+  }
+}
+
+.perfil-card-form,
+.perfil-card-preview {
+  background: #ffffff;
+  border: 1px solid #e2e4dc;
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.perfil-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Avatar de iniciales */
+.perfil-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.perfil-avatar-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #f4f5f0;
+  border: 2px solid #c2ff38;
+  color: #171914;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.perfil-avatar-circle.grande {
+  width: 84px;
+  height: 84px;
+  font-size: 26px;
+  margin: 12px auto 16px auto;
+}
+
+.perfil-nombre-cabecera {
+  margin: 0 0 2px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #171914;
+}
+
+.perfil-ayuda-texto {
+  font-size: 12px;
+  color: #777b70;
+}
+
+.perfil-separador {
+  border: none;
+  border-top: 1px solid #e2e4dc;
+  margin: 4px 0;
+}
+
+/* Fila doble Nombre / Apellido */
+.perfil-fila-doble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 540px) {
+  .perfil-fila-doble {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Fila de contraseña con botón a la derecha */
+.perfil-fila-accion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.perfil-label-bloque {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #171914;
+}
+
+/* Barra de acciones inferior */
+.perfil-footer-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid #e2e4dc;
+}
+
+.perfil-password-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.perfil-password-acciones button,
+.perfil-footer-acciones button {
+  box-sizing: border-box;
+  width: 160px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-outline-neutro {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #171914;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-outline-neutro:hover:not(:disabled) {
+  background: #f4f5f0;
+}
+
+.btn-outline-neutro:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-secundario-peligro {
+  background: #ffffff;
+  border: 1px solid #fecaca;
+  color: #ef4444;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secundario-peligro:hover {
+  background: #fee2e2;
+}
+
+/* Tarjeta Preview derecha */
+.perfil-card-preview {
+  text-align: center;
+  border-style: dashed;
+  background: #fafafa;
+}
+
+.perfil-preview-tag {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #777b70;
+}
+
+.preview-nombre {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #171914;
+}
+
+.perfil-rol-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(194, 255, 56, 0.28);
+  color: #4d6612;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  text-transform: capitalize;
+}
+
+.preview-email {
+  margin: 0;
+  font-size: 13px;
+  color: #777b70;
+  word-break: break-all;
+}
+
+/* Mensajes de feedback */
+.perfil-feedback {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 18px;
+  color: #777b70;
+}
+
+.perfil-feedback.es-error {
+  color: #ef4444;
+}
+
+.perfil-feedback.es-exito {
+  color: #16a34a;
+}
+
+body:has(#perfil.activa) .cobro-panel {
+  display: none;
+}
+
+body:has(#perfil.activa) .caja-main {
+  margin-right: 0;
+}

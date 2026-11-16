@@ -2,12 +2,12 @@ export const categoriasSeed = [
     {
         id: 1,
         nombre: "Bebidas",
-        productos: [1, 12]
+        productos: [1]
     },
     {
         id: 2,
         nombre: "Almacén",
-        productos: [2, 3, 4, 16]
+        productos: [2, 3, 4]
     },
     {
         id: 3,
@@ -27,11 +27,11 @@ export const categoriasSeed = [
     {
         id: 6,
         nombre: "Verdulería",
-        productos: [10, 14, 15]
+        productos: [10]
     },
     {
         id: 7,
         nombre: "Golosinas",
-        productos: [11, 13]
+        productos: []
     }
 ];

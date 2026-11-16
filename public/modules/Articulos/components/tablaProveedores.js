@@ -7,6 +7,13 @@ export function crearTablaProveedores({ tbody }) {
 
             tbody.innerHTML = "";
 
+            if (proveedores.length === 0) {
+                const fila = document.createElement("tr");
+                fila.innerHTML = '<td colspan="6">No hay proveedores registrados.</td>';
+                tbody.appendChild(fila);
+                return;
+            }
+
             proveedores.forEach((prov) => {
                 const fila = document.createElement("tr");
                 const claseEstado = prov.estado === "Activo" ? "stock-normal" : "stock-critico";

@@ -1,7 +1,8 @@
-export function crearArticulosStore({ inventario, proveedores, itemsPorPagina = 12, itemsPorPaginaProv = 10 }) {
+export function crearArticulosStore({ inventario = [], proveedores = [], itemsPorPagina = 12, itemsPorPaginaProv = 10 } = {}) {
     let baseProductos = [...inventario];
     let productosFiltrados = [...baseProductos];
-    let proveedoresFiltrados = [...proveedores];
+    let baseProveedores = [...proveedores];
+    let proveedoresFiltrados = [...baseProveedores];
     let umbralesStock = { critico: 5, medio: 10 };
     let paginaActual = 1;
     let paginaProvActual = 1;
@@ -43,6 +44,18 @@ export function crearArticulosStore({ inventario, proveedores, itemsPorPagina = 
         obtenerProductos: () => [...baseProductos],
         obtenerProveedores: () => [...proveedoresFiltrados],
 
+        establecerInventario(productos) {
+            baseProductos = [...productos];
+            productosFiltrados = [...baseProductos];
+            paginaActual = 1;
+        },
+
+        establecerProveedores(proveedores) {
+            baseProveedores = [...proveedores];
+            proveedoresFiltrados = [...baseProveedores];
+            paginaProvActual = 1;
+        },
+
         establecerUmbrales(stock) {
             umbralesStock = stock;
         },
@@ -61,7 +74,7 @@ export function crearArticulosStore({ inventario, proveedores, itemsPorPagina = 
             const busqueda = termino.toLowerCase();
 
             productosFiltrados = baseProductos.filter((producto) => {
-                const coincideTexto = producto.nombre.toLowerCase().includes(busqueda) || producto.id.toLowerCase().includes(busqueda) || producto.categoria.toLowerCase().includes(busqueda) || producto.precio.toString().includes(busqueda);
+                const coincideTexto = producto.nombre.toLowerCase().includes(busqueda) || String(producto.id).toLowerCase().includes(busqueda) || String(producto.categoria).toLowerCase().includes(busqueda) || String(producto.precio).includes(busqueda);
 
                 let coincideSemaforo = true;
                 if (estadoStock === "critico") {
@@ -81,7 +94,7 @@ export function crearArticulosStore({ inventario, proveedores, itemsPorPagina = 
         filtrarProveedores({ termino = "" } = {}) {
             const busqueda = termino.toLowerCase();
 
-            proveedoresFiltrados = proveedores.filter((proveedor) => proveedor.empresa.toLowerCase().includes(busqueda) || proveedor.rubro.toLowerCase().includes(busqueda) || proveedor.id.toLowerCase().includes(busqueda) || proveedor.contacto.toLowerCase().includes(busqueda));
+            proveedoresFiltrados = baseProveedores.filter((proveedor) => proveedor.empresa.toLowerCase().includes(busqueda) || proveedor.rubro.toLowerCase().includes(busqueda) || String(proveedor.id).toLowerCase().includes(busqueda) || proveedor.contacto.toLowerCase().includes(busqueda));
 
             paginaProvActual = 1;
         },

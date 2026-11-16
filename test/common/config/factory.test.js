@@ -18,12 +18,12 @@ describe("factory", () => {
     });
 
     test("crearProducto devuelve un objeto de tipo ProductoUnidad al pasarle la unidad", async () => {
-        const producto = factory.crearProducto({ id: 1, nombre: "Manzana", categoria: "Fruta", descripcion: "Manzana roja", precio: 100, unidad: 10 });
+        const producto = factory.crearProducto({ id: 1, nombre: "Manzana", categoria: "Fruta", descripcion: "Manzana roja", precioUsd: 1, unidad: 10 });
         expect(producto).toBeInstanceOf(ProductoUnidad);
     });
 
     test("crearProducto devuelve un objeto de tipo ProductoPeso al pasarle el peso", async () => {
-        const producto = factory.crearProducto({ id: 1, nombre: "Yerba", categoria: "Hierbas", descripcion: "Yerba playadito", precio: 100, peso: 1000, unidadMedida: "g" });
+        const producto = factory.crearProducto({ id: 1, nombre: "Yerba", categoria: "Hierbas", descripcion: "Yerba playadito", precioUsd: 1, peso: 1000, unidadMedida: "g" });
         expect(producto).toBeInstanceOf(ProductoPeso);
     });
 
