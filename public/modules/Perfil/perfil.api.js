@@ -20,8 +20,8 @@ export async function cerrarSesionUsuario() {
 }
 
 export async function cambiarPasswordUsuario(datos) {
-  return await httpClient("/api/auth/password", {
-    method: "PUT",
-    body: JSON.stringify(datos),
-  });
+    return await solicitarJson("/api/auth/password", {
+        method: "PUT",
+        body: JSON.stringify(datos),
+    });
 }
