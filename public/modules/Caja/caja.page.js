@@ -18,7 +18,6 @@ import { iniciarModalConsulta } from "./modales/consulta.js";
 import { iniciarModalCantidad } from "./modales/cantidad.js";
 import { iniciarModalApertura } from "./modales/apertura.js";
 import { iniciarModalCierre } from "./modales/cierre.js";
-import { iniciarTransacciones } from "../Transacciones/transacciones.page.js";
 import { iniciarPerfil } from "../Perfil/perfil.page.js";
 import { iniciarModalMovimiento } from "../Transacciones/modales/movimiento.js";
 import { crearTablaVentas } from "../Transacciones/components/tablaVentas.js";
@@ -192,23 +191,23 @@ export function iniciarCaja() {
         if (tbody) {
             tbody.innerHTML = "";
 
-              if (!movimientos.length) {
-                  tbody.innerHTML = `<tr><td colspan="4">No hay datos</td></tr>`;
-                  return;
-              }
+            if (!movimientos.length) {
+                tbody.innerHTML = `<tr><td colspan="4">No hay datos</td></tr>`;
+                return;
+            }
 
-              movimientos.forEach((movimiento) => {
-                  const esIngreso = Number(movimiento.monto) > 0;
-                  const responsable = usuariosPorId.get(Number(movimiento.idUsuario)) ?? movimiento.idUsuario ?? "-";
-                  tbody.insertAdjacentHTML("beforeend", `
-                      <tr>
-                          <td>${new Date(movimiento.fecha).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hour12: false })}</td>
-                          <td>${esIngreso ? "Ingreso" : "Egreso"}</td>
-                          <td>${formatearPrecio(movimiento.monto)}</td>
-                          <td>${responsable}</td>
-                      </tr>
-                  `);
-              });
+            movimientos.forEach((movimiento) => {
+                const esIngreso = Number(movimiento.monto) > 0;
+                const responsable = usuariosPorId.get(Number(movimiento.idUsuario)) ?? movimiento.idUsuario ?? "-";
+                tbody.insertAdjacentHTML("beforeend", `
+                    <tr>
+                        <td>${new Date(movimiento.fecha).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hour12: false })}</td>
+                        <td>${esIngreso ? "Ingreso" : "Egreso"}</td>
+                        <td>${formatearPrecio(movimiento.monto)}</td>
+                        <td>${responsable}</td>
+                    </tr>
+                `);
+            });
         }
     };
 
