@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { allowRoles } from "../../common/middlewares/auth.guard.js";
 
-export default function crearRouterProveedores(proveedorController) {
+export function crearRouterProveedores(proveedorController) {
     const router = Router();
 
     router.get("/", proveedorController.listarProveedores);
