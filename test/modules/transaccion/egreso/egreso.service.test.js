@@ -47,7 +47,8 @@ describe("EgresoService", () => {
             productoRepository,
             movimientoStockService: { movimientoStockRepository },
             aumentarStock: jest.fn(),
-            crearProducto: jest.fn()
+            crearProducto: jest.fn(),
+            buscarProducto: jest.fn()
         };
 
         insumoService = {
