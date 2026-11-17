@@ -5,6 +5,7 @@ import { BadRequestError, NotFoundError } from "../../../../src/common/errors/er
 describe("EgresoService", () => {
     let transaccionRepository;
     let productoRepository;
+    let movimientoStockRepository;
     let insumoRepository;
     let productoService;
     let insumoService;
@@ -30,6 +31,11 @@ describe("EgresoService", () => {
             confirmarTransaccion: jest.fn(),
             rollback: jest.fn()
         };
+        movimientoStockRepository = {
+            iniciarTransaccion: jest.fn(),
+            confirmarTransaccion: jest.fn(),
+            rollback: jest.fn()
+        };
 
         insumoRepository = {
             iniciarTransaccion: jest.fn(),
@@ -39,6 +45,7 @@ describe("EgresoService", () => {
 
         productoService = {
             productoRepository,
+            movimientoStockService: { movimientoStockRepository },
             aumentarStock: jest.fn(),
             crearProducto: jest.fn()
         };
@@ -160,7 +167,13 @@ describe("EgresoService", () => {
             expect(transaccionRepository.iniciarTransaccion).toHaveBeenCalled();
             expect(productoRepository.iniciarTransaccion).toHaveBeenCalled();
             expect(insumoRepository.iniciarTransaccion).toHaveBeenCalled();
-            expect(productoService.aumentarStock).toHaveBeenCalledWith(10, 2);
+            expect(productoService.aumentarStock).toHaveBeenCalledWith(
+                10,
+                2,
+                idUsuario,
+                "Compra",
+                { administrarTransacciones: false },
+            );
             expect(insumoService.aumentarStock).toHaveBeenCalledWith(20, 5);
             expect(transaccionRepository.crear).toHaveBeenCalledWith({
                 idUsuario,
@@ -174,6 +187,7 @@ describe("EgresoService", () => {
             });
             expect(transaccionRepository.confirmarTransaccion).toHaveBeenCalled();
             expect(productoRepository.confirmarTransaccion).toHaveBeenCalled();
+            expect(movimientoStockRepository.confirmarTransaccion).toHaveBeenCalled();
             expect(insumoRepository.confirmarTransaccion).toHaveBeenCalled();
             expect(resultado).toEqual({
                 ...egresoMock,
@@ -200,7 +214,11 @@ describe("EgresoService", () => {
 
             await service.crearCompra(idUsuario, datosNuevos);
 
-            expect(productoService.crearProducto).toHaveBeenCalledWith(datosNuevos.articulos[0]);
+            expect(productoService.crearProducto).toHaveBeenCalledWith(
+                datosNuevos.articulos[0],
+                idUsuario,
+                { administrarTransacciones: false },
+            );
             expect(insumoService.crearInsumo).toHaveBeenCalledWith(datosNuevos.articulos[1]);
         });
 
@@ -225,6 +243,7 @@ describe("EgresoService", () => {
 
             expect(transaccionRepository.rollback).toHaveBeenCalled();
             expect(productoRepository.rollback).toHaveBeenCalled();
+            expect(movimientoStockRepository.rollback).toHaveBeenCalled();
             expect(insumoRepository.rollback).toHaveBeenCalled();
         });
 
@@ -236,6 +255,7 @@ describe("EgresoService", () => {
 
             expect(transaccionRepository.iniciarTransaccion).not.toHaveBeenCalled();
             expect(transaccionRepository.confirmarTransaccion).not.toHaveBeenCalled();
+            expect(movimientoStockRepository.iniciarTransaccion).not.toHaveBeenCalled();
         });
     });
 

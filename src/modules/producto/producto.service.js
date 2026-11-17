@@ -1,9 +1,12 @@
 import { BadRequestError, NotFoundError } from "../../common/errors/errors.classes.js";
 
 export class ProductoService {
-    constructor(productoRepository, cotizacionService) {
+    constructor(productoRepository, cotizacionService, movimientoStockService, categoriaRepository, userRepository) {
         this.productoRepository = productoRepository;
         this.cotizacionService = cotizacionService;
+        this.movimientoStockService = movimientoStockService;
+        this.categoriaRepository = categoriaRepository;
+        this.userRepository = userRepository;
     }
 
     agregarCotizacion = (producto) => {
@@ -38,27 +41,62 @@ export class ProductoService {
         return this.agregarCotizacion(producto);
     }
 
-    async crearProducto(datos) {
+    async crearProducto(datos, idUsuario, { administrarTransacciones = true } = {}) {
         const idCotizacion = (await this.cotizacionService.consultarCotizacion()).cotizacion.id
-        return await this.productoRepository.crear({ ...datos, idCotizacion });
+        return this._conTransaccionStock(async () => {
+            const creado = await this.productoRepository.crear({ ...datos, idCotizacion });
+            const stockInicial = creado.unidad !== undefined ? Number(creado.unidad) : Number(creado.peso);
+
+            if (stockInicial > 0) {
+                await this._registrarMovimientoStock({
+                    producto: creado,
+                    stockAnterior: 0,
+                    stockNuevo: stockInicial,
+                    tipo: "entrada",
+                    motivo: datos.motivo || "Alta de producto con stock inicial",
+                    idUsuario,
+                });
+            }
+
+            return creado;
+        }, administrarTransacciones);
     }
 
-    async actualizarProducto(id, datos) {
-        const anterior = await this.productoRepository.buscarPorId(id);
+    async actualizarProducto(id, datos, idUsuario, { administrarTransacciones = true } = {}) {
+        return this._conTransaccionStock(async () => {
+            const anterior = await this.productoRepository.buscarPorId(id);
 
-        if (!anterior) {
-            throw new NotFoundError("Producto");
-        }
-
-        try {
-            const datosBase = { ...anterior, ...datos };
-            return await this.productoRepository.actualizar(datosBase);
-        } catch (error) {
-            if (error instanceof TypeError) {
-                throw new BadRequestError(error.message);
+            if (!anterior) {
+                throw new NotFoundError("Producto");
             }
-            throw error;
-        }
+
+            try {
+                const datosBase = { ...anterior, ...datos };
+                const actualizado = await this.productoRepository.actualizar(datosBase);
+
+                const esPorUnidad = anterior.unidad !== undefined;
+                const stockAnterior = esPorUnidad ? Number(anterior.unidad) : Number(anterior.peso);
+                const stockNuevo = esPorUnidad ? Number(actualizado.unidad) : Number(actualizado.peso);
+
+                if (stockNuevo !== stockAnterior) {
+                    await this._registrarMovimientoStock({
+                        producto: actualizado,
+                        stockAnterior,
+                        stockNuevo,
+                        tipo: "ajuste",
+                        motivo: datos.motivo || "Ajuste manual de inventario",
+                        idUsuario,
+                    });
+                }
+
+                return actualizado;
+            } catch (error) {
+                if (error instanceof TypeError) {
+                    throw new BadRequestError(error.message);
+                }
+                throw error;
+            }
+        }, administrarTransacciones);
     }
 
     async actualizarPreciosMasivo(productosActualizados) {
@@ -95,51 +133,154 @@ export class ProductoService {
         return eliminado;
     }
 
-    async aumentarStock(id, cantidad) {
+    async aumentarStock(id, cantidad, idUsuario, motivo = "Reposición de mercadería", { administrarTransacciones = true } = {}) {
         if (typeof cantidad !== "number" || !Number.isFinite(cantidad) || cantidad <= 0) {
             throw new BadRequestError("La cantidad debe ser un número positivo");
         }
 
-        const producto = await this.productoRepository.buscarPorId(id);
+        return this._conTransaccionStock(async () => {
+            const producto = await this.productoRepository.buscarPorId(id);
 
-        if (!producto) {
-            throw new NotFoundError("Producto");
-        }
+            if (!producto) {
+                throw new NotFoundError("Producto");
+            }
 
-        if (producto.unidad !== undefined) {
-            producto.unidad += cantidad;
-        } else {
-            producto.peso += cantidad;
-        }
+            const esPorUnidad = producto.unidad !== undefined;
+            const stockAnterior = esPorUnidad ? Number(producto.unidad) : Number(producto.peso);
 
-        return await this.productoRepository.actualizar(producto);
+            if (esPorUnidad) {
+                producto.unidad += cantidad;
+            } else {
+                producto.peso += cantidad;
+            }
+
+            const stockNuevo = esPorUnidad ? Number(producto.unidad) : Number(producto.peso);
+            const actualizado = await this.productoRepository.actualizar(producto);
+
+            await this._registrarMovimientoStock({
+                producto: actualizado,
+                stockAnterior,
+                stockNuevo,
+                tipo: "entrada",
+                motivo,
+                idUsuario,
+            });
+
+            return actualizado;
+        }, administrarTransacciones);
     }
 
-    async disminuirStock(id, cantidad) {
-        console.log(cantidad);
-        console.log(typeof cantidad);        
+    async disminuirStock(id, cantidad, idUsuario, motivo = "Venta", { administrarTransacciones = true } = {}) {
         if (typeof cantidad !== "number" || !Number.isFinite(cantidad) || cantidad <= 0) {
             throw new BadRequestError("La cantidad debe ser un número positivo");
         }
 
-        const producto = await this.productoRepository.buscarPorId(id);
+        return this._conTransaccionStock(async () => {
+            const producto = await this.productoRepository.buscarPorId(id);
 
-        if (!producto) {
-            throw new NotFoundError("Producto");
-        }
+            if (!producto) {
+                throw new NotFoundError("Producto");
+            }
 
-        if (producto.unidad !== undefined) {
-            if (producto.unidad < cantidad) {
+            const esPorUnidad = producto.unidad !== undefined;
+            const stockAnterior = esPorUnidad ? Number(producto.unidad) : Number(producto.peso);
+
+            if (stockAnterior < cantidad) {
                 throw new BadRequestError("Stock insuficiente de " + producto.nombre);
             }
-            producto.unidad -= cantidad;
-        } else {
-            if (producto.peso < cantidad) {
-                throw new BadRequestError("Stock insuficiente de " + producto.nombre);
+            if (esPorUnidad) {
+                producto.unidad -= cantidad;
+            } else {
+                producto.peso -= cantidad;
             }
-            producto.peso -= cantidad;
+
+            const stockNuevo = esPorUnidad ? Number(producto.unidad) : Number(producto.peso);
+            const actualizado = await this.productoRepository.actualizar(producto);
+
+            await this._registrarMovimientoStock({
+                producto: actualizado,
+                stockAnterior,
+                stockNuevo,
+                tipo: "salida",
+                motivo,
+                idUsuario,
+            });
+
+            return actualizado;
+        }, administrarTransacciones);
+    }
+
+    async _conTransaccionStock(operacion, administrarTransacciones) {
+        if (!administrarTransacciones) {
+            return operacion();
         }
 
-        return await this.productoRepository.actualizar(producto);
+        const repositorios = [
+            this.productoRepository,
+            this.movimientoStockService.movimientoStockRepository,
+        ];
+        const iniciados = [];
+
+        try {
+            for (const repositorio of repositorios) {
+                repositorio.iniciarTransaccion();
+                iniciados.push(repositorio);
+            }
+
+            const resultado = await operacion();
+
+            for (const repositorio of iniciados) {
+                await repositorio.confirmarTransaccion();
+            }
+
+            return resultado;
+        } catch (error) {
+            for (const repositorio of iniciados.reverse()) {
+                await repositorio.rollback();
+            }
+            throw error;
+        }
+    }
+
+    async _registrarMovimientoStock({ producto, stockAnterior, stockNuevo, tipo, motivo, idUsuario }) {
+        if (!this.movimientoStockService || !this.categoriaRepository || !this.userRepository) {
+            throw new Error("Faltan dependencias para registrar el movimiento de stock");
+        }
+        if (idUsuario === undefined) {
+            throw new BadRequestError("El usuario que realiza el movimiento es obligatorio");
+        }
+
+        const cantidad = stockNuevo - stockAnterior;
+        if (cantidad === 0) return;
+
+        const esPorUnidad = producto.unidad !== undefined;
+        const categoria = await this.categoriaRepository.buscarPorId(producto.idCategoria);
+        if (!categoria) {
+            throw new NotFoundError("Categoría");
+        }
+
+        let nombreUsuario = "Sistema";
+        if (idUsuario !== null) {
+            const usuario = await this.userRepository.buscarPorId(idUsuario);
+            if (!usuario) {
+                throw new NotFoundError("Usuario");
+            }
+            nombreUsuario = [usuario.nombre, usuario.apellido].filter(Boolean).join(" ").trim() || usuario.email;
+        }
+
+        await this.movimientoStockService.registrarMovimiento({
+            idProducto: producto.id,
+            nombreProducto: producto.nombre,
+            idCategoria: producto.idCategoria,
+            nombreCategoria: categoria.nombre,
+            tipo,
+            motivo,
+            cantidad,
+            unidadMedida: esPorUnidad ? "unidad" : producto.unidadMedida,
+            stockAnterior,
+            stockNuevo,
+            idUsuario,
+            nombreUsuario,
+        });
     }
 }

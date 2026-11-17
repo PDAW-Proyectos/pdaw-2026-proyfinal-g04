@@ -5,6 +5,7 @@ import { NotFoundError, BadRequestError } from "../../../../src/common/errors/er
 describe("IngresoService", () => {
     let transaccionRepository;
     let productoRepository;
+    let movimientoStockRepository;
     let productoService;
     let service;
 
@@ -28,9 +29,15 @@ describe("IngresoService", () => {
             confirmarTransaccion: jest.fn(),
             rollback: jest.fn()
         };
+        movimientoStockRepository = {
+            iniciarTransaccion: jest.fn(),
+            confirmarTransaccion: jest.fn(),
+            rollback: jest.fn()
+        };
 
         productoService = {
             productoRepository,
+            movimientoStockService: { movimientoStockRepository },
             disminuirStock: jest.fn()
         };
 
@@ -142,7 +149,13 @@ describe("IngresoService", () => {
 
             expect(transaccionRepository.iniciarTransaccion).toHaveBeenCalled();
             expect(productoRepository.iniciarTransaccion).toHaveBeenCalled();
-            expect(productoService.disminuirStock).toHaveBeenCalledWith(10, 2);
+            expect(productoService.disminuirStock).toHaveBeenCalledWith(
+                10,
+                2,
+                idUsuario,
+                "Venta",
+                { administrarTransacciones: false },
+            );
             expect(transaccionRepository.crear).toHaveBeenCalledWith({
                 idUsuario,
                 idCaja: 5,
@@ -154,6 +167,7 @@ describe("IngresoService", () => {
             });
             expect(transaccionRepository.confirmarTransaccion).toHaveBeenCalled();
             expect(productoRepository.confirmarTransaccion).toHaveBeenCalled();
+            expect(movimientoStockRepository.confirmarTransaccion).toHaveBeenCalled();
             expect(resultado).toEqual({
                 ...ventaMock,
                 articulos: [
@@ -174,6 +188,7 @@ describe("IngresoService", () => {
 
             expect(transaccionRepository.rollback).toHaveBeenCalled();
             expect(productoRepository.rollback).toHaveBeenCalled();
+            expect(movimientoStockRepository.rollback).toHaveBeenCalled();
         });
 
         it("no administra transacciones si administrarTransacciones es false", async () => {
@@ -184,6 +199,7 @@ describe("IngresoService", () => {
 
             expect(transaccionRepository.iniciarTransaccion).not.toHaveBeenCalled();
             expect(transaccionRepository.confirmarTransaccion).not.toHaveBeenCalled();
+            expect(movimientoStockRepository.iniciarTransaccion).not.toHaveBeenCalled();
         });
     });
 

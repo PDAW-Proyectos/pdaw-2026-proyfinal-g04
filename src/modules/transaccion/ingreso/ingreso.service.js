@@ -46,6 +46,7 @@ export class IngresoService {
 
         const repositorios = [
             this.productoService.productoRepository,
+            this.productoService.movimientoStockService.movimientoStockRepository,
             this.transaccionRepository
         ];
 
@@ -64,7 +65,13 @@ export class IngresoService {
 
             for (const articulo of datos.articulos) {
                 console.log(articulo);
-                const resultado = await this.productoService.disminuirStock(articulo.id, articulo.unidad || articulo.peso || articulo.cantidad);
+                const resultado = await this.productoService.disminuirStock(
+                    articulo.id,
+                    articulo.unidad || articulo.peso || articulo.cantidad,
+                    idUsuario,
+                    "Venta",
+                    { administrarTransacciones: false },
+                );
                 articulos.push({ ...resultado, cantidad: articulo.unidad || articulo.peso });
             }
 

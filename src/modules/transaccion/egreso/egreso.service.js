@@ -45,6 +45,7 @@ export class EgresoService {
 
         const repositorios = [
             this.productoService.productoRepository,
+            this.productoService.movimientoStockService.movimientoStockRepository,
             this.insumoService.insumoRepository,
             this.transaccionRepository
         ];
@@ -67,8 +68,18 @@ export class EgresoService {
 
                 if (articulo.tipo === "producto") {
                     resultado = articulo.id
-                        ? await this.productoService.aumentarStock(articulo.id, articulo.unidad || articulo.peso || articulo.cantidad)
-                        : await this.productoService.crearProducto(articulo);
+                        ? await this.productoService.aumentarStock(
+                            articulo.id,
+                            articulo.unidad || articulo.peso || articulo.cantidad,
+                            idUsuario,
+                            "Compra",
+                            { administrarTransacciones: false },
+                        )
+                        : await this.productoService.crearProducto(
+                            articulo,
+                            idUsuario,
+                            { administrarTransacciones: false },
+                        );
                 } else if (articulo.tipo === "insumo") {
                     resultado = articulo.id
                         ? await this.insumoService.aumentarStock(articulo.id, articulo.unidad)

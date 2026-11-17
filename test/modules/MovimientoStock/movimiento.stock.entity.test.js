@@ -1,0 +1,41 @@
+import { MovimientoStock } from "../../../src/modules/MovimientoStock/movimiento.stock.entity.js";
+
+describe("MovimientoStock", () => {
+  const datosEntrada = {
+    idProducto: 8,
+    nombreProducto: "Yerba",
+    idCategoria: 2,
+    nombreCategoria: "Almacén",
+    tipo: "entrada",
+    motivo: "compra",
+    cantidad: 12,
+    unidadMedida: "unidad",
+    stockAnterior: 6,
+    stockNuevo: 18,
+    idUsuario: 3,
+    nombreUsuario: "Ana Pérez",
+  };
+
+  it("guarda los datos de producto, categoría, usuario y la variación firmada", () => {
+    const movimiento = new MovimientoStock(datosEntrada);
+
+    expect(movimiento).toMatchObject({
+      ...datosEntrada,
+      fecha: expect.any(String),
+    });
+  });
+
+  it("rechaza una variación que no coincide con el stock anterior y posterior", () => {
+    expect(() => new MovimientoStock({
+      ...datosEntrada,
+      cantidad: 10,
+    })).toThrow("La variación debe coincidir con la diferencia entre stockNuevo y stockAnterior");
+  });
+
+  it("rechaza una salida con variación positiva", () => {
+    expect(() => new MovimientoStock({
+      ...datosEntrada,
+      tipo: "salida",
+    })).toThrow("El signo de la variación no coincide con el tipo de movimiento");
+  });
+});

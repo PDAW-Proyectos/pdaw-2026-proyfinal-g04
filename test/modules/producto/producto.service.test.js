@@ -6,6 +6,10 @@ describe('ProductoService', () => {
     let productoService;
     let mockProductoRepository;
     let mockCotizacionService;
+    let mockMovimientoStockRepository;
+    let mockMovimientoStockService;
+    let mockCategoriaRepository;
+    let mockUserRepository;
 
     beforeEach(() => {
         mockProductoRepository = {
@@ -25,7 +29,29 @@ describe('ProductoService', () => {
             consultarCotizacion: jest.fn(),
         };
 
-        productoService = new ProductoService(mockProductoRepository, mockCotizacionService);
+        mockMovimientoStockRepository = {
+            iniciarTransaccion: jest.fn(),
+            confirmarTransaccion: jest.fn(),
+            rollback: jest.fn(),
+        };
+        mockMovimientoStockService = {
+            movimientoStockRepository: mockMovimientoStockRepository,
+            registrarMovimiento: jest.fn().mockResolvedValue({ id: 1 }),
+        };
+        mockCategoriaRepository = {
+            buscarPorId: jest.fn().mockResolvedValue({ id: 2, nombre: "Almacén" }),
+        };
+        mockUserRepository = {
+            buscarPorId: jest.fn().mockResolvedValue({ id: 7, nombre: "Ana", apellido: "Pérez" }),
+        };
+
+        productoService = new ProductoService(
+            mockProductoRepository,
+            mockCotizacionService,
+            mockMovimientoStockService,
+            mockCategoriaRepository,
+            mockUserRepository,
+        );
     });
 
     afterEach(() => {
@@ -148,16 +174,117 @@ describe('ProductoService', () => {
 
         test('debe restar el stock por peso y actualizar en el repositorio', async () => {
             // Arrange
-            const productoFalso = { id: 1, peso: 20.5 };
+            const productoFalso = {
+                id: 1,
+                nombre: "Yerba",
+                idCategoria: 2,
+                peso: 20.5,
+                unidadMedida: "kg",
+            };
             mockProductoRepository.buscarPorId.mockResolvedValue(productoFalso);
-            mockProductoRepository.actualizar.mockResolvedValue(true);
+            mockProductoRepository.actualizar.mockResolvedValue(productoFalso);
 
             // Act
-            await productoService.disminuirStock(1, 5.5);
+            await productoService.disminuirStock(1, 5.5, 7);
 
             // Assert
             expect(productoFalso.peso).toBe(15);
             expect(mockProductoRepository.actualizar).toHaveBeenCalledWith(productoFalso);
+            expect(mockMovimientoStockService.registrarMovimiento).toHaveBeenCalledWith(expect.objectContaining({
+                idProducto: 1,
+                idCategoria: 2,
+                tipo: "salida",
+                motivo: "Venta",
+                cantidad: -5.5,
+                unidadMedida: "kg",
+                stockAnterior: 20.5,
+                stockNuevo: 15,
+                idUsuario: 7,
+                nombreUsuario: "Ana Pérez",
+            }));
+        });
+    });
+
+    describe('registrar movimientos de stock', () => {
+        test('registra el stock inicial de un producto con el usuario que lo creó', async () => {
+            const producto = {
+                id: 5,
+                nombre: "Yerba",
+                idCategoria: 2,
+                unidad: 8,
+            };
+            mockCotizacionService.consultarCotizacion.mockResolvedValue({ cotizacion: { id: 4 } });
+            mockProductoRepository.crear.mockResolvedValue(producto);
+
+            await productoService.crearProducto({ nombre: "Yerba", idCategoria: 2, unidad: 8 }, 7);
+
+            expect(mockMovimientoStockService.registrarMovimiento).toHaveBeenCalledWith(expect.objectContaining({
+                idProducto: 5,
+                tipo: "entrada",
+                stockAnterior: 0,
+                stockNuevo: 8,
+                idUsuario: 7,
+                nombreUsuario: "Ana Pérez",
+            }));
+        });
+
+        test('registra como ajuste un cambio manual de stock', async () => {
+            const anterior = {
+                id: 5,
+                nombre: "Yerba",
+                idCategoria: 2,
+                unidad: 6,
+            };
+            const actualizado = { ...anterior, unidad: 18 };
+            mockProductoRepository.buscarPorId.mockResolvedValue(anterior);
+            mockProductoRepository.actualizar.mockResolvedValue(actualizado);
+
+            await productoService.actualizarProducto(5, { unidad: 18 }, 7);
+
+            expect(mockMovimientoStockService.registrarMovimiento).toHaveBeenCalledWith(expect.objectContaining({
+                tipo: "ajuste",
+                cantidad: 12,
+                stockAnterior: 6,
+                stockNuevo: 18,
+                idUsuario: 7,
+            }));
+        });
+
+        test('registra una cantidad ponderada sin redondearla y conserva su unidad', async () => {
+            const producto = {
+                id: 3,
+                nombre: "Producto por peso",
+                idCategoria: 2,
+                peso: 1.2345,
+                unidadMedida: "g",
+            };
+            mockProductoRepository.buscarPorId.mockResolvedValue(producto);
+            mockProductoRepository.actualizar.mockResolvedValue(producto);
+
+            await productoService.aumentarStock(3, 0.00005, 7);
+
+            const movimiento = mockMovimientoStockService.registrarMovimiento.mock.calls[0][0];
+            expect(movimiento.unidadMedida).toBe("g");
+            expect(movimiento.stockAnterior).toBe(1.2345);
+            expect(movimiento.stockNuevo).toBe(producto.peso);
+            expect(movimiento.cantidad).toBe(movimiento.stockNuevo - movimiento.stockAnterior);
+        });
+
+        test('revierte stock e historial si falla el registro del movimiento', async () => {
+            const producto = {
+                id: 1,
+                nombre: "Yerba",
+                idCategoria: 2,
+                unidad: 5,
+            };
+            mockProductoRepository.buscarPorId.mockResolvedValue(producto);
+            mockProductoRepository.actualizar.mockResolvedValue(producto);
+            mockMovimientoStockService.registrarMovimiento.mockRejectedValue(new Error("Error de historial"));
+
+            await expect(productoService.aumentarStock(1, 2, 7)).rejects.toThrow("Error de historial");
+
+            expect(mockProductoRepository.rollback).toHaveBeenCalled();
+            expect(mockMovimientoStockRepository.rollback).toHaveBeenCalled();
         });
     });
 });
