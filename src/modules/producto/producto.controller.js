@@ -24,15 +24,16 @@ export class ProductoController {
   };
 
   crearProducto = async (req, res) => {
-    const producto = await this.productoService.crearProducto(req.body);
+    const idUsuario = req.session?.userId ?? null;
+    const producto = await this.productoService.crearProducto(req.body, idUsuario);
     res.status(201).json(producto);
   };
 
   actualizarProducto = async (req, res) => {
-    const producto = await this.productoService.actualizarProducto(req.params.id, req.body);
+    const idUsuario = req.session?.userId ?? null;
+    const producto = await this.productoService.actualizarProducto(req.params.id, req.body, idUsuario);
     res.status(200).json(producto);
-  };
-
+  }
   actualizarPreciosMasivo = async (req, res) => {
     const { tipo, valor } = req.body;
 

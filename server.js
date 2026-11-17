@@ -18,6 +18,7 @@ import { crearRouterConfiguracion } from "./src/modules/configuracion/configurac
 import { crearRouterCategorias } from "./src/modules/categorias/categorias.routes.js";
 import { crearRouterProveedores } from "./src/modules/proveedor/proveedor.routes.js";
 import { crearRouterTransaccion } from "./src/modules/transaccion/transaccion.routes.js";
+import { crearRouterMovimientosStock } from "./src/modules/MovimientoStock/movimientoStock.routes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -63,6 +64,7 @@ const productoController = await dependencyInjector.resolve("productoController"
 const insumoController = await dependencyInjector.resolve("insumoController");
 const proveedorController = await dependencyInjector.resolve("proveedorController");
 const cotizacionController = await dependencyInjector.resolve("cotizacionController");
+const movimientoStockController = await dependencyInjector.resolve("movimientoStockController");
 
 // 4. Rutas de la API
 app.use("/api/usuarios", requireAuth, crearRouterUsuarios(userController));
@@ -77,6 +79,7 @@ app.use("/api/productos", requireAuth, crearRouterProductos(productoController))
 app.use("/api/proveedores", requireAuth, crearRouterProveedores(proveedorController));
 app.use("/api/insumos", allowRoles("repositor"), crearRouterInsumos(insumoController));
 app.use("/api/cotizacion", requireAuth, crearRouterCotizacion(cotizacionController));
+app.use("/api/movimientos-stock", allowRoles("repositor"), crearRouterMovimientosStock(movimientoStockController));
 
 // 5. Redirección de la raíz
 app.get("/", (req, res) => {

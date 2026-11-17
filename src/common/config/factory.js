@@ -8,6 +8,7 @@ import { Cotizacion } from "../../modules/cotizacion/cotizacion.entity.js";
 import { Caja } from "../../modules/caja/caja.entity.js";
 import { Categoria } from "../../modules/categorias/categorias.entity.js";
 import { Proveedor } from "../../modules/proveedor/proveedor.entity.js";
+import { MovimientoStock } from "../../modules/MovimientoStock/movimiento.stock.entity.js";
 
 export class Factory {
     crearUsuario(entidad) {
@@ -47,5 +48,9 @@ export class Factory {
 
     crearProveedor(entidad) {
         return new Proveedor(entidad);
+    }
+
+    crearMovimientoStock(entidad){
+        return new MovimientoStock(entidad);
     }
 }

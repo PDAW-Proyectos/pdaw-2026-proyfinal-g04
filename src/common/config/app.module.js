@@ -29,6 +29,8 @@ import { ProveedorController } from "../../modules/proveedor/proveedor.controlle
 import { ProveedorService } from "../../modules/proveedor/proveedor.service.js";
 import { TransaccionesService } from "../../modules/transaccion/transaccion.service.js";
 import { TransaccionesController } from "../../modules/transaccion/transaccion.controller.js";
+import { MovimientoStockController } from "../../modules/MovimientoStock/movimientoStock.controller.js";
+import { MovimientoStockService } from "../../modules/MovimientoStock/movimiento.stock.service.js";
 
 export const dependencyInjector = new DependencyInjector();
 const factory = new Factory();
@@ -71,6 +73,10 @@ dependencyInjector.registerSingleton("proveedorRepository", () =>
   Repository.inicializar(path.join(__dirname, "../../../data", "Proveedores.json"), factory.crearProveedor),
 );
 
+dependencyInjector.registerSingleton("movimientoStockRepository", () =>
+  Repository.inicializar(path.join(__dirname, "../../../data", "MovimientosStock.json"), factory.crearMovimientoStock),
+);
+
 
 dependencyInjector.registerSingleton("userService", async () => {
   const userRepository = await dependencyInjector.resolve("userRepository");
@@ -95,7 +101,10 @@ dependencyInjector.registerSingleton("authController", async () => {
 dependencyInjector.registerSingleton("productoService", async () => {
   const productoRepository = await dependencyInjector.resolve("productoRepository");
   const cotizacionService = await dependencyInjector.resolve("cotizacionService");
-  return new ProductoService(productoRepository, cotizacionService);
+  const movimientoStockService = await dependencyInjector.resolve("movimientoStockService");
+  const categoriaRepository = await dependencyInjector.resolve("categoriaRepository");
+  const userRepository = await dependencyInjector.resolve("userRepository");
+  return new ProductoService(productoRepository, cotizacionService, movimientoStockService, categoriaRepository, userRepository);
 });
 
 dependencyInjector.registerSingleton("productoController", async () => {
@@ -196,4 +205,14 @@ dependencyInjector.registerSingleton("transaccionService", async () => {
 dependencyInjector.registerSingleton("transaccionController", async () => {
   const transaccionService = await dependencyInjector.resolve("transaccionService");
   return new TransaccionesController(transaccionService);
+});
+
+dependencyInjector.registerSingleton("movimientoStockService", async () => {
+  const movimientoStockRepository = await dependencyInjector.resolve("movimientoStockRepository");
+  return new MovimientoStockService(movimientoStockRepository);
+});
+
+dependencyInjector.registerSingleton("movimientoStockController", async () => {
+  const movimientoStockService = await dependencyInjector.resolve("movimientoStockService");
+  return new MovimientoStockController(movimientoStockService);
 });
