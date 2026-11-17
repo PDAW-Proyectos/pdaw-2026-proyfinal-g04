@@ -70,7 +70,7 @@ export function iniciarModalCierre({ store, api, notificar, alCerrar }) {
                 const usuario = store.obtenerUsuario();
                 const cajasAbiertas = await api.listarCajasAbiertas();
                 caja = cajasAbiertas.find((item) =>
-                    String(item.usuarioAbre) === String(usuario?.id) && item.estado === "abierta"
+                    String(item.usuarioAbre) === String(usuario?.idUsuario ?? usuario?.id) && item.estado === "abierta"
                 );
             }
 
@@ -124,7 +124,7 @@ export function iniciarModalCierre({ store, api, notificar, alCerrar }) {
             const usuario = store.obtenerUsuario();
             const cajasAbiertas = await api.listarCajasAbiertas();
             const cajasUsuario = cajasAbiertas.filter((caja) =>
-                String(caja.usuarioAbre) === String(usuario?.id) && caja.estado === "abierta"
+                String(caja.usuarioAbre) === String(usuario?.idUsuario ?? usuario?.id) && caja.estado === "abierta"
             );
 
             renderizarCajasAbiertas(cajasUsuario);

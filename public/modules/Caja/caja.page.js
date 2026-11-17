@@ -244,7 +244,7 @@ export function iniciarCaja() {
         await Promise.all([
             cargarVentasCaja(caja.id),
             cargarMovimientosCaja(caja.id),
-            cargarHistorial(store.obtenerUsuario().id),
+            cargarHistorial(store.obtenerUsuario()?.idUsuario ?? store.obtenerUsuario()?.id),
         ]);
     };
 
@@ -274,7 +274,7 @@ export function iniciarCaja() {
             await Promise.all([
                 cargarVentasCaja(caja.id),
                 cargarMovimientosCaja(caja.id),
-                cargarHistorial(store.obtenerUsuario().id),
+                cargarHistorial(store.obtenerUsuario()?.idUsuario ?? store.obtenerUsuario()?.id),
             ]);
 
             store.limpiarVenta();
@@ -382,7 +382,7 @@ export function iniciarCaja() {
         store.establecerCajasAbiertas(cajasAbiertas);
 
         const cajaUsuario = cajasAbiertas.find((caja) =>
-            String(caja.usuarioAbre) === String(usuario.id) && caja.estado === "abierta"
+            String(caja.usuarioAbre) === String(usuario.idUsuario ?? usuario.id) && caja.estado === "abierta"
         );
 
         if (cajaUsuario) {
@@ -440,7 +440,7 @@ export function iniciarCaja() {
             const usuario = store.obtenerUsuario();
             if (!usuario) return;
 
-            const tickets = await transaccionesApi.buscarPorTicket(termino.replace(/^#/, ""), usuario.id);
+            const tickets = await transaccionesApi.buscarPorTicket(termino.replace(/^#/, ""), usuario.idUsuario ?? usuario.id);
             store.establecerHistorial(tickets);
         },
     });

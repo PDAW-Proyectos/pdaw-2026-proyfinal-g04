@@ -97,5 +97,24 @@ export const productosSeed = [
         precioUsd: 2.00,
         peso: 20,
         unidadMedida: "kg"
+    },
+
+    // Productos sin precio
+    {
+        id: 11,
+        idCotizacion: 1,
+        idCategoria: 1,
+        nombre: "Producto sin precio unidad",
+        descripcion: "Producto de prueba sin precio asignado",
+        unidad: 5
+    },
+    {
+        id: 12,
+        idCotizacion: 1,
+        idCategoria: 4,
+        nombre: "Producto sin precio peso",
+        descripcion: "Producto de prueba sin precio asignado",
+        peso: 2,
+        unidadMedida: "kg"
     }
 ];
