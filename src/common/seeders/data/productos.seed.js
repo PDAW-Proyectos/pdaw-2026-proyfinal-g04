@@ -99,21 +99,23 @@ export const productosSeed = [
         unidadMedida: "kg"
     },
 
-    // Productos sin precio
+    // Productos con precio cero
     {
         id: 11,
         idCotizacion: 1,
         idCategoria: 1,
-        nombre: "Producto sin precio unidad",
-        descripcion: "Producto de prueba sin precio asignado",
+        nombre: "Producto con precio cero unidad",
+        descripcion: "Producto de prueba con precio cero",
+        precioUsd: 0,
         unidad: 5
     },
     {
         id: 12,
         idCotizacion: 1,
         idCategoria: 4,
-        nombre: "Producto sin precio peso",
-        descripcion: "Producto de prueba sin precio asignado",
+        nombre: "Producto con precio cero peso",
+        descripcion: "Producto de prueba con precio cero",
+        precioUsd: 0,
         peso: 2,
         unidadMedida: "kg"
     }
