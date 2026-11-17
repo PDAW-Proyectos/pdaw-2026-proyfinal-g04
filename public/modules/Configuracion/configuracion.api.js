@@ -6,6 +6,10 @@ export function crearConfiguracionApi(base = "/api") {
             return solicitarJson(`${base}/configuracion`);
         },
 
+        listarCajas() {
+            return solicitarJson(`${base}/configuracion/cajas`);
+        },
+
         actualizar(payload) {
             return solicitarJson(`${base}/configuracion`, {
                 method: "PATCH",

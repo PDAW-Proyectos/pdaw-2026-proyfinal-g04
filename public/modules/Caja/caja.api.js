@@ -52,6 +52,10 @@ export function crearCajaApi(base = "/api") {
             return respuesta.cajas ?? [];
         },
 
+        listarCajas() {
+            return listarColeccion("caja", "cajas");
+        },
+
         buscarCaja(id) {
             return solicitarJson(`${base}/caja/${id}`);
         },

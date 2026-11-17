@@ -17,6 +17,14 @@ export function crearTransaccionesApi(base = "/api") {
             return listar({ idUsuario: Number(idUsuario) });
         },
 
+        listarTodas() {
+            return listar({});
+        },
+
+        listarPorCaja(idCaja) {
+            return listar({ nroCaja: Number(idCaja) });
+        },
+
         async buscarPorTicket(id, idUsuario) {
             const respuesta = await solicitarJson(`${base}/transacciones/?pagina=1&limite=10`, {
                 method: "QUERY",
