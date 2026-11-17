@@ -23,9 +23,9 @@ export function crearPreciosStore(api) {
     };
 
     const mapearProducto = (producto) => {
-        if (typeof producto.precioUsd !== "number" || !Number.isFinite(producto.precioUsd) || producto.precioUsd < 0) {
-            throw new Error(`El producto ${producto.id} no tiene un precio USD válido`);
-        }
+        // if (typeof producto.precioUsd !== "number" || !Number.isFinite(producto.precioUsd) || producto.precioUsd < 0) {
+        //     throw new Error(`El producto ${producto.id} no tiene un precio USD válido`);
+        // }
 
         const precioUsd = producto.precioUsd;
         const cotizacion = Number(producto.cotizacion ?? 0);
@@ -68,7 +68,7 @@ export function crearPreciosStore(api) {
             ultimoTermino = termino;
             const resultado = await api.listar({
                 pagina: estado.paginaActual,
-                limite: 12,
+                limite: 10,
                 termino,
             });
 
