@@ -109,7 +109,12 @@ export class EgresoService {
 
             return {
                 ...compra, 
-                articulos
+                articulos: articulos.map((a) => {
+                    return {
+                        ...this.productoService.buscarProducto(a.id),
+                        ...a
+                    }
+                })
             };
         } catch (error) {
             if (administrarTransacciones) {
