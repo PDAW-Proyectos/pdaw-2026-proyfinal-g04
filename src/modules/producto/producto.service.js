@@ -15,8 +15,14 @@ export class ProductoService {
         return { ...productoSinCotizacion, cotizacion: cotizacion.venta, cotizacionFecha: cotizacion.fechaActualizacion };
     };
 
+    agregarCategoria = (producto) => {
+        const categoria = this.categoriaRepository.buscarPorId(producto.idCategoria);
+        return { ...producto, categoria };
+    };
+
     listarProductos(pagina, limite) {
-        const { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
+        let { datos, ...paginacion } = this.productoRepository.listar(pagina, limite);
+        datos = datos.map(this.agregarCategoria)
         return {
             productos: datos.map(this.agregarCotizacion),
             ...paginacion
@@ -37,8 +43,8 @@ export class ProductoService {
         if (!producto) {
             throw new NotFoundError("Producto");
         }
-
-        return this.agregarCotizacion(producto);
+        const productoCategoria = this.agregarCategoria(producto)
+        return this.agregarCotizacion(productoCategoria);
     }
 
     async crearProducto(datos, idUsuario, { administrarTransacciones = true } = {}) {
