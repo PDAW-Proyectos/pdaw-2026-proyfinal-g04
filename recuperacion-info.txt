@@ -1,7 +1,0 @@
-commit 3759800ad007e5a84f2fcd5951221fab58d5434b
-Author:     ITAlonsoRabanal <nachoalonso273@gmail.com>
-AuthorDate: Sun Nov 15 18:36:14 2026 -0300
-Commit:     ITAlonsoRabanal <nachoalonso273@gmail.com>
-CommitDate: Sun Nov 15 18:36:14 2026 -0300
-
-    caja conectada a backend
