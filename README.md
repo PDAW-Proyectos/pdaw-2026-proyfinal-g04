@@ -41,6 +41,7 @@ Proyecto del equipo 4 para _7513 · Proyecto de Desarrollo de Aplicaciones Web_
 ```bash
 npm install
 cp .env.example .env
+npm run seed
 npm run dev
 ```
 
@@ -48,6 +49,7 @@ npm run dev
 
 ```bash
 npm test
+npm run lint
 ```
 
 ## Documentación
