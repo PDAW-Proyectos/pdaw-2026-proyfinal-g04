@@ -1,7 +1,7 @@
 import { abrirModalOverlay, cerrarModalOverlay } from "../../../common/components/modalOverlay.js";
 import { formatearPrecio } from "../../../common/utils/formato.js";
 
-export function iniciarModalApertura({ store, api, notificar, cajas = [], alAbrir }) {
+export function iniciarModalApertura({ store, api, notificar, cajas = [], alAbrir, obtenerCajaSeleccionada }) {
     const modalApertura = document.getElementById("modal-inicio-turno");
     const inputsBilletes = document.querySelectorAll(".input-billete");
     const textoTotalApertura = document.getElementById("total-apertura");
@@ -58,7 +58,12 @@ export function iniciarModalApertura({ store, api, notificar, cajas = [], alAbri
             selectNroCaja.appendChild(opcion);
         });
 
-        if (selectNroCaja.options.length) selectNroCaja.selectedIndex = 0;
+        const seleccionada = obtenerCajaSeleccionada?.();
+        if (seleccionada && [...selectNroCaja.options].some((opcion) => opcion.value === seleccionada)) {
+            selectNroCaja.value = seleccionada;
+        } else if (selectNroCaja.options.length) {
+            selectNroCaja.selectedIndex = 0;
+        }
         if (btnConfirmar) btnConfirmar.disabled = false;
     };
 
@@ -77,6 +82,10 @@ export function iniciarModalApertura({ store, api, notificar, cajas = [], alAbri
 
     const abrirModal = () => {
         resetearApertura();
+        const seleccionada = obtenerCajaSeleccionada?.();
+        if (seleccionada && selectNroCaja && [...selectNroCaja.options].some((opcion) => opcion.value === seleccionada)) {
+            selectNroCaja.value = seleccionada;
+        }
         abrirModalOverlay(modalApertura);
         setTimeout(() => inputsBilletes[0]?.focus(), 100);
     };

@@ -8,7 +8,7 @@ export class Producto {
     if (new.target === Producto)
       throw new TypeError("Producto es una clase abstracta");
     if (!id) throw new ValidationError("id no puede ser nulo");
-    if (typeof precioUsd !== "undefined" && (!Number.isFinite(precioUsd) || precioUsd < 0)) {
+    if (precioUsd != null && (!Number.isFinite(precioUsd) || precioUsd < 0)) {
       throw new BadRequestError(
         "precioUsd debe ser un número válido mayor o igual a 0",
       );
