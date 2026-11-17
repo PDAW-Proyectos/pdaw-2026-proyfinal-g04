@@ -59,20 +59,12 @@ export function iniciarModalCierre({ store, api, notificar, alCerrar }) {
         }
     };
 
-    const abrirCierre = async (cajaSeleccionada = null) => {
+    const abrirCierre = async (cajaParam = null) => {
         if (inputEfectivoCierre) inputEfectivoCierre.value = "";
         if (inputObservaciones) inputObservaciones.value = "";
 
         try {
-            let caja = cajaSeleccionada;
-
-            if (!caja) {
-                const usuario = store.obtenerUsuario();
-                const cajasAbiertas = await api.listarCajasAbiertas();
-                caja = cajasAbiertas.find((item) =>
-                    String(item.usuarioAbre) === String(usuario?.idUsuario ?? usuario?.id) && item.estado === "abierta"
-                );
-            }
+            let caja = cajaParam ?? store.obtenerCaja();
 
             if (!caja) {
                 notificar("No hay una caja abierta para cerrar.", "error");

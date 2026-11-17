@@ -50,6 +50,8 @@ export function iniciarCaja() {
     const configuracionApi = crearConfiguracionApi();
     const usuariosApi = crearUsuariosApi();
     let usuariosPorId = new Map();
+    let cajasConfiguradas = [];
+    let cajaSeleccionada = null;
     const notificar = mostrarNotificacion;
 
     const tablaVentas = crearTablaVentas({
@@ -136,10 +138,8 @@ export function iniciarCaja() {
             elemento.textContent = horaApertura;
         });
 
-        const estadoTexto = caja ? "Caja abierta" : "Caja cerrada";
-        document.querySelectorAll('[data-campo="estado-caja"]').forEach((elemento) => {
-            elemento.textContent = estadoTexto;
-        });
+        renderizarSelectorCaja();
+        actualizarBotonCaja();
     };
 
     const actualizarPerfil = (estado) => {
@@ -234,25 +234,48 @@ export function iniciarCaja() {
         store.establecerMovimientos(transacciones);
     };
 
-    const cargarHistorial = async (idUsuario) => {
-        const transacciones = await transaccionesApi.listarPorUsuario(idUsuario);
-        store.establecerHistorial(transacciones);
+    const cargarHistorial = async (nroCaja) => {
+        if (!nroCaja) {
+            store.establecerHistorial([]);
+            return;
+        }
+
+        const [cajas, transacciones] = await Promise.all([
+            api.listarCajas(),
+            transaccionesApi.listarTodas(),
+        ]);
+
+        const idsCaja = (cajas ?? [])
+            .filter((caja) => String(caja.nroCaja).trim() === String(nroCaja).trim())
+            .map((caja) => Number(caja.id));
+
+        const historial = (transacciones ?? []).filter((transaccion) =>
+            idsCaja.includes(Number(transaccion.idCaja))
+        );
+
+        store.establecerHistorial(historial);
     };
 
     const abrirCajaEnStore = async (caja) => {
+        cajaSeleccionada = String(caja.nroCaja).trim();
         store.abrirCaja(caja);
+        const cajasAbiertas = await api.listarCajasAbiertas();
+        store.establecerCajasAbiertas(cajasAbiertas);
         await Promise.all([
             cargarVentasCaja(caja.id),
             cargarMovimientosCaja(caja.id),
-            cargarHistorial(store.obtenerUsuario()?.idUsuario ?? store.obtenerUsuario()?.id),
+            cargarHistorial(caja.nroCaja),
         ]);
     };
 
-    const cerrarCajaEnStore = async () => {
+    const cerrarCajaEnStore = async (cajaParam = null) => {
+        const nroCaja = cajaParam?.nroCaja ?? store.obtenerCaja()?.nroCaja ?? cajaSeleccionada;
         store.cerrarCaja();
         store.establecerVentas([]);
         store.establecerMovimientos([]);
-        store.establecerHistorial([]);
+        const cajasAbiertas = await api.listarCajasAbiertas();
+        store.establecerCajasAbiertas(cajasAbiertas);
+        await cargarHistorial(nroCaja);
     };
 
     const cobrarVenta = async () => {
@@ -274,7 +297,7 @@ export function iniciarCaja() {
             await Promise.all([
                 cargarVentasCaja(caja.id),
                 cargarMovimientosCaja(caja.id),
-                cargarHistorial(store.obtenerUsuario()?.idUsuario ?? store.obtenerUsuario()?.id),
+                cargarHistorial(caja.nroCaja),
             ]);
 
             store.limpiarVenta();
@@ -334,6 +357,52 @@ export function iniciarCaja() {
         `;
     };
 
+    const renderizarSelectorCaja = () => {
+        const abiertas = store.obtenerCajasAbiertas();
+        document.querySelectorAll("select[data-campo=\"estado-caja\"]").forEach((select) => {
+            const valorPrevio = cajaSeleccionada || select.value;
+            select.innerHTML = "";
+            const opcionPorDefecto = document.createElement("option");
+            opcionPorDefecto.value = "";
+            opcionPorDefecto.textContent = "Seleccione una caja";
+            opcionPorDefecto.disabled = true;
+            select.appendChild(opcionPorDefecto);
+            cajasConfiguradas.forEach((cajaConfig) => {
+                const nombre = String(cajaConfig?.nombre ?? cajaConfig).trim();
+                const abierta = abiertas.find((item) => String(item.nroCaja).trim() === nombre && item.estado === "abierta");
+                const opcion = document.createElement("option");
+                opcion.value = nombre;
+                opcion.textContent = abierta ? `${nombre} (abierta)` : `${nombre} (cerrada)`;
+                select.appendChild(opcion);
+            });
+            if (valorPrevio && [...select.options].some((opcion) => opcion.value === valorPrevio)) {
+                select.value = valorPrevio;
+                cajaSeleccionada = valorPrevio;
+            } else if (cajasConfiguradas.length) {
+                select.value = "";
+                cajaSeleccionada = null;
+            } else {
+                select.value = "";
+            }
+        });
+    };
+
+    const actualizarBotonCaja = () => {
+        const boton = document.getElementById("boton-cerrar-caja");
+        if (!boton) return;
+        const abierta = Boolean(store.obtenerCaja());
+        boton.dataset.accion = abierta ? "abrir-modal-cierre" : "abrir-modal-apertura";
+        const span = boton.querySelector("span");
+        if (span) span.textContent = abierta ? "Cerrar caja" : "Abrir caja";
+        const icono = boton.querySelector("i, svg");
+        if (icono) {
+            const nuevoIcono = document.createElement("i");
+            nuevoIcono.setAttribute("data-lucide", abierta ? "lock-keyhole" : "lock-open");
+            icono.replaceWith(nuevoIcono);
+        }
+        renderizarIconos(boton);
+    };
+
     store.suscribir((estado) => {
         renderizarCarrito(estado);
         actualizarResumen(estado);
@@ -351,6 +420,34 @@ export function iniciarCaja() {
 
     iniciarRelojCaja();
     configurarAtajosTeclado();
+
+    document.addEventListener("change", async (event) => {
+        const select = event.target.closest('select[data-campo="estado-caja"]');
+        if (!select) return;
+
+        if (!select.value) return;
+
+        cajaSeleccionada = select.value;
+        const abierta = store.obtenerCajasAbiertas().find((caja) =>
+            String(caja.nroCaja).trim() === String(cajaSeleccionada).trim() && caja.estado === "abierta"
+        );
+
+        if (abierta) {
+            abrirCajaEnStore(abierta).then(() => {
+                renderizarSelectorCaja();
+                actualizarBotonCaja();
+            });
+        } else {
+            store.cerrarCaja();
+            store.establecerVentas([]);
+            store.establecerMovimientos([]);
+            const cajasAbiertas = await api.listarCajasAbiertas();
+            store.establecerCajasAbiertas(cajasAbiertas);
+            await cargarHistorial(cajaSeleccionada);
+            renderizarSelectorCaja();
+            actualizarBotonCaja();
+        }
+    });
 
     crearModalPausa({ store });
 
@@ -373,24 +470,19 @@ export function iniciarCaja() {
         store.establecerCategorias(categorias);
         renderizarChipsCategoria(categorias);
 
-        const cajasConfiguradas = await configuracionApi.listarCajas();
-        modalApertura?.actualizarOpcionesCajas?.(cajasConfiguradas.cajas ?? []);
+        const resultadoCajas = await configuracionApi.listarCajas();
+        cajasConfiguradas = resultadoCajas.cajas ?? [];
+        modalApertura?.actualizarOpcionesCajas?.(cajasConfiguradas);
 
         await cargarCatalogo();
 
         const cajasAbiertas = await api.listarCajasAbiertas();
         store.establecerCajasAbiertas(cajasAbiertas);
 
-        const cajaUsuario = cajasAbiertas.find((caja) =>
-            String(caja.usuarioAbre) === String(usuario.idUsuario ?? usuario.id) && caja.estado === "abierta"
-        );
+        cajaSeleccionada = null;
 
-        if (cajaUsuario) {
-            await abrirCajaEnStore(cajaUsuario);
-        } else {
-            setTimeout(() => modalApertura?.abrirModal(), 150);
-        }
-
+        renderizarSelectorCaja();
+        actualizarBotonCaja();
         modalApertura?.actualizarOpciones?.();
     };
 
@@ -399,14 +491,25 @@ export function iniciarCaja() {
         api,
         notificar,
         cajas: [],
-        alAbrir: abrirCajaEnStore,
+        alAbrir: async (caja) => {
+            await abrirCajaEnStore(caja);
+            cajaSeleccionada = String(caja.nroCaja).trim();
+            renderizarSelectorCaja();
+            actualizarBotonCaja();
+        },
+        obtenerCajaSeleccionada: () => cajaSeleccionada,
     });
 
     iniciarModalCierre({
         store,
         api,
         notificar,
-        alCerrar: cerrarCajaEnStore,
+        alCerrar: async (caja) => {
+            await cerrarCajaEnStore(caja);
+            cajaSeleccionada = String(caja.nroCaja).trim();
+            renderizarSelectorCaja();
+            actualizarBotonCaja();
+        },
     });
 
     iniciarModalMovimiento({
