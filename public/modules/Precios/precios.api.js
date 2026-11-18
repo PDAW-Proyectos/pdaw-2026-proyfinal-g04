@@ -14,7 +14,8 @@ export function crearPreciosApi(base = "/api") {
         },
 
         actualizarPrecios(operacion) {
-            return solicitarJson(`${base}/productos/actualizar-precios`, {
+            const url = operacion.porcentaje ? `${base}/productos/actualizar-precios-porcentaje` : `${base}/productos/actualizar-precios`;
+            return solicitarJson(url, {
                 method: "PUT",
                 body: JSON.stringify(operacion),
             });

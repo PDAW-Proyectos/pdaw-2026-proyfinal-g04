@@ -34,6 +34,7 @@ app.use(
     secret: process.env.SESSION_SECRET || "clave-secreta-gestor-kchin",
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
       httpOnly: true, // Mitiga robo mediante XSS
       sameSite: "lax", // Mitiga CSRF

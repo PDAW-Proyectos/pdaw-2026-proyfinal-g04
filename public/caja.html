@@ -197,6 +197,16 @@
           </div>
         </div>
 
+        <!-- Switch de vistas solo para Admin -->
+        <div
+          class="admin-switch-vistas"
+          id="admin-switch-vistas"
+          style="display: none"
+        >
+          <span class="switch-label">Ir a vista:</span>
+          <a href="/admin.html" class="btn-switch-vista">Admin</a>
+          <a href="/repositor.html" class="btn-switch-vista">Repositor</a>
+        </div>
       </div>
 
       <!-- VISTA: CATÁLOGO -->
@@ -489,6 +499,21 @@
         </header>
 
         <section class="filtros-historial" aria-label="Búsqueda y filtros">
+          <div class="buscar-historial">
+            <form id="form-lector-inicio" class="lector-caja">
+              <i data-lucide="scan-barcode" aria-hidden="true"></i>
+
+              <input
+                type="text"
+                id="input-lector-inicio"
+                class="lector-input"
+                placeholder="Escanear código o presionar F2 para escribir..."
+                autocomplete="off"
+              />
+              <button type="submit" class="boton-lector">Buscar</button>
+            </form>
+          </div>
+
           <!-- Fechas y Chips (Abajo, en fila) -->
           <div class="filtros-secundarios">
             <!-- Filtros de Fecha -->

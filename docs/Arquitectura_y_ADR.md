@@ -97,7 +97,6 @@ Clases de error (`src/common/errors/`): `AppError` y derivados (`BadRequestError
 - `PUT /api/productos/actualizar-precios`: el controlador llama a `actualizarPreciosMasivo(tipo, valor)` pero el servicio espera un array de productos; la operación no actualiza precios y `modificados` puede ser `undefined`.
 - Usuarios (`/api/usuarios`) e insumos (`/api/insumos`) montados sin autenticación (públicos).
 - Categorías: respuesta anidada doble (listado y filtro); `GET /:id` envuelve en `{categoria}`; `POST`/`PATCH` responden `201`.
-- Configuración: `GET /negocio` apunta por error a `obtenerSesion` (devuelve `{sessionExpiringTime}`); `PATCH` solo admin.
 - `POST /api/caja/`: `usuarioAbre` se toma de `req.session.userId`, no del body.
 - Autenticación actual no valida el campo `habilitado` del usuario.
 - Limitaciones conocidas documentadas arriba son comportamiento real de la implementación.

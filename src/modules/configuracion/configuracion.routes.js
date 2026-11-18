@@ -7,7 +7,7 @@ export const crearRouterConfiguracion = (configuracionController) => {
     router.get("/", configuracionController.obtenerConfiguracion);
     router.get("/stock", configuracionController.obtenerStock);
     router.get("/sesion", configuracionController.obtenerSesion);
-    router.get("/negocio", configuracionController.obtenerSesion);
+    router.get("/negocio", configuracionController.obtenerNegocio);
     router.patch("/negocio", allowRoles(), configuracionController.actualizarNegocio);
 
     router.get("/cajas", configuracionController.obtenerCajas);

@@ -89,4 +89,14 @@ describe("ConfiguracionService", () => {
             expect(mockRepository.actualizarConfiguracion).not.toHaveBeenCalled();
         });
     });
+
+    describe("actualizarExpiracion", () => {
+        test("guarda el minuto elegido en milisegundos", async () => {
+            await service.actualizarExpiracion(1);
+
+            expect(mockRepository.actualizarConfiguracion).toHaveBeenCalledWith({
+                sessionExpiringTime: 60000
+            });
+        });
+    });
 });

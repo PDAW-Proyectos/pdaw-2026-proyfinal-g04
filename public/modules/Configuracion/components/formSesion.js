@@ -8,6 +8,9 @@ export function crearFormSesion({ api, notificar }) {
         try {
             const sessionDurationMinutes = Number(inputTiempoInactividad.value);
             await api.actualizar({ sessionDurationMinutes });
+            window.dispatchEvent(new CustomEvent("sesion:duracion-actualizada", {
+                detail: sessionDurationMinutes * 60 * 1000,
+            }));
             notificar("Duración de sesión guardada");
         } catch (error) {
             console.error("Error guardando la duración de sesión:", error);

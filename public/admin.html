@@ -31,11 +31,6 @@
           <span>Control de Precios</span>
         </a>
 
-        <a href="#caja" class="nav-enlace" data-nav="caja">
-          <i data-lucide="wallet" aria-hidden="true"></i>
-          <span>Caja y Transacciones</span>
-        </a>
-
         <a href="#usuarios" class="nav-enlace" data-nav="vista-usuarios">
           <i data-lucide="users" aria-hidden="true"></i>
           <span>Personal y Usuarios</span>
@@ -631,6 +626,7 @@
                 <label>Cerrar sesión por inactividad:</label>
                 <!-- Reutilizamos el estilo del input del modal pero en un select -->
                 <select id="tiempo-inactividad" class="config-select">
+                  <option value="1">1 minuto</option>
                   <option value="15">15 minutos</option>
                   <option value="30" selected>30 minutos</option>
                   <option value="60">1 hora</option>
@@ -672,6 +668,7 @@
                     id="stock-critico"
                     value="5"
                     min="0"
+                    required
                     placeholder="Menor o igual a..."
                   />
                   <span style="font-size: 11px; color: #777b70"
@@ -686,6 +683,7 @@
                     id="stock-medio"
                     value="15"
                     min="0"
+                    required
                     placeholder="Menor o igual a..."
                   />
                   <span style="font-size: 11px; color: #777b70"
@@ -898,6 +896,28 @@
             </select>
           </div>
 
+          <div class="modal-radio-group" role="radiogroup" aria-label="Tipo de producto">
+            <label class="modal-radio-option">
+              <input
+                type="radio"
+                id="tipo-producto-unidad"
+                name="tipoProducto"
+                value="unidad"
+                checked
+              />
+              Unidad
+            </label>
+            <label class="modal-radio-option">
+              <input
+                type="radio"
+                id="tipo-producto-peso"
+                name="tipoProducto"
+                value="peso"
+              />
+              Peso
+            </label>
+          </div>
+
           <div class="modal-input-group">
             <label for="nuevo-prod-usd">Precio en Dólares (U$D):</label>
             <input
@@ -925,15 +945,27 @@
           </div>
 
           <div class="modal-input-group">
-            <label for="nuevo-prod-stock">Stock inicial (Unidades):</label>
+            <label id="label-nuevo-prod-stock" for="nuevo-prod-stock">Stock inicial (Unidades):</label>
             <input
               type="number"
               id="nuevo-prod-stock"
-              name="unidad"
+              name="cantidad"
               min="0"
+              step="1"
               value="0"
               required
             />
+          </div>
+
+          <div class="modal-input-group" id="grupo-unidad-medida" hidden>
+            <label for="nuevo-prod-unidad-medida">Unidad de medida:</label>
+            <select id="nuevo-prod-unidad-medida" name="unidadMedida" disabled required>
+              <option value="" disabled selected>Seleccione una unidad...</option>
+              <option value="g">g</option>
+              <option value="kg">kg</option>
+              <option value="l">l</option>
+              <option value="ml">ml</option>
+            </select>
           </div>
 
           <div class="modal-input-group">

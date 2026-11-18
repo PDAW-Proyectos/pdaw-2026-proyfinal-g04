@@ -34,14 +34,30 @@ export class ProductoController {
     const producto = await this.productoService.actualizarProducto(req.params.id, req.body, idUsuario);
     res.status(200).json(producto);
   }
-  actualizarPreciosMasivo = async (req, res) => {
-    const { tipo, valor } = req.body;
 
-    if (!tipo || valor === undefined) {
-      throw new BadRequestError("Faltan el tipo o el valor para actualizar los precios");
+  actualizarPreciosMasivo = async (req, res) => {
+    const { productosActualizar } = req.body;
+
+    if (!productosActualizar) {
+      throw new BadRequestError("Faltan los productos para actualizar los precios");
     }
 
-    const modificados = await this.productoService.actualizarPreciosMasivo(tipo, valor);
+    const modificados = await this.productoService.actualizarPreciosMasivo(productosActualizar);
+    
+    res.status(200).json({ 
+      message: "Precios actualizados correctamente", 
+      modificados 
+    });
+  };
+
+  actualizarPreciosPorcentaje = async (req, res) => {
+    const { porcentaje, productosActualizar } = req.body;
+
+    if (!porcentaje || productosActualizar === undefined) {
+      throw new BadRequestError("Faltan el porcentaje o los productos para actualizar los precios");
+    }
+
+    const modificados = await this.productoService.actualizarPreciosPorcentaje(porcentaje, productosActualizar);
     
     res.status(200).json({ 
       message: "Precios actualizados correctamente", 
