@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -120,9 +120,9 @@
                 <div class="swap-body">
                   <div class="swap-info">
                     <span id="cat-criticos" class="swap-cat">---</span>
-                    <h4 id="nombre-criticos" class="swap-prod-nombre">
+                    <h3 id="nombre-criticos" class="swap-prod-nombre">
                       Sin alertas críticas
-                    </h4>
+                    </h3>
                     <p id="stock-criticos" class="swap-stock-dato">
                       No hay productos agotados o críticos.
                     </p>
@@ -148,9 +148,9 @@
                 <div class="swap-body">
                   <div class="swap-info">
                     <span id="cat-bajos" class="swap-cat">---</span>
-                    <h4 id="nombre-bajos" class="swap-prod-nombre">
+                    <h3 id="nombre-bajos" class="swap-prod-nombre">
                       Stock estable
-                    </h4>
+                    </h3>
                     <p id="stock-bajos" class="swap-stock-dato">
                       Todos los demás productos tienen buen margen.
                     </p>
@@ -232,22 +232,22 @@
             <table class="tabla-base">
               <thead>
                 <tr>
-                  <th class="sortable" data-sort="id">
+                  <th class="sortable" data-sort="id" tabindex="0" role="button">
                     ID
-                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                    <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
-                  <th class="sortable" data-sort="nombre">
+                  <th class="sortable" data-sort="nombre" tabindex="0" role="button">
                     Nombre
-                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                    <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
                   <th>Categoría</th>
                   <th>Descripción</th>
-                  <th class="sortable" data-sort="precio">
+                  <th class="sortable" data-sort="precio" tabindex="0" role="button">
                     Precio (ARS)
-                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                    <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
-                  <th class="sortable" data-sort="stock">
-                    Stock <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  <th class="sortable" data-sort="stock" tabindex="0" role="button">
+                    Stock <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
                   <th>Acciones</th>
                 </tr>
@@ -295,21 +295,21 @@
             <table class="tabla-base">
               <thead>
                 <tr>
-                  <th class="sortable" data-sort="id">
-                    ID <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  <th class="sortable" data-sort="id" tabindex="0" role="button">
+                    ID <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
-                  <th class="sortable" data-sort="empresa">
+                  <th class="sortable" data-sort="empresa" tabindex="0" role="button">
                     Empresa
-                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                    <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
-                  <th class="sortable" data-sort="rubro">
-                    Rubro <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                  <th class="sortable" data-sort="rubro" tabindex="0" role="button">
+                    Rubro <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
                   <th>Contacto</th>
                   <th>Teléfono</th>
-                  <th class="sortable" data-sort="estado">
+                  <th class="sortable" data-sort="estado" tabindex="0" role="button">
                     Estado
-                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                    <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
                 </tr>
               </thead>
@@ -433,7 +433,7 @@
         </header>
 
         <div class="modal-icono-escaner">
-          <i data-lucide="barcode"></i>
+          <i data-lucide="barcode" aria-hidden="true"></i>
         </div>
 
         <form id="form-escaner" class="modal-form">
