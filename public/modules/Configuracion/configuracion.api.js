@@ -10,6 +10,13 @@ export function crearConfiguracionApi(base = "/api") {
             return solicitarJson(`${base}/configuracion/cajas`);
         },
 
+        crearCaja(payload) {
+            return solicitarJson(`${base}/configuracion/cajas`, {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+        },
+
         actualizar(payload) {
             let recurso;
             let datos;

@@ -4,6 +4,7 @@ import { crearConfiguracionApi } from "./configuracion.api.js";
 import { crearFormNegocio } from "./components/formNegocio.js";
 import { crearFormSesion } from "./components/formSesion.js";
 import { crearFormStock } from "./components/formStock.js";
+import { crearFormCajas } from "./components/formCajas.js";
 import { crearGridCategorias } from "../Categorias/components/gridCategorias.js";
 
 export async function iniciarConfiguracion(storeCategorias) {
@@ -14,6 +15,7 @@ export async function iniciarConfiguracion(storeCategorias) {
     const formNegocio = crearFormNegocio({ api, notificar });
     const formSesion = crearFormSesion({ api, notificar });
     const formStock = crearFormStock({ api, notificar });
+    const formCajas = crearFormCajas({ api, notificar });
     const gridCategorias = crearGridCategorias({ storeCategorias, apiCategorias, notificar });
 
     const formNuevaCategoria = document.getElementById("form-nueva-categoria");
@@ -42,6 +44,7 @@ export async function iniciarConfiguracion(storeCategorias) {
         formNegocio.cargar(configuracion);
         formSesion.cargar(configuracion);
         formStock.cargar(configuracion);
+        formCajas.cargar();
     } catch (error) {
         console.error("Error cargando la configuración:", error);
         notificar(error.message || "No se pudo cargar la configuración", true);
