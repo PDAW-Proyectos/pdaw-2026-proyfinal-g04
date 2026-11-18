@@ -104,18 +104,44 @@ export class ProductoService {
         }, administrarTransacciones);
     }
 
-    async actualizarPreciosMasivo(productosActualizados) {
+    async actualizarPreciosMasivo(productosActualizar) {
         try {
             this.productoRepository.iniciarTransaccion();
             const cotizacionActual = await this.cotizacionService.consultarCotizacion();
 
-            for (const idProdModificado of productosActualizados) {
+            for (const idProdModificado of productosActualizar) {
                 const anterior = await this.productoRepository.buscarPorId(idProdModificado);
 
                 if (anterior) {
                     const datosBase = {
                         ...anterior,
                         idCotizacion: cotizacionActual.cotizacion.id
+                    };
+                    await this.productoRepository.actualizar(datosBase);
+                }
+            }
+
+            await this.productoRepository.confirmarTransaccion();
+        } catch (error) {
+            await this.productoRepository.rollback();
+            throw error;
+        }
+    }
+
+    async actualizarPreciosPorcentaje(porcentaje, productosActualizar) {
+        try {
+            this.productoRepository.iniciarTransaccion();
+            for (const idProdModificado of productosActualizar) {
+                const anterior = await this.productoRepository.buscarPorId(idProdModificado);
+
+                if (anterior) {
+                    const cotizacion = await this.cotizacionService.buscarCotizacion(anterior.idCotizacion);
+                    const precioArs = Math.round(anterior.precioUsd * cotizacion.venta / 10) * 10;
+                    const precioArsPorcentaje = Math.round(precioArs * (1 + porcentaje / 100) / 10) * 10;
+                    const precioUsdPorcentaje = Math.round(precioArsPorcentaje / cotizacion.venta * 100) / 100;
+                    const datosBase = {
+                        ...anterior,
+                        precioUsd: precioUsdPorcentaje,
                     };
                     await this.productoRepository.actualizar(datosBase);
                 }
