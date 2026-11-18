@@ -77,7 +77,7 @@
             <div class="card">
               <div class="card-header">
                 <span class="card-label">Ventas Totales</span>
-                <select class="input-mini filtro-card" data-card="ventas">
+                <select class="input-mini filtro-card" data-card="ventas" aria-label="Filtrar ventas por período">
                   <option value="mes">Mes</option>
                   <option value="dia">Hoy</option>
                   <option value="anio">Año</option>
@@ -95,7 +95,7 @@
             <div class="card">
               <div class="card-header">
                 <span class="card-label">Cantidad de Tickets</span>
-                <select class="input-mini filtro-card" data-card="tickets">
+                <select class="input-mini filtro-card" data-card="tickets" aria-label="Filtrar tickets por período">
                   <option value="mes">Mes</option>
                   <option value="dia">Hoy</option>
                   <option value="anio">Año</option>
@@ -113,7 +113,7 @@
             <div class="card">
               <div class="card-header">
                 <span class="card-label">Ticket Promedio</span>
-                <select class="input-mini filtro-card" data-card="promedio">
+                <select class="input-mini filtro-card" data-card="promedio" aria-label="Filtrar ticket promedio por período">
                   <option value="mes">Mes</option>
                   <option value="dia">Hoy</option>
                   <option value="anio">Año</option>
@@ -149,6 +149,7 @@
                 <span class="card-label">Promedio Diario</span>
                 <i
                   data-lucide="calendar"
+                  aria-hidden="true"
                   style="width: 16px; height: 16px; color: #777b70"
                 ></i>
               </div>
@@ -181,6 +182,7 @@
                 <span class="card-label">Promedio Mensual</span>
                 <i
                   data-lucide="calendar-days"
+                  aria-hidden="true"
                   style="width: 16px; height: 16px; color: #777b70"
                 ></i>
               </div>
@@ -215,7 +217,7 @@
             <div class="card" style="height: 340px">
               <div class="card-header">
                 <span class="card-label">Evolución de Ventas</span>
-                <select class="input-mini filtro-card" data-grafico="ventas">
+                <select class="input-mini filtro-card" data-grafico="ventas" aria-label="Filtrar gráfico de ventas">
                   <option value="mes">Este Mes</option>
                   <option value="anio">Este Año</option>
                 </select>
@@ -224,7 +226,7 @@
                 class="card-body"
                 style="flex-grow: 1; position: relative; margin-top: 8px"
               >
-                <canvas id="grafico-ventas"></canvas>
+                <canvas id="grafico-ventas" role="img" aria-label="Gráfico de evolución de ventas"></canvas>
               </div>
             </div>
 
@@ -232,7 +234,7 @@
             <div class="card" style="height: 340px">
               <div class="card-header">
                 <span class="card-label">Métodos de Pago</span>
-                <select class="input-mini filtro-card" data-grafico="pagos">
+                <select class="input-mini filtro-card" data-grafico="pagos" aria-label="Filtrar gráfico de métodos de pago">
                   <option value="mes">Este Mes</option>
                   <option value="anio">Este Año</option>
                 </select>
@@ -241,7 +243,7 @@
                 class="card-body card-grafico-dona"
                 style="flex-grow: 1; position: relative; margin-top: 8px"
               >
-                <canvas id="grafico-pagos"></canvas>
+                <canvas id="grafico-pagos" role="img" aria-label="Gráfico de métodos de pago"></canvas>
               </div>
             </div>
 
@@ -249,7 +251,7 @@
             <div class="card" style="height: 340px">
               <div class="card-header">
                 <span class="card-label">Aumento Histórico de Precios</span>
-                <select class="input-mini filtro-card" data-grafico="precios">
+                <select class="input-mini filtro-card" data-grafico="precios" aria-label="Filtrar gráfico de aumento de precios">
                   <option value="anio">Este Año</option>
                   <option value="historico">Histórico Completo</option>
                 </select>
@@ -258,7 +260,7 @@
                 class="card-body"
                 style="flex-grow: 1; position: relative; margin-top: 8px"
               >
-                <canvas id="grafico-precios"></canvas>
+                <canvas id="grafico-precios" role="img" aria-label="Gráfico histórico de aumento de precios"></canvas>
               </div>
             </div>
           </div>
@@ -281,7 +283,7 @@
           <div class="dashboard-grid">
             <div class="card">
               <div class="card-header">
-                <i data-lucide="dollar-sign"></i>
+                <i data-lucide="dollar-sign" aria-hidden="true"></i>
                 <h3>Estado del Dólar</h3>
                 <span
                   id="alerta-dolar"
@@ -304,7 +306,7 @@
 
             <div class="card">
               <div class="card-header">
-                <i data-lucide="trending-up"></i>
+                <i data-lucide="trending-up" aria-hidden="true"></i>
                 <h3>Impacto Estimado</h3>
               </div>
               <div class="card-body">
@@ -316,7 +318,7 @@
                 </p>
                 <div class="dato-impacto">
                   <span class="precio-viejo" id="ejemplo-viejo">$800</span>
-                  <i data-lucide="arrow-right"></i>
+                  <i data-lucide="arrow-right" aria-hidden="true"></i>
                   <span class="precio-nuevo" id="ejemplo-nuevo">---</span>
                 </div>
               </div>
@@ -331,8 +333,9 @@
                 id="btn-deshacer"
                 disabled
                 title="Deshacer último cambio"
+                aria-label="Deshacer último cambio"
               >
-                <i data-lucide="undo-2"></i>
+                <i data-lucide="undo-2" aria-hidden="true"></i>
               </button>
 
               <div class="separador-vertical"></div>
@@ -341,6 +344,7 @@
                 <input
                   type="number"
                   id="input-porcentaje"
+                  aria-label="Porcentaje para el ajuste de precios"
                   placeholder="Ej: 10"
                   min="-100"
                   max="100"
@@ -352,7 +356,7 @@
                 class="btn-secundario"
                 id="btn-aplicar-porcentaje"
               >
-                <i data-lucide="percent"></i> Probar Ajuste
+                <i data-lucide="percent" aria-hidden="true"></i> Probar Ajuste
               </button>
             </div>
 
@@ -362,7 +366,7 @@
                 class="btn-secundario"
                 id="btn-aplicar-dolar"
               >
-                <i data-lucide="calculator"></i> Probar Dólar Mercado
+                <i data-lucide="calculator" aria-hidden="true"></i> Probar Dólar Mercado
               </button>
 
               <button
@@ -371,7 +375,7 @@
                 id="btn-guardar-cambios"
                 disabled
               >
-                <i data-lucide="save"></i> Guardar Cambios
+                <i data-lucide="save" aria-hidden="true"></i> Guardar Cambios
               </button>
             </div>
           </div>
@@ -432,7 +436,7 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-label">Total Personal</h3>
-                <i data-lucide="users"></i>
+                <i data-lucide="users" aria-hidden="true"></i>
               </div>
               <div class="card-body">
                 <p class="card-valor" id="stat-total-usuarios">0</p>
@@ -442,7 +446,7 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-label">Administradores</h3>
-                <i data-lucide="shield-check"></i>
+                <i data-lucide="shield-check" aria-hidden="true"></i>
               </div>
               <div class="card-body">
                 <p class="card-valor" id="stat-total-admins">0</p>
@@ -452,7 +456,7 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-label">Cajeros</h3>
-                <i data-lucide="calculator"></i>
+                <i data-lucide="calculator" aria-hidden="true"></i>
               </div>
               <div class="card-body">
                 <p class="card-valor" id="stat-total-cajeros">0</p>
@@ -462,7 +466,7 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-label">Repositores</h3>
-                <i data-lucide="package"></i>
+                <i data-lucide="package" aria-hidden="true"></i>
               </div>
               <div class="card-body">
                 <p class="card-valor" id="stat-total-repositores">0</p>
@@ -485,7 +489,7 @@
               class="btn-primario btn-con-icono"
               id="btn-nuevo-usuario"
             >
-              <i data-lucide="plus" class="icono-chico"></i> Nuevo Usuario
+              <i data-lucide="plus" class="icono-chico" aria-hidden="true"></i> Nuevo Usuario
             </button>
           </div>
 
@@ -517,13 +521,13 @@
             <table class="tabla-base">
               <thead>
                 <tr>
-                  <th class="sortable" data-sort="id">
+                  <th class="sortable" data-sort="id" tabindex="0" role="button">
                     ID
-                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                    <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
-                  <th class="sortable" data-sort="nombre">
+                  <th class="sortable" data-sort="nombre" tabindex="0" role="button">
                     Nombre
-                    <i data-lucide="arrow-up-down" class="icono-sort"></i>
+                    <i data-lucide="arrow-up-down" class="icono-sort" aria-hidden="true"></i>
                   </th>
                   <th>Email</th>
                   <th>Rol</th>
@@ -623,7 +627,7 @@
             <h3>Seguridad y Sesión</h3>
             <form id="form-sesion" class="modal-form config-form-wrapper">
               <div class="modal-input-group">
-                <label>Cerrar sesión por inactividad:</label>
+                <label for="tiempo-inactividad">Cerrar sesión por inactividad:</label>
                 <!-- Reutilizamos el estilo del input del modal pero en un select -->
                 <select id="tiempo-inactividad" class="config-select">
                   <option value="1">1 minuto</option>
@@ -662,7 +666,7 @@
                 "
               >
                 <div class="modal-input-group">
-                  <label style="color: #ef4444">Stock Crítico (Rojo)</label>
+                  <label for="stock-critico" style="color: #ef4444">Stock Crítico (Rojo)</label>
                   <input
                     type="number"
                     id="stock-critico"
@@ -677,7 +681,7 @@
                 </div>
 
                 <div class="modal-input-group">
-                  <label style="color: #f59e0b">Stock Medio (Amarillo)</label>
+                  <label for="stock-medio" style="color: #f59e0b">Stock Medio (Amarillo)</label>
                   <input
                     type="number"
                     id="stock-medio"
@@ -692,12 +696,14 @@
                 </div>
 
                 <div class="modal-input-group">
-                  <label style="color: #16a34a">Stock Ideal (Verde)</label>
+                  <label for="stock-ideal" style="color: #16a34a">Stock Ideal (Verde)</label>
                   <!-- Este input está deshabilitado porque lógicamente es todo lo que supera al stock medio -->
                   <input
                     type="text"
+                    id="stock-ideal"
                     value="Mayor al Medio"
                     disabled
+                    aria-label="Stock ideal: mayor al nivel medio"
                     style="
                       background: #f4f5f0;
                       color: #777b70;
@@ -774,6 +780,7 @@
                 <input
                   type="text"
                   id="nueva-categoria-nombre"
+                  aria-label="Nombre de la nueva categoría"
                   placeholder="Nombre de categoría..."
                   class="input-base"
                   style="

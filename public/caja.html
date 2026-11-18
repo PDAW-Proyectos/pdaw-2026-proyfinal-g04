@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -87,6 +87,7 @@
             <select
               data-campo="estado-caja"
               class="select-estandar selector-caja"
+              aria-label="Estado de la caja"
             ></select>
           </div>
         </header>
@@ -118,6 +119,7 @@
             <input
               type="text"
               class="lector-input"
+              aria-label="Código de producto"
               placeholder="Escanear código o presionar F2 para escribir..."
               autocomplete="off"
             />
@@ -226,6 +228,7 @@
             <select
               data-campo="estado-caja"
               class="select-estandar selector-caja"
+              aria-label="Estado de la caja"
             ></select>
           </div>
         </header>
@@ -239,6 +242,7 @@
             <input
               type="text"
               class="lector-input"
+              aria-label="Código de producto"
               id="buscar-producto-caja"
               placeholder="Escanear código o presionar F2 para escribir..."
               autocomplete="off"
@@ -312,6 +316,7 @@
             <select
               data-campo="estado-caja"
               class="select-estandar selector-caja"
+              aria-label="Estado de la caja"
             ></select>
           </div>
         </header>
@@ -392,6 +397,7 @@
             <select
               data-campo="estado-caja"
               class="select-estandar selector-caja"
+              aria-label="Estado de la caja"
             ></select>
           </div>
         </header>
@@ -494,6 +500,7 @@
             <select
               data-campo="estado-caja"
               class="select-estandar selector-caja"
+              aria-label="Estado de la caja"
             ></select>
           </div>
         </header>
@@ -507,6 +514,7 @@
                 type="text"
                 id="input-lector-inicio"
                 class="lector-input"
+                aria-label="Buscar ticket por código"
                 placeholder="Escanear código o presionar F2 para escribir..."
                 autocomplete="off"
               />
@@ -641,6 +649,7 @@
             <select
               data-campo="estado-caja"
               class="select-estandar selector-caja"
+              aria-label="Estado de la caja"
             ></select>
           </div>
         </header>
@@ -847,6 +856,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="20000"
+                  aria-label="Cantidad de billetes de $ 20.000"
                   min="0"
                   placeholder="0"
                 />
@@ -857,6 +867,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="10000"
+                  aria-label="Cantidad de billetes de $ 10.000"
                   min="0"
                   placeholder="0"
                 />
@@ -867,6 +878,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="2000"
+                  aria-label="Cantidad de billetes de $ 2.000"
                   min="0"
                   placeholder="0"
                 />
@@ -877,6 +889,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="1000"
+                  aria-label="Cantidad de billetes de $ 1.000"
                   min="0"
                   placeholder="0"
                 />
@@ -887,6 +900,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="500"
+                  aria-label="Cantidad de billetes de $ 500"
                   min="0"
                   placeholder="0"
                 />
@@ -897,6 +911,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="200"
+                  aria-label="Cantidad de billetes de $ 200"
                   min="0"
                   placeholder="0"
                 />
@@ -907,6 +922,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="100"
+                  aria-label="Cantidad de billetes de $ 100"
                   min="0"
                   placeholder="0"
                 />
@@ -917,6 +933,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="50"
+                  aria-label="Cantidad de billetes de $ 50"
                   min="0"
                   placeholder="0"
                 />
@@ -927,6 +944,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="20"
+                  aria-label="Cantidad de billetes de $ 20"
                   min="0"
                   placeholder="0"
                 />
@@ -937,6 +955,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="10"
+                  aria-label="Cantidad de billetes de $ 10"
                   min="0"
                   placeholder="0"
                 />
@@ -947,6 +966,7 @@
                   type="number"
                   class="input-billete"
                   data-denominacion="5"
+                  aria-label="Cantidad de billetes de $ 5"
                   min="0"
                   placeholder="0"
                 />
@@ -1167,6 +1187,7 @@
             <input
               type="text"
               id="input-consulta-codigo"
+              aria-label="Código del ticket a consultar"
               placeholder="Buscar producto..."
               autocomplete="off"
             />
@@ -1257,6 +1278,7 @@
             type="text"
             id="input-teclado-cantidad"
             class="visor-teclado"
+            aria-label="Cantidad de productos"
             value="1"
             inputmode="decimal"
             autocomplete="off"
@@ -1410,15 +1432,15 @@
                 data-tipo="ingreso"
               >
                 <div class="opcion-icono">
-                  <i data-lucide="wallet"></i
+                  <i data-lucide="wallet" aria-hidden="true"></i
                   ><span class="icono-badge verde"
-                    ><i data-lucide="dollar-sign"></i
+                    ><i data-lucide="dollar-sign" aria-hidden="true"></i
                   ></span>
                 </div>
                 <div class="opcion-texto">
                   <strong>Ingreso</strong><span>Sumá dinero a la caja</span>
                 </div>
-                <i data-lucide="chevron-right" class="chevron-icono"></i>
+                <i data-lucide="chevron-right" class="chevron-icono" aria-hidden="true"></i>
               </button>
 
               <!-- Egreso -->
@@ -1429,15 +1451,15 @@
                 data-tipo="egreso"
               >
                 <div class="opcion-icono">
-                  <i data-lucide="wallet"></i
+                  <i data-lucide="wallet" aria-hidden="true"></i
                   ><span class="icono-badge verde"
-                    ><i data-lucide="minus"></i
+                    ><i data-lucide="minus" aria-hidden="true"></i
                   ></span>
                 </div>
                 <div class="opcion-texto">
                   <strong>Egreso</strong><span>Restá dinero de la caja</span>
                 </div>
-                <i data-lucide="chevron-right" class="chevron-icono"></i>
+                <i data-lucide="chevron-right" class="chevron-icono" aria-hidden="true"></i>
               </button>
             </div>
           </div>
