@@ -1,59 +1,77 @@
 import { abrirModalOverlay, cerrarModalOverlay } from "../../../common/components/modalOverlay.js";
 import { formatearPrecio } from "../../../common/utils/formato.js";
 
-export function iniciarModalConsulta({ api, notificar }) {
+export function iniciarModalConsulta({ api, store, configuracionApi, notificar }) {
     const modalConsulta = document.getElementById("modal-consulta");
     const inputConsulta = document.getElementById("input-consulta-codigo");
     const tarjetaResultado = document.getElementById("resultado-consulta");
     const tarjetaEspera = document.getElementById("espera-consulta");
+    let umbralesStock = { critico: 5, medio: 10 };
 
     const mostrarEspera = () => {
         tarjetaResultado?.classList.add("oculto");
         if (tarjetaEspera) tarjetaEspera.style.display = "block";
     };
 
-    const buscarProducto = async () => {
-        const codigo = inputConsulta?.value.trim();
-        if (!codigo) return;
-
-        const id = Number(codigo);
-        if (!Number.isInteger(id) || id < 1) {
-            notificar("Ingresa un codigo de producto valido.", "error");
+    const buscarProducto = () => {
+        const termino = inputConsulta?.value.trim().toLowerCase();
+        if (!termino) {
+            mostrarEspera();
             return;
         }
 
-        try {
-            const producto = await api.buscarProducto(id);
-            const precio = Number(producto.precioUsd) * Number(producto.cotizacion);
+        const producto = store?.obtenerProductos().find((item) => {
+            const nombre = String(item.nombre ?? "").toLowerCase();
+            const id = String(item.id ?? "");
+            const codigoBarras = String(
+                item.codigoBarras ?? item.codigo ?? item.sku ?? "",
+            ).toLowerCase();
 
-            if (document.getElementById("res-sku")) {
-                document.getElementById("res-sku").textContent = `#${producto.id}`;
-            }
-            if (document.getElementById("res-nombre")) {
-                document.getElementById("res-nombre").textContent = producto.nombre;
-            }
-            if (document.getElementById("res-precio")) {
-                document.getElementById("res-precio").textContent = formatearPrecio(precio);
-            }
+            return (
+                nombre.includes(termino)
+                || id === termino
+                || codigoBarras === termino
+            );
+        });
 
-            const elStock = document.getElementById("res-stock");
-            if (elStock) {
-                const stock = producto.peso !== undefined ? producto.peso : producto.unidad;
-                const unidad = producto.peso !== undefined ? "kg" : "un.";
-                elStock.textContent = `Stock: ${stock} ${unidad}`;
-                elStock.className = `resultado-stock ${
-                    producto.stock > 5 ? "stock-ok" : producto.stock > 0 ? "stock-bajo" : "stock-cero"
-                }`;
-            }
-
-            if (tarjetaEspera) tarjetaEspera.style.display = "none";
-            tarjetaResultado?.classList.remove("oculto");
-        } catch (error) {
-            notificar(error.message, "error");
+        if (!producto) {
             mostrarEspera();
+            return;
         }
 
-        if (inputConsulta) inputConsulta.value = "";
+        const stock = Number(producto.stock ?? producto.peso ?? producto.unidad ?? 0);
+        const unidad = producto.peso !== undefined ? "kg" : "un.";
+        const codigoBarras =
+            producto.codigoBarras ?? producto.codigo ?? producto.sku ?? "---";
+
+        document.getElementById("res-nombre").textContent = producto.nombre;
+        document.getElementById("res-precio").textContent =
+            formatearPrecio(producto.precio);
+
+        const badgeStock = document.getElementById("res-stock-badge");
+        if (badgeStock) {
+            badgeStock.textContent =
+                `Stock: ${Number.isFinite(stock) ? stock : "--"} ${unidad}`;
+            if (stock <= umbralesStock.critico) {
+                badgeStock.className = "badge-stock-critico";
+            } else if (stock <= umbralesStock.medio) {
+                badgeStock.className = "badge-stock-bajo";
+            } else {
+                badgeStock.className = "badge-stock-ok";
+            }
+        }
+
+        const categoria = document.getElementById("res-categoria");
+        if (categoria) categoria.textContent = producto.categoria || "Sin categoría";
+
+        const id = document.getElementById("res-id");
+        if (id) id.textContent = `#${String(producto.id).padStart(4, "0")}`;
+
+        const codigo = document.getElementById("res-codigo-barras");
+        if (codigo) codigo.textContent = codigoBarras;
+
+        if (tarjetaEspera) tarjetaEspera.style.display = "none";
+        tarjetaResultado?.classList.remove("oculto");
     };
 
     document.addEventListener("click", (event) => {
@@ -61,6 +79,14 @@ export function iniciarModalConsulta({ api, notificar }) {
             abrirModalOverlay(modalConsulta);
             if (inputConsulta) inputConsulta.value = "";
             mostrarEspera();
+            configuracionApi?.obtener()
+                .then((respuesta) => {
+                    const stockConfigurado = respuesta?.configuracion?.stock ?? respuesta?.stock;
+                    if (stockConfigurado) umbralesStock = stockConfigurado;
+                })
+                .catch((error) => {
+                    console.error("No se pudieron cargar los umbrales de stock:", error);
+                });
             setTimeout(() => inputConsulta?.focus(), 100);
             return;
         }
@@ -76,4 +102,6 @@ export function iniciarModalConsulta({ api, notificar }) {
         event.preventDefault();
         buscarProducto();
     });
+
+    inputConsulta?.addEventListener("input", buscarProducto);
 }

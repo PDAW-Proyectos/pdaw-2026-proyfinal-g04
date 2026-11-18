@@ -43,10 +43,14 @@ export function iniciarModalCierre({ store, api, notificar, alCerrar }) {
         if (txtMovimientos) txtMovimientos.textContent = String(movimientos.length);
 
         if (txtFechaHora) {
-            txtFechaHora.textContent = new Date().toLocaleString("es-AR", {
-                dateStyle: "short",
-                timeStyle: "short",
+            const ahora = new Date();
+            const fecha = ahora.toLocaleDateString("es-AR");
+            const hora = ahora.toLocaleTimeString("es-AR", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
             });
+            txtFechaHora.innerHTML = `<span>${fecha}</span><span>${hora} hs</span>`;
         }
 
         if (nombreCajero) {

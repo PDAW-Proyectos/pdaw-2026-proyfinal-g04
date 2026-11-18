@@ -155,6 +155,13 @@ body {
   text-align: center;
 }
 
+#total-tickets,
+#reloj-vivo,
+#horario-empleado {
+  color: #b3ff00 !important;
+  font-size: 1.4rem !important;
+}
+
 /* =====================
     Lector de barras
 ======================*/
@@ -190,6 +197,60 @@ body {
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.lector-seccion {
+  position: relative;
+  margin: 1rem 0;
+}
+
+.lista-busqueda {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% - 1px);
+  left: 0;
+  right: 0;
+  display: none;
+  max-height: 280px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #e2e4dc;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(23, 25, 20, 0.12);
+}
+
+.lista-busqueda.visible {
+  display: block;
+}
+
+.resultado-busqueda {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 0;
+  border-bottom: 1px solid #eceee7;
+  background: #ffffff;
+  color: #171914;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.resultado-busqueda:last-child {
+  border-bottom: 0;
+}
+
+.resultado-busqueda:hover {
+  background: #f7ffe8;
+}
+
+.resultado-busqueda span {
+  color: #8fc51b;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 /* =========================
@@ -411,6 +472,65 @@ body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+}
+
+.cobro-panel .carrito-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.carrito-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 36px;
+  align-items: center;
+  column-gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.carrito-item-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 3px;
+}
+
+.carrito-item-info strong,
+.carrito-item-info span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-quitar-carrito {
+  display: grid;
+  place-items: center;
+  justify-self: end;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: #f1f9e4;
+  color: #161615;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-quitar-carrito i,
+.btn-quitar-carrito svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-quitar-carrito:hover {
+  background: #fee2e2;
+  color: #dc2626;
 }
 
 .cobro-panel .cobro-footer {
@@ -641,7 +761,7 @@ body {
   align-items: center;
   background: #ffffff;
   border: 1px solid #d5d8d1;
-  padding: 8px 16px 8px 14px;
+  padding: 9px 18px 9px 16px;
   border-radius: 16px;
   gap: 18px;
   position: relative;
@@ -659,51 +779,54 @@ body {
   border-color: #c2ff38;
 }
 
-.card-imagen {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #f1f6e6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
+.card-sin-stock {
+  cursor: not-allowed !important;
+  opacity: 0.55;
+  filter: grayscale(0.35);
 }
 
-.card-imagen img {
-  display: block;
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
+.card-sin-stock:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: #d5d8d1;
+}
+
+.card-sin-stock .btn-cantidad-catalogo {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .card-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   flex: 1;
 }
 
 .card-info h3 {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   color: #171914;
   margin: 0;
   line-height: 1.2;
 }
 
+.producto-categoria {
+  font-size: 14px;
+  color: #777b70;
+}
+
 .precio-destacado {
-  font-size: 1.3rem;
+  font-size: 18px;
   color: #8fc51b;
   font-weight: 800;
 }
 
 .icono-estrella-top {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 18px;
+  right: 18px;
   color: #8fc51b;
   width: 20px;
   height: 20px;
@@ -744,10 +867,11 @@ body {
   width: 100%;
   background: #ffffff;
   border: 1px solid #d5d8d1;
-  min-height: 220px;
-  padding: 10px;
+  min-height: 130px;
+  min-width: 185px;
+  padding: 15px;
   border-radius: 16px;
-  gap: 12px;
+  gap: 14px;
   position: relative;
   cursor: pointer;
   transition:
@@ -755,26 +879,6 @@ body {
     box-shadow 0.2s ease,
     border-color 0.2s ease;
   box-shadow: 0 4px 12px rgba(23, 25, 20, 0.03);
-}
-
-.card-img {
-  align-self: center;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background-color: #f1f6e6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.card-img img {
-  display: block;
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
 }
 
 .card-detalles {
@@ -788,7 +892,7 @@ body {
 
 .producto-nombre {
   min-height: 34px;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   color: #171914;
   margin: 0;
@@ -799,23 +903,25 @@ body {
   flex-shrink: 1;
   min-width: 0;
   white-space: nowrap;
-  font-size: clamp(0.9rem, 1.35vw, 1.35rem);
+  overflow: hidden;
+  font-size: 19.5px;
   color: #8fc51b;
   font-weight: 800;
+  text-align: left;
 }
 
 .producto-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
   margin-top: auto;
 }
 
 .btn-cantidad-catalogo {
   display: inline-flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
@@ -840,6 +946,21 @@ body {
   font-size: 18px;
 }
 
+.btn-cantidad-catalogo:has(i[data-lucide="scale"])::after {
+  content: none;
+}
+
+.btn-cantidad-catalogo.btn-balanza-catalogo::after {
+  content: none;
+  display: none;
+}
+
+.btn-cantidad-catalogo i[data-lucide="scale"] {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.2;
+}
+
 .btn-cantidad-catalogo .cantidad-label,
 .btn-cantidad-catalogo .badge-cant {
   display: none;
@@ -859,6 +980,10 @@ body {
 /* =========================================
    VISTA: VENTAS DEL TURNO
 ========================================= */
+
+.ventas-jornada {
+  margin-top: 1.5rem;
+}
 
 .filtros-ventas {
   margin-top: 1.5rem;
@@ -898,15 +1023,19 @@ body {
   margin-top: 1.5rem;
 }
 
+.arqueo-movimientos {
+  margin-top: 1.5rem;
+}
+
 /* Colores de balances */
 .texto-inicial {
-  color: #8fc51b;
+  color: #8fc51b !important;
 }
 .texto-ingreso {
-  color: green;
+  color: green !important;
 }
 .texto-egreso {
-  color: red;
+  color: red !important;
 }
 
 /* Botón de acción principal del arqueo */
@@ -1109,7 +1238,6 @@ body {
   color: #161615;
   line-height: 1.1;
 }
-
 
 /* Contenedor de la fila de abajo (fechas + chips) */
 .filtros-secundarios {

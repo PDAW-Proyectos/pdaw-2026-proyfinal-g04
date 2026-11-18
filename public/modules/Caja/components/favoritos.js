@@ -2,15 +2,16 @@ import { formatearPrecio } from "../../../common/utils/formato.js";
 import { renderizarIconos } from "../../../common/utils/iconos.js";
 
 export function renderizarFavoritos(articulos) {
-    const contenedor = document.getElementById("contenedor-favoritos");
-    if (!contenedor) return;
+  const contenedor = document.getElementById("contenedor-favoritos");
+  if (!contenedor) return;
 
-    contenedor.innerHTML = "";
+  contenedor.innerHTML = "";
 
-    articulos.forEach((prod) => {
-        const html = `
+  articulos.forEach((prod) => {
+    const sinExistencias = Number(prod.stock) <= 0;
+    const html = `
             <article
-                class="card-producto-favorito"
+            class="card-producto-favorito ${sinExistencias ? "card-sin-stock" : ""}"
                 data-accion="agregar-al-carrito"
                 data-id="${prod.id}"
                 data-nombre="${prod.nombre}"
@@ -19,19 +20,17 @@ export function renderizarFavoritos(articulos) {
                 data-peso="${Boolean(prod.peso)}"
                 data-unidad="${prod.unidadMedida ?? "u"}"
             >
-                <div class="card-imagen">
-                <img src="img/producto-bolsa.svg" alt="${prod.nombre}" loading="lazy">
-                </div>
+               
                 <div class="card-info">
-                <span class="producto-categoria">${prod.categoria ?? ""}</span>
                 <h3>${prod.nombre}</h3>
+                <span class="producto-categoria">${prod.categoria ?? ""}</span>
                 <strong class="precio-destacado">${formatearPrecio(prod.precio)}</strong>
                 </div>
                 <i data-lucide="star" class="icono-estrella-top" aria-hidden="true"></i>
             </article>
         `;
-        contenedor.insertAdjacentHTML("beforeend", html);
-    });
+    contenedor.insertAdjacentHTML("beforeend", html);
+  });
 
-    renderizarIconos(contenedor);
+  renderizarIconos(contenedor);
 }
