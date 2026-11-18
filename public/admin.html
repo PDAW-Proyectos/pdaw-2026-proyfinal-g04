@@ -724,6 +724,21 @@
 
           <hr class="config-divider" />
 
+          <section class="config-section">
+            <h3>Cajas</h3>
+            <p class="config-subtitle">Creá y administrá las cajas disponibles.</p>
+            <form id="form-nueva-caja" style="display: flex; gap: 8px; align-items: stretch; margin-top: 16px; max-width: 600px">
+              <input
+                type="text"
+                id="nueva-caja-nombre"
+                placeholder="Nombre de la caja"
+                required
+              />
+              <button type="submit" class="btn-primario config-btn-guardar">Agregar Caja</button>
+            </form>
+            <ul id="lista-cajas" style="margin-top: 16px; list-style: disc; padding-left: 20px"></ul>
+          </section>
+
           <!-- Sección 4: Métodos de Pago -->
           <section class="config-section">
             <h3>Métodos de Pago Habilitados</h3>
