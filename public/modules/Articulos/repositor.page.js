@@ -15,8 +15,10 @@ import { crearModalStock } from "./modales/stock.js";
 import { crearModalEscaner } from "./modales/escaner.js";
 import { iniciarPerfil } from "../Perfil/perfil.page.js";
 import { iniciarHistorial } from "../Historial/historial.page.js";
+import { iniciarControlInactividad } from "../../common/utils/sesionInactividad.js";
 
 export async function iniciarArticulos() {
+  void iniciarControlInactividad();
   renderizarIconos();
   iniciarPerfil();
 

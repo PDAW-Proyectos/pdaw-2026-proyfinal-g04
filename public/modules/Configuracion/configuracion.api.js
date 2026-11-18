@@ -11,9 +11,25 @@ export function crearConfiguracionApi(base = "/api") {
         },
 
         actualizar(payload) {
-            return solicitarJson(`${base}/configuracion`, {
+            let recurso;
+            let datos;
+
+            if (payload?.negocio) {
+                recurso = "negocio";
+                datos = payload.negocio;
+            } else if (payload?.stock) {
+                recurso = "stock";
+                datos = payload.stock;
+            } else if (Object.prototype.hasOwnProperty.call(payload ?? {}, "sessionDurationMinutes")) {
+                recurso = "expiracion";
+                datos = payload;
+            } else {
+                throw new Error("La configuración enviada no es válida");
+            }
+
+            return solicitarJson(`${base}/configuracion/${recurso}`, {
                 method: "PATCH",
-                body: JSON.stringify(payload),
+                body: JSON.stringify(datos),
             });
         },
     };

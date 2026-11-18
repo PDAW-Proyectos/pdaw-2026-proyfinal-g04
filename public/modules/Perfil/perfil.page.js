@@ -175,6 +175,11 @@ export async function iniciarPerfil() {
     inputApellido.value = datos.apellido;
     inputEmail.value = datos.email;
     sincronizarVistaPrevia();
+
+    if (String(estadoOriginal.rol).toLowerCase() === "admin") {
+      const switchVistas = document.getElementById("admin-switch-vistas");
+      if (switchVistas) switchVistas.style.display = "";
+    }
   }
 
   function mostrarMensaje(texto, tipo = "") {

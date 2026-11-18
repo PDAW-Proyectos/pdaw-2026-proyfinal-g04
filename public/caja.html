@@ -7,8 +7,8 @@
     <link href="common/styles/caja.css" rel="stylesheet" />
     <link href="common/styles/tablas.css" rel="stylesheet" />
     <link href="common/styles/modales.css" rel="stylesheet" />
-     <link href="common/styles/componentes.css" rel="stylesheet" />
-    <link href="common/styles/perfil.css" rel="stylesheet">
+    <link href="common/styles/componentes.css" rel="stylesheet" />
+    <link href="common/styles/perfil.css" rel="stylesheet" />
     <title>KCHIN | Gestor de caja</title>
   </head>
   <body>
@@ -61,14 +61,12 @@
     </aside>
 
     <main class="caja-main">
-
-       <section id="perfil" class="vista-tab">
+      <section id="perfil" class="vista-tab">
         <header class="vista-header">
           <h2>Perfil de Usuario</h2>
         </header>
 
         <div id="contenedor-perfil"></div>
-
       </section>
 
       <!--VISTA: INICIO-->
@@ -78,13 +76,17 @@
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
             <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
+              Turno iniciado a las
+              <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            <select data-campo="estado-caja" class="select-estandar selector-caja"></select>
+            <select
+              data-campo="estado-caja"
+              class="select-estandar selector-caja"
+            ></select>
           </div>
         </header>
 
@@ -220,6 +222,17 @@
             </div>
           </div>
         </div>
+
+        <!-- Switch de vistas solo para Admin -->
+        <div
+          class="admin-switch-vistas"
+          id="admin-switch-vistas"
+          style="display: none"
+        >
+          <span class="switch-label">Ir a vista:</span>
+          <a href="/admin.html" class="btn-switch-vista">Admin</a>
+          <a href="/repositor.html" class="btn-switch-vista">Repositor</a>
+        </div>
       </div>
 
       <!-- VISTA: CATÁLOGO -->
@@ -229,13 +242,17 @@
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
             <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
+              Turno iniciado a las
+              <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            <select data-campo="estado-caja" class="select-estandar selector-caja"></select>
+            <select
+              data-campo="estado-caja"
+              class="select-estandar selector-caja"
+            ></select>
           </div>
         </header>
 
@@ -315,13 +332,17 @@
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
             <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
+              Turno iniciado a las
+              <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            <select data-campo="estado-caja" class="select-estandar selector-caja"></select>
+            <select
+              data-campo="estado-caja"
+              class="select-estandar selector-caja"
+            ></select>
           </div>
         </header>
 
@@ -377,13 +398,17 @@
             <p class="rol-eyebrow">KCHIN / PUNTO DE VENTA</p>
             <h1 data-campo="nombre-cajero">Cajero 1</h1>
             <p class="rol-descripcion">
-              Turno iniciado a las <strong data-campo="hora-apertura">--:--</strong> hs
+              Turno iniciado a las
+              <strong data-campo="hora-apertura">--:--</strong> hs
             </p>
           </div>
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            <select data-campo="estado-caja" class="select-estandar selector-caja"></select>
+            <select
+              data-campo="estado-caja"
+              class="select-estandar selector-caja"
+            ></select>
           </div>
         </header>
         <!-- Tarjetas de Balance y acción -->
@@ -391,17 +416,25 @@
         <section class="arqueo-metricas" aria-label="Métricas de arqueo">
           <article class="metrica-tarjeta">
             <span class="metrica-titulo">Fondo Inicial</span>
-            <strong class="metrica-valor texto-inicial" id="arqueo-fondo-inicial">$ 0,00</strong>
+            <strong
+              class="metrica-valor texto-inicial"
+              id="arqueo-fondo-inicial"
+              >$ 0,00</strong
+            >
           </article>
 
           <article class="metrica-tarjeta">
             <span class="metrica-titulo">Ingresos del Turno</span>
-            <strong class="metrica-valor texto-ingreso" id="arqueo-ingresos">+$ 0,00</strong>
+            <strong class="metrica-valor texto-ingreso" id="arqueo-ingresos"
+              >+$ 0,00</strong
+            >
           </article>
 
           <article class="metrica-tarjeta">
             <span class="metrica-titulo">Egresos del Turno</span>
-            <strong class="metrica-valor texto-egreso" id="arqueo-egresos">-$ 0,00</strong>
+            <strong class="metrica-valor texto-egreso" id="arqueo-egresos"
+              >-$ 0,00</strong
+            >
           </article>
 
           <!-- Botón para nuevo movimiento -->
@@ -480,23 +513,26 @@
           </div>
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            <select data-campo="estado-caja" class="select-estandar selector-caja"></select>
+            <select
+              data-campo="estado-caja"
+              class="select-estandar selector-caja"
+            ></select>
           </div>
         </header>
 
         <!-- Buscador por número de ticket -->
         <section class="filtros-historial" aria-label="Búsqueda y filtros">
           <div class="buscar-historial">
-          <form id="form-lector-inicio" class="lector-caja">
-            <i data-lucide="scan-barcode" aria-hidden="true"></i>
+            <form id="form-lector-inicio" class="lector-caja">
+              <i data-lucide="scan-barcode" aria-hidden="true"></i>
 
-            <input
-              type="text"
-              id="input-lector-inicio"
-              class="lector-input"
-              placeholder="Escanear código o presionar F2 para escribir..."
-              autocomplete="off"
-            />
+              <input
+                type="text"
+                id="input-lector-inicio"
+                class="lector-input"
+                placeholder="Escanear código o presionar F2 para escribir..."
+                autocomplete="off"
+              />
               <button type="submit" class="boton-lector">Buscar</button>
             </form>
           </div>
@@ -554,13 +590,19 @@
           <!-- Total Recaudado -->
           <article class="tarjeta-metrica-blanca">
             <span class="metrica-titulo-claro">Total recaudado</span>
-            <strong class="metrica-valor-resaltado" id="historial-total-recaudado">$ 0,00</strong>
+            <strong
+              class="metrica-valor-resaltado"
+              id="historial-total-recaudado"
+              >$ 0,00</strong
+            >
           </article>
 
           <!-- Total Tickets -->
           <article class="tarjeta-metrica-blanca">
             <span class="metrica-titulo-claro">Total tickets</span>
-            <strong class="metrica-valor-simple" id="historial-total-tickets">0</strong>
+            <strong class="metrica-valor-simple" id="historial-total-tickets"
+              >0</strong
+            >
           </article>
         </section>
 
@@ -602,14 +644,19 @@
 
           <div class="caja-estado">
             <span class="estado-indicador"></span>
-            <select data-campo="estado-caja" class="select-estandar selector-caja"></select>
+            <select
+              data-campo="estado-caja"
+              class="select-estandar selector-caja"
+            ></select>
           </div>
         </header>
 
         <section class="inicio-metricas" aria-label="Datos del perfil">
           <article class="metrica-tarjeta">
             <span class="metrica-titulo">Nombre</span>
-            <strong class="metrica-valor" id="perfil-nombre-completo">--</strong>
+            <strong class="metrica-valor" id="perfil-nombre-completo"
+              >--</strong
+            >
           </article>
 
           <article class="metrica-tarjeta">
@@ -691,11 +738,28 @@
             <strong id="total-venta">$ 0,00</strong>
           </div>
 
-          <div class="metodos-pago" id="selector-metodo-pago" role="group" aria-label="MActodo de pago">
-            <button type="button" class="metodo-pago" data-metodo="efectivo">Efectivo</button>
-            <button type="button" class="metodo-pago" data-metodo="debito">Debito</button>
-            <button type="button" class="metodo-pago" data-metodo="credito">Credito</button>
-            <button type="button" class="metodo-pago" data-metodo="transferencia">Transferencia</button>
+          <div
+            class="metodos-pago"
+            id="selector-metodo-pago"
+            role="group"
+            aria-label="MActodo de pago"
+          >
+            <button type="button" class="metodo-pago" data-metodo="efectivo">
+              Efectivo
+            </button>
+            <button type="button" class="metodo-pago" data-metodo="debito">
+              Debito
+            </button>
+            <button type="button" class="metodo-pago" data-metodo="credito">
+              Credito
+            </button>
+            <button
+              type="button"
+              class="metodo-pago"
+              data-metodo="transferencia"
+            >
+              Transferencia
+            </button>
           </div>
 
           <button type="button" class="boton-cobrar" id="boton-cobrar" disabled>
@@ -1001,10 +1065,14 @@
           <div class="valor-modificador-input">
             <label for="input-valor-mod">Monto a aplicar</label>
             <div class="input-grupo-mixto">
-                <select id="modo-valor-mod" class="select-modo" aria-label="Tipo de valor">
-                  <option value="porcentaje">%</option>
-                  <option value="fijo">$</option>
-                </select>
+              <select
+                id="modo-valor-mod"
+                class="select-modo"
+                aria-label="Tipo de valor"
+              >
+                <option value="porcentaje">%</option>
+                <option value="fijo">$</option>
+              </select>
               <input
                 type="number"
                 id="input-valor-mod"
@@ -1138,12 +1206,12 @@
         <div class="modal-body teclado-container">
           <input
             type="text"
-              id="input-teclado-cantidad"
-              class="visor-teclado"
-              value="1"
-              inputmode="decimal"
-              autocomplete="off"
-            />
+            id="input-teclado-cantidad"
+            class="visor-teclado"
+            value="1"
+            inputmode="decimal"
+            autocomplete="off"
+          />
 
           <div class="teclado-numerico-grilla">
             <button type="button" class="tecla">1</button>
@@ -1243,7 +1311,6 @@
                 </div>
                 <i data-lucide="chevron-right" class="chevron-icono"></i>
               </button>
-
             </div>
           </div>
 
@@ -1277,7 +1344,6 @@
                   />
                 </div>
               </div>
-
             </form>
           </div>
         </div>
@@ -1364,7 +1430,10 @@
             </div>
             <div class="textos-cierre">
               <h2 id="titulo-cierre">Cerrar Caja</h2>
-              <p>Confirmá el cierre de la caja de <span data-campo="nombre-cajero-cierre">el cajero</span></p>
+              <p>
+                Confirmá el cierre de la caja de
+                <span data-campo="nombre-cajero-cierre">el cajero</span>
+              </p>
             </div>
           </div>
           <button
@@ -1382,7 +1451,9 @@
           <div class="cierre-resumen-grid">
             <div class="cierre-metrica">
               <span class="metrica-label">Total en ventas</span>
-              <strong class="metrica-valor" id="cierre-total-ventas">$ 0,00</strong>
+              <strong class="metrica-valor" id="cierre-total-ventas"
+                >$ 0,00</strong
+              >
             </div>
             <div class="cierre-metrica metrica-central">
               <span class="metrica-label">Movimientos</span>
