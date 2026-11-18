@@ -49,6 +49,13 @@ export function crearModalCrearProducto({ store, storeCategorias, notificar }) {
             const valorUsd = parseFloat(event.target.value) || 0;
             inputArsCrear.value = redondearPrecio(valorUsd * dolar);
         });
+        inputArsCrear.addEventListener("input", (event) => {
+            const dolar = store.obtenerEstado().dolarApiEnVivo;
+            if (!dolar) return;
+
+            const valorArs = parseFloat(event.target.value) || 0;
+            inputUsdCrear.value = Math.round(valorArs / dolar * 100) / 100;
+        });
     }
 
     if (formCrear) {
