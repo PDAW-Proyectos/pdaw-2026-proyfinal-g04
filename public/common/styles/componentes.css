@@ -374,6 +374,38 @@
   gap: 20px;
 }
 
+.modal-form [hidden] {
+  display: none !important;
+}
+
+.modal-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.modal-radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-radio-group input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  accent-color: #171914;
+}
+
+.modal-radio-group input[type="radio"]:focus-visible {
+  outline: 2px solid #c2ff38;
+  outline-offset: 2px;
+}
+
 /* Zona de edición de foto */
 .modal-foto-container {
   display: flex;
