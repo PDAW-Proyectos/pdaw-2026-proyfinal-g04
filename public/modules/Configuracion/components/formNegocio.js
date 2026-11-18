@@ -25,12 +25,10 @@ export function crearFormNegocio({ api, notificar }) {
         event.preventDefault();
 
         try {
-            await api.actualizar({
-                negocio: {
-                    nombre: inputsNegocio.nombre.value.trim(),
-                    telefono: inputsNegocio.telefono.value.trim(),
-                    direccion: inputsNegocio.direccion.value.trim(),
-                },
+            await api.actualizarNegocio({
+                nombre: inputsNegocio.nombre.value.trim(),
+                telefono: inputsNegocio.telefono.value.trim(),
+                direccion: inputsNegocio.direccion.value.trim(),
             });
             actualizarVistaPrevia();
             notificar("Datos del negocio guardados");

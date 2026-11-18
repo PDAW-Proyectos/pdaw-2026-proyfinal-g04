@@ -15,7 +15,7 @@ export function crearFormStock({ api, notificar }) {
         }
 
         try {
-            await api.actualizar({ stock: { critico, medio } });
+            await api.actualizarStock({ critico, medio });
             notificar("Niveles de stock guardados");
         } catch (error) {
             console.error("Error guardando los niveles de stock:", error);
