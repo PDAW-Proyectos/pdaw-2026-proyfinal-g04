@@ -4,7 +4,9 @@ export function crearFiltrosHistorial({ store, onFiltrar, onBuscarTicket }) {
     const inputHasta = document.getElementById("input-fecha-hasta");
     const textoDesde = document.getElementById("texto-fecha-desde");
     const textoHasta = document.getElementById("texto-fecha-hasta");
-    const formulario = document.querySelector("#historial .lector-form");
+    const formulario =
+        document.querySelector("#historial #form-lector-inicio") ??
+        document.querySelector("#historial .lector-form");
     const buscador = formulario?.querySelector("input");
 
     const obtenerFiltros = () => {
@@ -30,11 +32,6 @@ export function crearFiltrosHistorial({ store, onFiltrar, onBuscarTicket }) {
         event.preventDefault();
 
         const termino = buscador?.value.trim() ?? "";
-        if (!termino) {
-            filtrar();
-            return;
-        }
-
         await onBuscarTicket(termino);
     });
 
