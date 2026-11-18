@@ -63,7 +63,7 @@ export function crearPreciosStore(api) {
             ultimoTermino = termino;
             const resultado = await api.listar({
                 pagina: estado.paginaActual,
-                limite: 12,
+                limite: 10,
                 termino,
             });
 
@@ -171,6 +171,14 @@ export function crearPreciosStore(api) {
         async crearProducto(payload) {
             await api.crearProducto(payload);
             actualizar({ paginaActual: 1 });
+            await store.recargar();
+        },
+
+        async eliminarProducto(id) {
+            await api.eliminarProducto(id);
+            if (estado.catalogoEdicion.length === 1 && estado.paginaActual > 1) {
+                actualizar({ paginaActual: estado.paginaActual - 1 });
+            }
             await store.recargar();
         },
     };

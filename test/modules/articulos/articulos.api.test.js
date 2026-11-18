@@ -46,6 +46,30 @@ describe("crearArticulosApi", () => {
         });
     });
 
+    it("acepta productos con precio USD cero", async () => {
+        jest.spyOn(globalThis, "fetch").mockImplementation(async (url) => ({
+            ok: true,
+            status: 200,
+            json: async () => String(url).includes("/productos/")
+                ? {
+                    productos: [{
+                        id: 11,
+                        idCategoria: 1,
+                        nombre: "Producto con precio cero",
+                        precioUsd: 0,
+                        cotizacion: 1000,
+                        unidad: 5,
+                    }],
+                    totalPaginas: 1,
+                }
+                : { categorias: [] },
+        }));
+
+        const productos = await crearArticulosApi().listarProductos();
+
+        expect(productos[0]).toMatchObject({ id: 11, precio: 0 });
+    });
+
     it("rechaza productos sin precio", async () => {
         jest.spyOn(globalThis, "fetch").mockImplementation(async (url) => ({
             ok: true,

@@ -99,22 +99,106 @@ export const productosSeed = [
         unidadMedida: "kg"
     },
 
-    // Productos sin precio
+    // Productos con precio cero
     {
         id: 11,
         idCotizacion: 1,
         idCategoria: 1,
-        nombre: "Producto sin precio unidad",
-        descripcion: "Producto de prueba sin precio asignado",
+        nombre: "Producto con precio cero unidad",
+        descripcion: "Producto de prueba con precio cero",
         unidad: 5
     },
     {
         id: 12,
         idCotizacion: 1,
         idCategoria: 4,
-        nombre: "Producto sin precio peso",
-        descripcion: "Producto de prueba sin precio asignado",
+        nombre: "Producto con precio cero peso",
+        descripcion: "Producto de prueba con precio cero",
         peso: 2,
         unidadMedida: "kg"
-    }
+    },
+    {
+    id: 13,
+    idCotizacion: 1,
+    idCategoria: 1,
+    nombre: "Sprite 2.25L",
+    descripcion: "Gaseosa lima limón botella de 2.25 litros",
+    unidad: 12
+    },
+    {
+    id: 14,
+    idCotizacion: 1,
+    idCategoria: 1,
+    nombre: "Fanta Naranja 2.25L",
+    descripcion: "Gaseosa sabor naranja botella de 2.25 litros",
+    unidad: 8
+    },
+{
+    id: 15,
+    idCotizacion: 1,
+    idCategoria: 2,
+    nombre: "Harina Morixe 1kg",
+    descripcion: "Harina de trigo tipo 0000 paquete de 1kg",
+    unidad: 15
+    },
+{
+    id: 16,
+    idCotizacion: 1,
+    idCategoria: 2,
+    nombre: "Azúcar Ledesma 1kg",
+    descripcion: "Azúcar blanca refinada paquete de 1kg",
+    unidad: 20
+    },
+{
+    id: 17,
+    idCotizacion: 1,
+    idCategoria: 3,
+    nombre: "Yogur Ser Frutilla 1L",
+    descripcion: "Yogur bebible sabor frutilla",
+    unidad: 10
+    },
+{
+    id: 18,
+    idCotizacion: 1,
+    idCategoria: 3,
+    nombre: "Manteca La Serenísima 200g",
+    descripcion: "Manteca pasteurizada en paquete de 200 gramos",
+    unidad: 12
+    },
+{
+    id: 19,
+    idCotizacion: 1,
+    idCategoria: 4,
+    nombre: "Mortadela Paladini",
+    descripcion: "Mortadela por kilogramo",
+    peso: 3,
+    unidadMedida: "kg"
+    },
+{
+    id: 20,
+    idCotizacion: 1,
+    idCategoria: 5,
+    nombre: "Pollo Entero",
+    descripcion: "Pollo fresco entero por kilogramo",
+    peso: 10,
+    unidadMedida: "kg"
+    },
+{
+    id: 21,
+    idCotizacion: 1,
+    idCategoria: 6,
+    nombre: "Papa",
+    descripcion: "Papa fresca por kilogramo",
+    peso: 25,
+    unidadMedida: "kg"
+    },
+{
+    id: 22,
+    idCotizacion: 1,
+    idCategoria: 6,
+    nombre: "Cebolla",
+    descripcion: "Cebolla fresca por kilogramo",
+    peso: 15,
+    unidadMedida: "kg"
+}
 ];

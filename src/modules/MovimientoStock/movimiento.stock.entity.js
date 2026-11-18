@@ -1,6 +1,6 @@
 import { BadRequestError } from "../../common/errors/errors.classes.js";
 
-const TIPOS_MOVIMIENTO = new Set(["entrada", "salida", "ajuste"]);
+const TIPOS_MOVIMIENTO = new Set(["entrada", "salida", "eliminacion"]);
 const UNIDADES_MEDIDA = new Set(["unidad", "g", "kg", "l", "ml"]);
 
 export class MovimientoStock {
@@ -12,7 +12,6 @@ export class MovimientoStock {
     idCategoria,
     nombreCategoria,
     tipo,
-    motivo,
     cantidad,
     unidadMedida,
     stockAnterior,
@@ -49,10 +48,7 @@ export class MovimientoStock {
       throw new BadRequestError("nombreUsuario es obligatorio");
     }
     if (!TIPOS_MOVIMIENTO.has(tipo)) {
-      throw new BadRequestError("tipo debe ser entrada, salida o ajuste");
-    }
-    if (typeof motivo !== "string" || !motivo.trim()) {
-      throw new BadRequestError("motivo es obligatorio");
+      throw new BadRequestError("tipo debe ser entrada, salida o eliminacion");
     }
     if (!UNIDADES_MEDIDA.has(unidadMedida)) {
       throw new BadRequestError("unidadMedida no es válida");
@@ -64,11 +60,18 @@ export class MovimientoStock {
       !Number.isFinite(cantidadNumerica)
       || !Number.isFinite(stockAnteriorNumerico)
       || !Number.isFinite(stockNuevoNumerico)
-      || cantidadNumerica === 0
       || stockAnteriorNumerico < 0
       || stockNuevoNumerico < 0
     ) {
       throw new BadRequestError("La variación y los stocks deben ser números válidos");
+    }
+
+    const eliminacionSinStock = tipo === "eliminacion"
+      && cantidadNumerica === 0
+      && stockAnteriorNumerico === 0
+      && stockNuevoNumerico === 0;
+    if (cantidadNumerica === 0 && !eliminacionSinStock) {
+      throw new BadRequestError("La variación debe ser distinta de cero, salvo al eliminar un producto sin stock");
     }
 
     const tolerancia = Number.EPSILON
@@ -80,6 +83,7 @@ export class MovimientoStock {
     if (
       (tipo === "entrada" && cantidadNumerica < 0)
       || (tipo === "salida" && cantidadNumerica > 0)
+      || (tipo === "eliminacion" && cantidadNumerica > 0)
     ) {
       throw new BadRequestError("El signo de la variación no coincide con el tipo de movimiento");
     }
@@ -91,7 +95,6 @@ export class MovimientoStock {
     this.idCategoria = Number(idCategoria);
     this.nombreCategoria = nombreCategoria.trim();
     this.tipo = tipo;
-    this.motivo = motivo.trim();
     this.cantidad = cantidadNumerica;
     this.unidadMedida = unidadMedida;
     this.stockAnterior = stockAnteriorNumerico;

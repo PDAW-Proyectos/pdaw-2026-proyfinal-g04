@@ -1,16 +1,44 @@
 import { redondearPrecio } from "../../../common/utils/formato.js";
+import { confirmarAccion } from "../../../common/utils/confirmar.js";
 
 export function crearModalEditarProducto({ store, notificar }) {
     const modalStock = document.getElementById("modal-stock");
     const formStock = document.getElementById("form-stock");
     const btnCerrarModal = document.getElementById("cerrar-modal");
     const btnCancelarModal = document.getElementById("btn-cancelar-modal");
+    const btnEliminarProducto = document.getElementById("btn-eliminar-producto");
     const inputUsdModal = document.getElementById("modal-precio-usd");
     const inputArsModal = document.getElementById("modal-precio-ars");
     let productoEnEdicionId = null;
 
     [btnCerrarModal, btnCancelarModal].forEach((btn) => {
         if (btn) btn.addEventListener("click", () => modalStock?.close());
+    });
+
+    btnEliminarProducto?.addEventListener("click", async () => {
+        if (!productoEnEdicionId) return;
+
+        if (store.obtenerEstado().hayCambiosSinGuardar) {
+            notificar("Publicá o deshacé los cambios de precios antes de eliminar un producto.", true);
+            return;
+        }
+
+        const confirmado = await confirmarAccion({
+            titulo: "Eliminar producto",
+            mensaje: "Esta acción eliminará el producto del catálogo y no se puede deshacer.",
+            textoConfirmar: "Sí, eliminar",
+            peligro: true,
+        });
+        if (!confirmado) return;
+
+        try {
+            await store.eliminarProducto(productoEnEdicionId);
+            modalStock.close();
+            notificar("El producto fue eliminado del catálogo.");
+        } catch (error) {
+            console.error("Error al eliminar producto:", error);
+            notificar(error.message || "Hubo un error al eliminar el producto.", true);
+        }
     });
 
     if (inputUsdModal && inputArsModal) {

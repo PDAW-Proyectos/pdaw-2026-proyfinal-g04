@@ -69,7 +69,6 @@ export class IngresoService {
                     articulo.id,
                     articulo.unidad || articulo.peso || articulo.cantidad,
                     idUsuario,
-                    "Venta",
                     { administrarTransacciones: false },
                 );
                 articulos.push({ ...resultado, cantidad: articulo.unidad || articulo.peso });

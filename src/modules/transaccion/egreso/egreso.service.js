@@ -72,7 +72,6 @@ export class EgresoService {
                             articulo.id,
                             articulo.unidad || articulo.peso || articulo.cantidad,
                             idUsuario,
-                            "Compra",
                             { administrarTransacciones: false },
                         )
                         : await this.productoService.crearProducto(

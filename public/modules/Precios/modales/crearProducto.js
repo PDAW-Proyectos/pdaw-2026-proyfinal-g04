@@ -57,7 +57,7 @@ export function crearModalCrearProducto({ store, storeCategorias, notificar }) {
 
             const nuevoProducto = {
                 nombre: document.getElementById("nuevo-prod-nombre").value,
-                idCategoria: selectCategoria.value,
+                idCategoria: Number(selectCategoria.value),
                 precioUsd: parseFloat(inputUsdCrear.value),
                 unidad: parseInt(document.getElementById("nuevo-prod-stock").value) || 0,
                 descripcion: document.getElementById("nuevo-prod-descripcion").value,

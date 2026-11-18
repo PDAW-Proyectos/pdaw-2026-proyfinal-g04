@@ -34,5 +34,11 @@ export function crearPreciosApi(base = "/api") {
                 body: JSON.stringify(payload),
             });
         },
+
+        eliminarProducto(id) {
+            return solicitarJson(`${base}/productos/${encodeURIComponent(id)}`, {
+                method: "DELETE",
+            });
+        },
     };
 }
