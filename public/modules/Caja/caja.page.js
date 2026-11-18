@@ -133,7 +133,6 @@ export function iniciarCaja() {
       totalPaginas,
     });
   }
-}
 
   function renderizarMovimientos() {
     const tbody = document.getElementById("lista-movimientos-turno");
