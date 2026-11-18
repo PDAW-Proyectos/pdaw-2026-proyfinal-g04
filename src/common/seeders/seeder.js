@@ -6,6 +6,7 @@ import { transaccionesSeed } from "./data/transacciones.seed.js";
 import { cajasSeed } from "./data/caja.seed.js";
 import { categoriasSeed } from "./data/categorias.seed.js";
 import { proveedoresSeed } from "./data/proveedores.seed.js";
+import { configuracionesSeed } from "./data/configuraciones.seed.js";
 
 export class Seeder {
     constructor({ usuarioRepository, productoRepository, categoriaRepository, insumoRepository, transaccionRepository, cotizacionRepository, cajaRepository, configuracionRepository, proveedorRepository }) {
@@ -31,7 +32,7 @@ export class Seeder {
             transaccionRepository: transaccionesSeed,
             cotizacionRepository: cotizacionesSeed,
             cajaRepository: cajasSeed,
-            configuracionRepository: [],
+            configuracionRepository: configuracionesSeed,
             proveedorRepository: proveedoresSeed,
         };
 
