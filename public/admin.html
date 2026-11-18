@@ -739,32 +739,6 @@
             <ul id="lista-cajas" style="margin-top: 16px; list-style: disc; padding-left: 20px"></ul>
           </section>
 
-          <!-- Sección 4: Métodos de Pago -->
-          <section class="config-section">
-            <h3>Métodos de Pago Habilitados</h3>
-            <p class="config-subtitle">
-              Activá o desactivá los medios de pago en la caja.
-            </p>
-
-            <div class="config-switches">
-              <label class="toggle-switch-container">
-                <span class="toggle-label">Efectivo</span>
-                <input type="checkbox" checked disabled />
-                <span class="slider round"></span>
-              </label>
-              <label class="toggle-switch-container">
-                <span class="toggle-label">Tarjetas de Débito/Crédito</span>
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
-              </label>
-              <label class="toggle-switch-container">
-                <span class="toggle-label">Mercado Pago / Transferencia</span>
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
-              </label>
-            </div>
-          </section>
-
           <hr class="config-divider" />
 
           <!-- Sección 5: Categorías -->
@@ -1117,6 +1091,25 @@
               Cancelar
             </button>
             <button type="submit" class="btn-primario">Crear Usuario</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <dialog id="modal-editar-caja" class="modal-base">
+      <div class="modal-contenido">
+        <header class="modal-header">
+          <h3>Editar Caja</h3>
+          <button type="button" class="modal-cerrar" id="cerrar-modal-editar-caja" aria-label="Cerrar modal">&times;</button>
+        </header>
+        <form id="form-editar-caja" class="modal-form">
+          <div class="modal-input-group">
+            <label for="editar-caja-nombre">Nombre de la caja:</label>
+            <input type="text" id="editar-caja-nombre" required />
+          </div>
+          <div class="modal-acciones" style="margin-top: 24px">
+            <button type="button" class="btn-secundario" id="btn-cancelar-modal-editar-caja">Cancelar</button>
+            <button type="submit" class="btn-primario">Guardar</button>
           </div>
         </form>
       </div>

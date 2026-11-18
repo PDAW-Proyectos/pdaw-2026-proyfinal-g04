@@ -17,6 +17,13 @@ export function crearConfiguracionApi(base = "/api") {
             });
         },
 
+        actualizarCaja(nombre, payload) {
+            return solicitarJson(`${base}/configuracion/cajas/${encodeURIComponent(nombre)}`, {
+                method: "PATCH",
+                body: JSON.stringify(payload),
+            });
+        },
+
         actualizar(payload) {
             let recurso;
             let datos;
