@@ -153,7 +153,6 @@ describe("IngresoService", () => {
                 10,
                 2,
                 idUsuario,
-                "Venta",
                 { administrarTransacciones: false },
             );
             expect(transaccionRepository.crear).toHaveBeenCalledWith({

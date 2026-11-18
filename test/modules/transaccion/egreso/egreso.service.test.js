@@ -172,7 +172,6 @@ describe("EgresoService", () => {
                 10,
                 2,
                 idUsuario,
-                "Compra",
                 { administrarTransacciones: false },
             );
             expect(insumoService.aumentarStock).toHaveBeenCalledWith(20, 5);
