@@ -19,6 +19,7 @@ import { iniciarModalCantidad } from "./modales/cantidad.js";
 import { iniciarModalApertura } from "./modales/apertura.js";
 import { iniciarModalCierre } from "./modales/cierre.js";
 import { iniciarPerfil } from "../Perfil/perfil.page.js";
+import { iniciarControlInactividad } from "../../common/utils/sesionInactividad.js";
 import { iniciarModalMovimiento } from "../Transacciones/modales/movimiento.js";
 import { crearTablaVentas } from "../Transacciones/components/tablaVentas.js";
 import { crearTablaHistorial } from "../Transacciones/components/tablaHistorial.js";
@@ -40,6 +41,7 @@ const transformarProducto = (producto, categoriasPorId) => {
 };
 
 export function iniciarCaja() {
+    void iniciarControlInactividad();
     renderizarIconos();
     iniciarPerfil();
 

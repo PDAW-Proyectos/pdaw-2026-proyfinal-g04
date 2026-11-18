@@ -6,8 +6,10 @@ import { iniciarFinanzas } from "../Finanzas/finanzas.page.js";
 import { iniciarConfiguracion } from "../Configuracion/configuracion.page.js";
 import { crearCategoriasStore } from "../Categorias/categorias.store.js";
 import { iniciarPerfil } from "../Perfil/perfil.page.js";
+import { iniciarControlInactividad } from "../../common/utils/sesionInactividad.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    void iniciarControlInactividad();
     const storeCategorias = crearCategoriasStore();
 
     iniciarSidebar();
