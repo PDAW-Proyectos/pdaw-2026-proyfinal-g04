@@ -106,9 +106,29 @@
    MODAL APERTURA DE TURNO
 ========================================= */
 #modal-inicio-turno .modal-card {
+  width: min(700px, calc(100vw - 2rem));
   max-width: 700px;
+  margin: auto;
+  box-sizing: border-box;
 }
 
+#modal-inicio-turno .modal-header {
+  width: 100%;
+}
+
+#modal-inicio-turno .modal-body {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: left;
+}
+
+#modal-inicio-turno .modal-footer-acciones {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
 
 .apertura-seccion {
   margin-bottom: 1rem;
@@ -127,6 +147,13 @@
   gap: 1rem;
 }
 
+.apertura-grid-mitad {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
 .apertura-detalle-header {
   display: flex;
   justify-content: space-between;
@@ -142,7 +169,7 @@
 .grilla-billetes {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem 1.5rem;
+  gap: 0.75rem;
   background: #f8fafc;
   padding: 1rem;
   border-radius: 12px;
@@ -187,6 +214,30 @@
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
+}
+
+/* Utilidad para ocultar elementos dinámicamente */
+.oculto {
+  display: none !important;
+}
+
+/* Estilo para los inputs de tipo time (usando tu misma clase base) */
+input[type="time"].select-estandar {
+  width: 100%;
+  background: #f4f4f5;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #161615;
+  outline: none;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+input[type="time"].select-estandar:focus {
+  background: #e4e4e7;
+  box-shadow: inset 0 0 0 2px #c7ff3e;
 }
 
 /* =========================================
@@ -244,7 +295,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #1e1e1d;
+  background: #eef1ec;
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.85rem 1rem;
   border-radius: 10px;
@@ -258,7 +309,7 @@
 
 .venta-pausada-info strong {
   font-size: 0.95rem;
-  color: #f1f9e4;
+  color: black;
 }
 
 .venta-pausada-info span {
@@ -267,8 +318,8 @@
 }
 
 .btn-recuperar {
-  background: transparent;
-  color: #c7ff3e;
+  background: #b3ef25;
+  color: black;
   border: 1px solid rgba(199, 255, 62, 0.4);
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
@@ -323,7 +374,8 @@
 
 .valor-modificador-input label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
   color: #161615;
   margin-bottom: 0.5rem;
 }
@@ -414,104 +466,190 @@
 }
 
 /* =========================================
-   4. ESPECÍFICO: MODAL CONSULTA RÁPIDA
+   MODAL CONSULTAR STOCK (DISEÑO CLARO)
 ========================================= */
-.resultado-consulta-tarjeta {
+.modal-stock-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.modal-stock-titulo-grupo {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.icono-circulo-verde {
+  width: 48px;
+  height: 48px;
+  background-color: #eef7e1;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #171914;
+}
+
+.modal-stock-titulo-grupo h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #171914;
+  font-weight: 700;
+}
+
+.modal-stock-titulo-grupo p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.input-buscar-stock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #c7ff3e;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  background: #ffffff;
+}
+
+.input-buscar-stock input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+  color: #171914;
+}
+
+.resultado-stock-tarjeta {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.resultado-stock-tarjeta.oculto {
+  display: none !important;
+}
+
+.stock-tarjeta-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(199, 255, 62, 0.05);
-  border: 1px dashed rgba(199, 255, 62, 0.2);
-  padding: 1.25rem;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  margin-bottom: 0.5rem;
 }
 
-.select-mixto {
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 58px;
-  width: 58px;
-  height: 58px;
-  padding: 0;
-  background: #c7ff3e;
-  color: #161615;
-  border: none;
-  border-radius: 6px;
+.stock-tarjeta-top h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #171914;
   font-weight: 700;
-  cursor: pointer;
-  font-size: 0.8rem;
 }
 
-.select-mixto svg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 24px;
-  height: 24px;
-  transform: translate(-50%, -50%);
+.badge-stock-ok {
+  background: #c7ff3e;
+  color: #171914;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.resultado-consulta-tarjeta.oculto {
-  display: none;
+.badge-stock-bajo {
+  background: #fef3c7;
+  color: #d97706;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.resultado-info {
+.badge-stock-critico {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stock-precio-grande {
+  display: block;
+  font-size: 2rem;
+  color: #8fc51b;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.separador-stock {
+  height: 1px;
+  background: #e5e7eb;
+  margin-bottom: 1rem;
+  border: none;
+}
+
+.info-adicional-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #171914;
+  margin: 0 0 1rem 0;
+}
+
+.lista-info-adicional {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.8rem;
 }
 
-.resultado-sku {
-  font-size: 0.75rem;
-  color: #a1a1aa;
-  font-family: monospace;
+.lista-info-adicional li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
 }
 
-.resultado-info h3 {
-  font-size: 1.1rem;
-  color: #f1f9e4;
-  margin: 0;
+.info-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
 }
 
-.resultado-stock {
-  font-size: 0.85rem;
-  color: #a1a1aa;
+.info-label i {
+  width: 18px;
+  height: 18px;
 }
 
-.resultado-stock.stock-ok {
-  color: #10b981; /* Verde */
-}
-.resultado-stock.stock-bajo {
-  color: #f59e0b; /* Naranja */
-}
-.resultado-stock.stock-cero {
-  color: #ef4444; /* Rojo */
+.info-valor {
+  font-weight: 500;
+  color: #171914;
 }
 
-.resultado-precio strong {
-  font-size: 1.8rem;
+.btn-cerrar-modal-ancho {
+  width: 100%;
+  background: #f3f4f6;
+  color: #171914;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-#modal-consulta .input-grupo-mixto,
-#modal-registrar-movimiento .input-grupo-mixto,
-#modal-historial-movimiento .input-grupo-mixto {
-  padding: 0;
+.btn-cerrar-modal-ancho:hover {
+  background: #e5e7eb;
 }
-
-#modal-consulta .input-grupo-mixto input,
-#modal-registrar-movimiento .input-grupo-mixto input,
-#modal-historial-movimiento .input-grupo-mixto input {
-  padding-left: 1rem;
-}
-
 /* =========================================
    5. ESPECÍFICO: MODAL TECLADO NUMÉRICO (NUMPAD)
 ========================================= */
-
 .modal-compacto {
   max-width: 320px;
 }
@@ -573,6 +711,95 @@
 }
 
 /* =========================================
+   MODAL BALANZA (VERDULERÍA)
+========================================= */
+.balanza-info-prod {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.balanza-info-prod h3 {
+  color: #b3ef25;
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.balanza-info-prod p {
+  color: black;
+  font-size: 1rem;
+}
+
+.balanza-info-prod strong {
+  color: #b3ef25;
+}
+
+.balanza-grupo-peso {
+  width: 260px;
+  max-width: 100%;
+  margin: 0 auto 1.5rem;
+}
+
+.balanza-grupo-peso label {
+  color: #a1a1aa;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  white-space: nowrap;
+  align-items: center;
+}
+
+.balanza-input-wrapper {
+  display: flex;
+  background: #f1f9e4;
+  border: 2px solid #c7ff3e;
+  border-radius: 12px;
+  height: 90px;
+  padding: 0 1rem;
+  align-items: center;
+}
+
+.balanza-input {
+  border: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  line-height: 90px;
+  padding: 0;
+  text-align: center;
+  background: transparent;
+  color: #161615;
+  font-size: 1.8rem;
+  font-weight: 800;
+  outline: none;
+}
+
+.balanza-unidad {
+  color: #161615;
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+}
+
+.balanza-total-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(199, 255, 62, 0.05);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(199, 255, 62, 0.2);
+}
+
+.balanza-total-box span {
+  color: black;
+  font-weight: 600;
+}
+
+.balanza-precio-final {
+  font-size: 1.2rem;
+}
+
+/* =========================================
    6. MODAL REGISTRAR MOVIMIENTO
 ========================================= */
 .paso-oculto {
@@ -590,6 +817,84 @@
 
 .modal-ancha {
   max-width: 600px;
+}
+
+#modal-registrar-movimiento .modal-card {
+  width: min(600px, calc(100vw - 2rem));
+  margin: 0 auto;
+}
+
+#modal-registrar-movimiento .modal-body {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+}
+
+#movimiento-paso-1,
+#movimiento-paso-2 {
+  width: 100%;
+}
+
+#modal-registrar-movimiento .grid-movimientos {
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+#modal-registrar-movimiento .opcion-movimiento {
+  min-height: 116px;
+  box-sizing: border-box;
+}
+
+#modal-registrar-movimiento .opcion-texto {
+  min-width: 0;
+}
+
+#modal-registrar-movimiento #movimiento-paso-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+#modal-registrar-movimiento #movimiento-paso-2.paso-oculto {
+  display: none;
+}
+
+#modal-registrar-movimiento .formulario-movimiento,
+#modal-registrar-movimiento #grupo-monto,
+#modal-registrar-movimiento .input-grupo-mixto {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#modal-registrar-movimiento .input-grupo-mixto {
+  padding: 0;
+}
+
+#modal-registrar-movimiento .indicador-tipo {
+  align-self: stretch;
+  width: 48px;
+  min-width: 48px;
+  padding: 0;
+  border-radius: 9px 0 0 9px;
+  flex-shrink: 0;
+}
+
+#modal-registrar-movimiento #input-monto-mov {
+  padding: 0.85rem 1rem;
+  text-align: left;
+}
+
+#modal-registrar-movimiento .modal-footer-movimiento {
+  width: 100%;
+}
+
+@media (max-width: 560px) {
+  #modal-registrar-movimiento .grid-movimientos {
+    grid-template-columns: 1fr;
+  }
 }
 
 .header-movimiento {
@@ -856,12 +1161,24 @@ select.input-historial {
 }
 
 /* =========================================
-   8. MODAL CIERRE DE CAJA (BLANCO)
+   8. MODAL CIERRE DE CAJA 
 ========================================= */
 .modal-cierre-card {
   background: #ffffff !important; /* Forzamos fondo blanco */
   color: #18181b;
+  width: min(500px, calc(100vw - 2rem));
   max-width: 500px;
+  margin: auto;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+#modal-cierre .modal-body,
+#modal-cierre .modal-footer-acciones {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .modal-header-cierre {
@@ -959,6 +1276,14 @@ select.input-historial {
   font-weight: 700;
 }
 
+#cierre-fecha-hora {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
 /* Input y Diferencia */
 .label-oscuro {
   display: block;
@@ -972,6 +1297,28 @@ select.input-historial {
   border: 2px solid #c7ff3e !important;
   background: #ffffff;
   padding-right: 0.5rem;
+}
+
+#modal-cierre .input-cierre {
+  padding: 0;
+}
+
+#modal-cierre .input-cierre .select-mixto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  align-self: stretch;
+  margin-right: 1rem;
+  border-right: 1px solid #d4d4d8;
+}
+
+#modal-cierre .input-cierre input {
+  padding: 0.85rem 0.25rem;
+}
+
+#modal-cierre .cierre-diferencia-caja + .cierre-ingreso-grupo {
+  margin-top: 1.5rem;
 }
 
 .bg-transparent {
@@ -1047,4 +1394,149 @@ select.input-historial {
   border-radius: 10px;
   cursor: pointer;
   flex: 1;
+}
+
+/* =========================================
+   MODAL COBRAR VENTA
+========================================= */
+.modal-body {
+  text-align: center;
+  max-width: 400px;
+  align-items: center;
+}
+
+#modal-cobro .modal-card {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#modal-cobro .modal-body {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#modal-cobro .metodo-label {
+  text-align: center;
+}
+
+#modal-cobro .calculo-vuelto-seccion {
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#modal-cobro .modal-footer-acciones {
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cobro-label {
+  display: block;
+  color: #b3ef25;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.cobro-total-gigante {
+  display: block;
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 2rem;
+}
+
+.metodo-label {
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  color: #b3ef25;
+}
+
+.metodos-pago-seccion {
+  margin-bottom: 1.5rem;
+}
+
+/* Reducción del padding de los tabs para que entren 4 botones cómodos */
+#tabs-metodos-pago .tab-btn {
+  padding: 0.6rem 0.3rem;
+  font-size: 0.85rem;
+}
+
+.calculo-vuelto-seccion {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.input-grupo-borde {
+  flex: 1;
+  text-align: left;
+}
+
+.input-grupo-borde label {
+  font-size: 0.9rem;
+  color: #a1a1aa;
+  display: block;
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.input-con-simbolo {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: border-color 0.2s;
+}
+
+.input-con-simbolo:focus-within {
+  border-color: #c7ff3e;
+}
+
+.input-con-simbolo span {
+  color: #b3ef25;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.input-con-simbolo input {
+  background: transparent;
+  border: none;
+  color: black;
+  font-size: 1.8rem;
+  font-weight: bold;
+  width: 100%;
+  outline: none;
+}
+
+.caja-vuelto {
+  flex: 1;
+  background: #c7ff3e;
+  color: #161615;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 64px; /* Para igualar la altura del input */
+}
+
+.caja-vuelto span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.caja-vuelto strong {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }

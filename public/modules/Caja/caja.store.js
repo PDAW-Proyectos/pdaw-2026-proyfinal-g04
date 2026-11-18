@@ -1,4 +1,39 @@
 export function crearCajaStore() {
+    const claveFavoritosDiarios = "kchin-favoritos-diarios";
+
+    const fechaActual = () => {
+        const fecha = new Date();
+        const anio = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        return `${anio}-${mes}-${dia}`;
+    };
+
+    const cargarFavoritosDiarios = () => {
+        try {
+            const guardado = JSON.parse(localStorage.getItem(claveFavoritosDiarios));
+            if (!guardado || typeof guardado !== "object") {
+                return { fecha: fechaActual(), ventasPorProducto: {}, favoritosIds: [] };
+            }
+
+            const fecha = guardado.fecha === fechaActual() ? guardado.fecha : fechaActual();
+            return {
+                fecha,
+                ventasPorProducto:
+                    guardado.fecha === fechaActual() && guardado.ventasPorProducto
+                        ? guardado.ventasPorProducto
+                        : {},
+                favoritosIds: Array.isArray(guardado.favoritosIds)
+                    ? guardado.favoritosIds.map(Number).filter(Number.isFinite)
+                    : [],
+            };
+        } catch {
+            return { fecha: fechaActual(), ventasPorProducto: {}, favoritosIds: [] };
+        }
+    };
+
+    const favoritosIniciales = cargarFavoritosDiarios();
+
     let estado = {
         usuario: null,
         cajasAbiertas: [],
@@ -12,6 +47,11 @@ export function crearCajaStore() {
         ventasPausadas: [],
         metodoPago: null,
         modificador: { tipo: "descuento", modo: "porcentaje", valor: 0 },
+        horarioEmpleado: "",
+        horarioInicioTurno: "",
+        fechaFavoritos: favoritosIniciales.fecha,
+        ventasPorProducto: favoritosIniciales.ventasPorProducto,
+        favoritosIds: favoritosIniciales.favoritosIds,
     };
     const oyentes = new Set();
 
@@ -91,6 +131,78 @@ export function crearCajaStore() {
             ...venta,
             items: venta.items.map((item) => ({ ...item })),
         })),
+        obtenerFavoritosIds: () => [...estado.favoritosIds],
+        obtenerRankingDiario: () => ({ ...estado.ventasPorProducto }),
+
+        registrarVentaFavoritos(items = []) {
+            const hoy = fechaActual();
+            if (estado.fechaFavoritos !== hoy) {
+                estado.fechaFavoritos = hoy;
+                estado.ventasPorProducto = {};
+            }
+
+            const idsUnicos = new Set(
+                items
+                    .map((item) => Number(item.id))
+                    .filter((id) => Number.isFinite(id)),
+            );
+
+            idsUnicos.forEach((id) => {
+                estado.ventasPorProducto[id] =
+                    (estado.ventasPorProducto[id] ?? 0) + 1;
+            });
+
+            const candidatos = Object.entries(estado.ventasPorProducto)
+                .map(([id, ventas]) => ({ id: Number(id), ventas }))
+                .filter((producto) => producto.ventas >= 5)
+                .sort((a, b) => b.ventas - a.ventas || a.id - b.id);
+
+            const favoritos = [...estado.favoritosIds];
+
+            candidatos.forEach((candidato) => {
+                if (favoritos.includes(candidato.id)) return;
+
+                if (favoritos.length < 6) {
+                    favoritos.push(candidato.id);
+                    return;
+                }
+
+                let indiceMenor = 0;
+                let ventasMenor =
+                    estado.ventasPorProducto[favoritos[0]] ?? 0;
+
+                favoritos.forEach((id, indice) => {
+                    const ventas = estado.ventasPorProducto[id] ?? 0;
+                    if (ventas < ventasMenor) {
+                        ventasMenor = ventas;
+                        indiceMenor = indice;
+                    }
+                });
+
+                if (candidato.ventas > ventasMenor) {
+                    favoritos[indiceMenor] = candidato.id;
+                }
+            });
+
+            estado.favoritosIds = favoritos
+                .sort((a, b) =>
+                    (estado.ventasPorProducto[b] ?? 0) -
+                    (estado.ventasPorProducto[a] ?? 0) || a - b
+                )
+                .slice(0, 6);
+
+            try {
+                localStorage.setItem(claveFavoritosDiarios, JSON.stringify({
+                    fecha: estado.fechaFavoritos,
+                    ventasPorProducto: estado.ventasPorProducto,
+                    favoritosIds: estado.favoritosIds,
+                }));
+            } catch (error) {
+                console.error("No se pudo guardar el ranking diario:", error);
+            }
+
+            notificar();
+        },
 
         hayVentaActual: () => estado.carrito.length > 0,
         estaCajaAbierta: () => Boolean(estado.caja),
@@ -130,8 +242,12 @@ export function crearCajaStore() {
             notificar();
         },
 
-        abrirCaja(caja) {
+        abrirCaja(caja, horario = null) {
             estado.caja = { ...caja };
+            if (horario) {
+                estado.horarioEmpleado = horario.horarioTexto ?? "";
+                estado.horarioInicioTurno = horario.horaInicio ?? "";
+            }
             notificar();
         },
 
@@ -140,6 +256,8 @@ export function crearCajaStore() {
             estado.carrito = [];
             estado.metodoPago = null;
             estado.modificador = { tipo: "descuento", modo: "porcentaje", valor: 0 };
+            estado.horarioEmpleado = "";
+            estado.horarioInicioTurno = "";
             notificar();
         },
 
@@ -178,7 +296,7 @@ export function crearCajaStore() {
         },
 
         puedeCobrar() {
-            return Boolean(estado.caja) && estado.carrito.length > 0 && estado.metodoPago && this.total() > 0;
+            return Boolean(estado.caja) && estado.carrito.length > 0 && this.total() > 0;
         },
 
         setMetodoPago(metodo) {
@@ -210,6 +328,11 @@ export function crearCajaStore() {
         agregarProducto(producto, cantidad = 1) {
             if (!estado.caja) {
                 return { ok: false, error: "La caja no esta abierta" };
+            }
+
+            const stockDisponible = Number(producto.stock);
+            if (Number.isFinite(stockDisponible) && stockDisponible <= 0) {
+                return { ok: false, error: "Sin existencias disponibles" };
             }
 
             const cantidadNormalizada = normalizarCantidad(producto, cantidad);

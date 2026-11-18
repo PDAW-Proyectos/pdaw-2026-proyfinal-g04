@@ -1,7 +1,7 @@
 import { abrirModalOverlay, cerrarModalOverlay } from "../../../common/components/modalOverlay.js";
 import { formatearPrecio } from "../../../common/utils/formato.js";
 
-export function crearModalPausa({ store }) {
+export function crearModalPausa({ store, notificar }) {
     const modalPausa = document.getElementById("modal-pausa");
     const contenedorPausadas = document.getElementById("contenedor-ventas-pausadas");
     const btnConfirmarPausa = document.getElementById("btn-confirmar-pausa");
@@ -57,14 +57,14 @@ export function crearModalPausa({ store }) {
         if (!store.pausarVenta()) return;
 
         cerrarModalPausa();
-        alert("Venta pausada. Podés atender al siguiente cliente");
+        notificar("La venta fue pausada correctamente.");
     };
 
     const recuperarVenta = (id) => {
         const resultado = store.recuperarVenta(id);
 
         if (resultado === "ocupado") {
-            alert("Tenés una venta en curso. Pausala o cobrala antes de recuperar otra.");
+            notificar("Tenés una venta en curso. Pausala o cobrala antes de recuperar otra.", "error");
             return;
         }
 
