@@ -22,8 +22,8 @@ export function crearTablaPrecios({ tbody, onEditar }) {
                 fila.innerHTML = `
                     <td class="td-codigo">${prod.id}</td>
                     <td class="td-nombre">${prod.nombre}</td>
-                    <td class="td-usd">U$D ${prod.precioUsd.toFixed(2)}</td>
-                    <td class="${clasePrecio}">$ ${(prod.precioArs ?? 0).toLocaleString("es-AR")}</td>
+                    <td class="td-usd">U$D ${prod.precioUsd ? prod.precioUsd.toFixed(2) : "-"}</td>
+                    <td class="${clasePrecio}">$ ${prod.precioArs ? (prod.precioArs ?? 0).toLocaleString("es-AR") : "-"}</td>
                     <td>
                         <button type="button" class="btn-primario btn-chico" data-id="${prod.id}">
                         <i data-lucide="square-pen" class="icono-chico"></i>

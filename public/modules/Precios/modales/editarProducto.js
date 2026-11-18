@@ -29,13 +29,11 @@ export function crearModalEditarProducto({ store, notificar }) {
             if (!productoEnEdicionId) return;
 
             const nuevoPrecioUsd = parseFloat(document.getElementById("modal-precio-usd").value);
-            const nuevoPrecioArs = parseFloat(document.getElementById("modal-precio-ars").value);
             const nuevaDescripcion = document.getElementById("nueva-descripcion").value;
 
             try {
                 await store.actualizarProducto(productoEnEdicionId, {
                     precioUsd: nuevoPrecioUsd,
-                    precio: nuevoPrecioArs,
                     descripcion: nuevaDescripcion,
                 });
 

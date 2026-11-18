@@ -23,19 +23,14 @@ export function crearPreciosStore(api) {
     };
 
     const mapearProducto = (producto) => {
-        if (typeof producto.precioUsd !== "number" || !Number.isFinite(producto.precioUsd) || producto.precioUsd < 0) {
-            throw new Error(`El producto ${producto.id} no tiene un precio USD válido`);
-        }
-
         const precioUsd = producto.precioUsd;
-        const cotizacion = Number(producto.cotizacion ?? 0);
 
         return {
             id: producto.id,
             nombre: producto.nombre,
             categoria: producto.categoria || "General",
             precioUsd,
-            precioArs: producto.precio ?? producto.precioArs ?? (cotizacion > 0 ? redondearPrecio(precioUsd * cotizacion) : 0),
+            precioArs: redondearPrecio(producto.precioUsd * producto.cotizacion),
             stock: producto.stock ?? producto.unidad ?? producto.peso ?? 0,
             descripcion: producto.descripcion || "",
         };
@@ -76,7 +71,7 @@ export function crearPreciosStore(api) {
             const mapeados = productos.map(mapearProducto);
 
             actualizar({
-                catalogoBase: estado.catalogoBase.length ? estado.catalogoBase : [...mapeados],
+                catalogoBase: [...mapeados],
                 catalogoEdicion: mapeados,
                 totalPaginas: resultado.totalPaginas ?? 1,
                 totalProductos: resultado.total ?? mapeados.length,
@@ -116,8 +111,7 @@ export function crearPreciosStore(api) {
                     precioArs: redondearPrecio(producto.precioUsd * estado.dolarApiEnVivo),
                 })),
                 operacionMasivaPendiente: {
-                    tipo: "dolar",
-                    valor: estado.dolarApiEnVivo,
+                    productosActualizar: estado.catalogoEdicion.map((producto) => producto.id),
                 },
                 hayCambiosSinGuardar: true,
             });
@@ -134,7 +128,10 @@ export function crearPreciosStore(api) {
                     ...producto,
                     precioArs: redondearPrecio(producto.precioArs * (1 + porcentaje / 100)),
                 })),
-                operacionMasivaPendiente: { tipo: "porcentaje", valor: porcentaje },
+                operacionMasivaPendiente: { 
+                    porcentaje,
+                    productosActualizar: estado.catalogoEdicion.map((producto) => producto.id),
+                },
                 hayCambiosSinGuardar: true,
             });
 
