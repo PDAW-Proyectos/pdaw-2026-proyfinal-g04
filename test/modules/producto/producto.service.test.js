@@ -194,7 +194,6 @@ describe('ProductoService', () => {
                 idProducto: 1,
                 idCategoria: 2,
                 tipo: "salida",
-                motivo: "Venta",
                 cantidad: -5.5,
                 unidadMedida: "kg",
                 stockAnterior: 20.5,
@@ -206,6 +205,53 @@ describe('ProductoService', () => {
     });
 
     describe('registrar movimientos de stock', () => {
+        test('registra la eliminación y luego elimina el producto del catálogo', async () => {
+            const producto = {
+                id: 4,
+                nombre: "Leche",
+                idCategoria: 2,
+                unidad: 6,
+            };
+            mockProductoRepository.buscarPorId.mockResolvedValue(producto);
+            mockProductoRepository.eliminar.mockResolvedValue(true);
+
+            await expect(productoService.eliminarProducto(4, 7)).resolves.toBe(true);
+
+            expect(mockMovimientoStockService.registrarMovimiento).toHaveBeenCalledWith(expect.objectContaining({
+                idProducto: 4,
+                nombreProducto: "Leche",
+                tipo: "eliminacion",
+                cantidad: -6,
+                unidadMedida: "unidad",
+                stockAnterior: 6,
+                stockNuevo: 0,
+                idUsuario: 7,
+            }));
+            expect(mockProductoRepository.eliminar).toHaveBeenCalledWith(4);
+            expect(mockProductoRepository.confirmarTransaccion).toHaveBeenCalled();
+            expect(mockMovimientoStockRepository.confirmarTransaccion).toHaveBeenCalled();
+        });
+
+        test('registra la eliminación aunque el producto ya no tenga stock', async () => {
+            const producto = {
+                id: 4,
+                nombre: "Leche",
+                idCategoria: 2,
+                unidad: 0,
+            };
+            mockProductoRepository.buscarPorId.mockResolvedValue(producto);
+            mockProductoRepository.eliminar.mockResolvedValue(true);
+
+            await productoService.eliminarProducto(4, 7);
+
+            expect(mockMovimientoStockService.registrarMovimiento).toHaveBeenCalledWith(expect.objectContaining({
+                tipo: "eliminacion",
+                cantidad: 0,
+                stockAnterior: 0,
+                stockNuevo: 0,
+            }));
+        });
+
         test('registra el stock inicial de un producto con el usuario que lo creó', async () => {
             const producto = {
                 id: 5,
@@ -228,7 +274,7 @@ describe('ProductoService', () => {
             }));
         });
 
-        test('registra como ajuste un cambio manual de stock', async () => {
+        test('registra una entrada cuando la edición manual aumenta el stock', async () => {
             const anterior = {
                 id: 5,
                 nombre: "Yerba",
@@ -242,10 +288,32 @@ describe('ProductoService', () => {
             await productoService.actualizarProducto(5, { unidad: 18 }, 7);
 
             expect(mockMovimientoStockService.registrarMovimiento).toHaveBeenCalledWith(expect.objectContaining({
-                tipo: "ajuste",
+                tipo: "entrada",
                 cantidad: 12,
                 stockAnterior: 6,
                 stockNuevo: 18,
+                idUsuario: 7,
+            }));
+        });
+
+        test('registra una salida cuando la edición manual disminuye el stock', async () => {
+            const anterior = {
+                id: 5,
+                nombre: "Yerba",
+                idCategoria: 2,
+                unidad: 18,
+            };
+            const actualizado = { ...anterior, unidad: 6 };
+            mockProductoRepository.buscarPorId.mockResolvedValue(anterior);
+            mockProductoRepository.actualizar.mockResolvedValue(actualizado);
+
+            await productoService.actualizarProducto(5, { unidad: 6 }, 7);
+
+            expect(mockMovimientoStockService.registrarMovimiento).toHaveBeenCalledWith(expect.objectContaining({
+                tipo: "salida",
+                cantidad: -12,
+                stockAnterior: 18,
+                stockNuevo: 6,
                 idUsuario: 7,
             }));
         });

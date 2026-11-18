@@ -50,7 +50,7 @@ export class ProductoController {
   };
 
   eliminarProducto = async (req, res) => {
-    await this.productoService.eliminarProducto(req.params.id);
+    await this.productoService.eliminarProducto(req.params.id, req.session?.userId ?? null);
     res.status(204).send();
   };
 }

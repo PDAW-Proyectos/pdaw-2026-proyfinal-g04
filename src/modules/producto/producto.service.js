@@ -59,7 +59,6 @@ export class ProductoService {
                     stockAnterior: 0,
                     stockNuevo: stockInicial,
                     tipo: "entrada",
-                    motivo: datos.motivo || "Alta de producto con stock inicial",
                     idUsuario,
                 });
             }
@@ -85,12 +84,12 @@ export class ProductoService {
                 const stockNuevo = esPorUnidad ? Number(actualizado.unidad) : Number(actualizado.peso);
 
                 if (stockNuevo !== stockAnterior) {
+                    const diferencia = stockNuevo - stockAnterior;
                     await this._registrarMovimientoStock({
                         producto: actualizado,
                         stockAnterior,
                         stockNuevo,
-                        tipo: "ajuste",
-                        motivo: datos.motivo || "Ajuste manual de inventario",
+                        tipo: diferencia > 0 ? "entrada" : "salida",
                         idUsuario,
                     });
                 }
@@ -129,17 +128,35 @@ export class ProductoService {
         }
     }
 
-    async eliminarProducto(id) {
-        const eliminado = await this.productoRepository.eliminar(id);
+    async eliminarProducto(id, idUsuario, { administrarTransacciones = true } = {}) {
+        return this._conTransaccionStock(async () => {
+            const producto = await this.productoRepository.buscarPorId(id);
+            if (!producto) {
+                throw new NotFoundError("Producto");
+            }
 
-        if (!eliminado) {
-            throw new NotFoundError("Producto");
-        }
+            const stockAnterior = producto.unidad !== undefined
+                ? Number(producto.unidad)
+                : Number(producto.peso);
 
-        return eliminado;
+            await this._registrarMovimientoStock({
+                producto,
+                stockAnterior,
+                stockNuevo: 0,
+                tipo: "eliminacion",
+                idUsuario,
+            });
+
+            const eliminado = await this.productoRepository.eliminar(id);
+            if (!eliminado) {
+                throw new NotFoundError("Producto");
+            }
+
+            return eliminado;
+        }, administrarTransacciones);
     }
 
-    async aumentarStock(id, cantidad, idUsuario, motivo = "Reposición de mercadería", { administrarTransacciones = true } = {}) {
+    async aumentarStock(id, cantidad, idUsuario, { administrarTransacciones = true } = {}) {
         if (typeof cantidad !== "number" || !Number.isFinite(cantidad) || cantidad <= 0) {
             throw new BadRequestError("La cantidad debe ser un número positivo");
         }
@@ -168,7 +185,6 @@ export class ProductoService {
                 stockAnterior,
                 stockNuevo,
                 tipo: "entrada",
-                motivo,
                 idUsuario,
             });
 
@@ -176,7 +192,7 @@ export class ProductoService {
         }, administrarTransacciones);
     }
 
-    async disminuirStock(id, cantidad, idUsuario, motivo = "Venta", { administrarTransacciones = true } = {}) {
+    async disminuirStock(id, cantidad, idUsuario, { administrarTransacciones = true } = {}) {
         if (typeof cantidad !== "number" || !Number.isFinite(cantidad) || cantidad <= 0) {
             throw new BadRequestError("La cantidad debe ser un número positivo");
         }
@@ -208,7 +224,6 @@ export class ProductoService {
                 stockAnterior,
                 stockNuevo,
                 tipo: "salida",
-                motivo,
                 idUsuario,
             });
 
@@ -248,7 +263,7 @@ export class ProductoService {
         }
     }
 
-    async _registrarMovimientoStock({ producto, stockAnterior, stockNuevo, tipo, motivo, idUsuario }) {
+    async _registrarMovimientoStock({ producto, stockAnterior, stockNuevo, tipo, idUsuario }) {
         if (!this.movimientoStockService || !this.categoriaRepository || !this.userRepository) {
             throw new Error("Faltan dependencias para registrar el movimiento de stock");
         }
@@ -257,7 +272,7 @@ export class ProductoService {
         }
 
         const cantidad = stockNuevo - stockAnterior;
-        if (cantidad === 0) return;
+        if (cantidad === 0 && tipo !== "eliminacion") return;
 
         const esPorUnidad = producto.unidad !== undefined;
         const categoria = await this.categoriaRepository.buscarPorId(producto.idCategoria);
@@ -280,7 +295,6 @@ export class ProductoService {
             idCategoria: producto.idCategoria,
             nombreCategoria: categoria.nombre,
             tipo,
-            motivo,
             cantidad,
             unidadMedida: esPorUnidad ? "unidad" : producto.unidadMedida,
             stockAnterior,

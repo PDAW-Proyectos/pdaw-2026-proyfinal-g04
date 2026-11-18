@@ -176,6 +176,14 @@ export function crearPreciosStore(api) {
             actualizar({ paginaActual: 1 });
             await store.recargar();
         },
+
+        async eliminarProducto(id) {
+            await api.eliminarProducto(id);
+            if (estado.catalogoEdicion.length === 1 && estado.paginaActual > 1) {
+                actualizar({ paginaActual: estado.paginaActual - 1 });
+            }
+            await store.recargar();
+        },
     };
 
     return store;

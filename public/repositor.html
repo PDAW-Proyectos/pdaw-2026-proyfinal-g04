@@ -323,7 +323,53 @@
         </section>
 
         <section id="movimientos" class="vista">
-          <h2>Historial de Movimientos</h2>
+           <header class="vista-header">
+            <h2>Historial de movimientos</h2>
+          </header>
+
+          <!-- Tabla movimientos -->
+          <div class="tabla-contenedor">
+            <table class="tabla-base">
+              <thead>
+                <tr>
+                  <th>
+                    ID 
+                  </th>
+                  <th>
+                    Fecha
+                  </th>
+                  <th data-sort="rubro">
+                    Producto
+                  </th>
+                  <th>Movimiento</th>
+                  <th>Cantidad</th>
+                  <th>
+                    Stock
+                  </th>
+                  <th>
+                    Usuario
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="tabla-movimientos-body"></tbody>
+            </table>
+          </div>
+
+          <!-- Paginado -->
+          <nav class="paginacion" aria-label="Navegación de páginas">
+            <button class="btn-secundario" id="btn-anterior-mov">
+              <i data-lucide="chevron-left" aria-hidden="true"></i>
+              <span>Anterior</span>
+            </button>
+
+            <div class="numeros-paginacion" id="numeros-paginacion-mov"></div>
+
+            <button class="btn-secundario" id="btn-siguiente-mov">
+              <span>Siguiente</span>
+              <i data-lucide="chevron-right" aria-hidden="true"></i>
+            </button>
+          </nav>
+
         </section>
       </div>
     </main>
