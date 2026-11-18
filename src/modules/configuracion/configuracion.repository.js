@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { Repository } from "../../common/config/repository.js";
 
 export class ConfiguracionRepository extends Repository {
