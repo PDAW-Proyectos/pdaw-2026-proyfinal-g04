@@ -2,19 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { Repository } from "../../common/config/repository.js";
 
 export class ConfiguracionRepository extends Repository {
-    #configuracion = {
-        sessionExpiringTime: 8 * 60 * 60 * 1000,
-        negocio: {
-            nombre: "Mi Comercio",
-            telefono: "",
-            direccion: ""
-        },
-        stock: {
-            critico: 5,
-            medio: 15
-        },
-        cajas: []
-    };
+    #configuracion
 
     constructor(ruta, factory) {
         super(ruta, factory);
@@ -28,6 +16,10 @@ export class ConfiguracionRepository extends Repository {
 
     get configuracion() {
         return this.#configuracion;
+    }
+
+    set configuracion(configuracion) {
+        this.#configuracion = configuracion
     }
 
     async actualizarConfiguracion(datos) {
@@ -55,28 +47,8 @@ export class ConfiguracionRepository extends Repository {
 		await writeFile(this.ruta, JSON.stringify(data, null, 2), "utf8");
 	}
 
-    async cargar() {
-        try {
-            const datos = JSON.parse(await readFile(this.ruta, "utf8"));
-            this.cargarDesdeJson(datos.entidades);
-            this.#configuracion = {
-                ...this.#configuracion,
-                ...datos?.configuracion,
-                negocio: {
-                    ...this.#configuracion.negocio,
-                    ...datos?.configuracion?.negocio
-                },
-            stock: {
-                ...this.#configuracion.stock,
-                ...datos?.configuracion?.stock
-            },
-            cajas: datos?.configuracion?.cajas ?? this.#configuracion.cajas
-        };
-            this.proximoId = Math.max(0, ...this.entidades.map((e) => e.id)) + 1;
-        } catch (error) {
-            if (error.code !== "ENOENT") {
-                throw error;
-            }
-        }
-    }
+    cargarDesdeJson = (datos) => {
+        this.entidades = datos.entidades ?? {};
+        this.configuracion = datos.configuracion;
+    };
 }
