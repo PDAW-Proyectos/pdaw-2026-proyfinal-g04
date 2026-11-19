@@ -86,7 +86,7 @@ export class ConfiguracionService {
             throw new ConflictError("Ya existe una caja con ese nombre");
         }
 
-        cajas[indice] = { nombre: nombreNuevo };
+        cajas[indice] = nombreNuevo;
         await this.configuracionRepository.actualizarConfiguracion({ cajas });
 
         return (await this.obtenerConfiguracion()).configuracion;
