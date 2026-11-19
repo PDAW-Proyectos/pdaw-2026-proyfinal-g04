@@ -64,7 +64,6 @@ export class IngresoService {
             const articulos = [];
 
             for (const articulo of datos.articulos) {
-                console.log(articulo);
                 const resultado = await this.productoService.disminuirStock(
                     articulo.id,
                     articulo.unidad || articulo.peso || articulo.cantidad,

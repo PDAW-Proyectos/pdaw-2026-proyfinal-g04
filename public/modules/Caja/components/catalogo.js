@@ -28,12 +28,11 @@ export function renderizarGrillaPrincipal(articulos) {
                 <div class="card-detalles">
                 <h3 class="producto-nombre">${prod.nombre}</h3>
                 <span class="producto-categoria">${prod.categoria ?? ""}</span>
+                <span class="producto-categoria">${!prod.peso ? `Unidades: ${prod.stock}` : `Peso: ${prod.stock} - ${prod.unidadMedida}`}</span>
                 <div class="producto-footer">
                     <strong class="producto-precio">${precio}</strong>
-                    <button type="button" class="btn-cantidad-catalogo ${String(prod.categoria).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === "verduleria" ? "btn-balanza-catalogo" : ""}" data-accion="abrir-modal-cantidad" aria-label="Cambiar cantidad" ${noDisponible ? "disabled" : ""}>
-                    ${String(prod.categoria).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === "verduleria"
-                        ? '<i data-lucide="scale" aria-hidden="true"></i>'
-                        : ""}
+                    <button type="button" class="btn-cantidad-catalogo ${prod.peso ? "btn-balanza-catalogo" : ""}" data-accion="abrir-modal-cantidad" aria-label="Cambiar cantidad" ${noDisponible ? "disabled" : ""}>
+                    ${prod.peso ? '<i data-lucide="scale" aria-hidden="true"></i>' : ""}
                     <span class="cantidad-label">CANT</span>
                     <span class="badge-cant">1</span>
                     </button>

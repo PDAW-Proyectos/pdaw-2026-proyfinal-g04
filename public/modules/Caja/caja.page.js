@@ -46,7 +46,7 @@ const transformarProducto = (producto, categoriasPorId) => {
     precio,
     stock: producto.unidad ?? producto.peso ?? null,
     peso: producto.peso !== undefined,
-    unidadMedida: producto.peso !== undefined ? "kg" : "u",
+    unidadMedida: producto.peso !== undefined ? producto.unidadMedida : "u",
     codigoBarras: generarCodigoBarrasFalso(producto.id),
     categoria:
       categoriasPorId.get(Number(producto.idCategoria)) ?? "Sin categoria",
@@ -67,6 +67,7 @@ export function iniciarCaja() {
   let usuariosPorId = new Map();
   let cajasConfiguradas = [];
   let cajaSeleccionada = null;
+  let categoriaCatalogoActiva = "";
   const notificar = mostrarNotificacion;
 
   const tablaVentas = crearTablaVentas({
@@ -563,6 +564,13 @@ export function iniciarCaja() {
 
       store.limpiarVenta();
       notificar("Venta registrada correctamente.");
+
+      try {
+        await cargarCatalogo(categoriaCatalogoActiva, { preservarVista: true });
+      } catch {
+        notificar("No se pudo actualizar el catalogo.", "error");
+      }
+
       return true;
     } catch (error) {
       notificar(error.message, "error");
@@ -649,7 +657,24 @@ export function iniciarCaja() {
     notificar(`${producto.nombre} agregado a la venta.`);
   });
 
-  const cargarCatalogo = async (idCategoria = "") => {
+  function filtrarCatalogo(termino = "") {
+    const normalizado = termino.toLowerCase().trim();
+    catalogoFiltrado = normalizado
+      ? catalogoBase.filter((producto) => {
+          const nombre = String(producto.nombre ?? "").toLowerCase();
+          const id = String(producto.id ?? "");
+
+          return nombre.includes(normalizado) || id.includes(normalizado);
+        })
+      : [...catalogoBase];
+  }
+
+  const cargarCatalogo = async (
+    idCategoria = "",
+    { preservarVista = false } = {},
+  ) => {
+    const termino = preservarVista ? inputBuscarProducto.value : "";
+    const pagina = paginaCatalogo;
     const productos = idCategoria
       ? await api.filtrarProductos({ idCategoria: Number(idCategoria) })
       : await api.listarProductos();
@@ -660,13 +685,13 @@ export function iniciarCaja() {
     );
     const productosTransformados = productos
       .map((producto) => transformarProducto(producto, categoriasPorId))
-      .filter(Boolean);
+      .filter(producto => producto && Number(producto.precio) > 0);
 
     store.establecerProductos(productosTransformados);
     catalogoBase = productosTransformados;
-    catalogoFiltrado = [...catalogoBase];
-    paginaCatalogo = 1;
-    inputBuscarProducto.value = "";
+    filtrarCatalogo(termino);
+    inputBuscarProducto.value = preservarVista ? termino : "";
+    paginaCatalogo = preservarVista ? pagina : 1;
     renderizarCatalogo();
   };
 
@@ -709,15 +734,7 @@ export function iniciarCaja() {
   const inputBuscarProducto = document.getElementById("buscar-producto-caja");
 
   inputBuscarProducto?.addEventListener("input", () => {
-    const termino = inputBuscarProducto.value.toLowerCase().trim();
-
-    catalogoFiltrado = catalogoBase.filter((producto) => {
-      const nombre = String(producto.nombre ?? "").toLowerCase();
-      const id = String(producto.id ?? "");
-
-      return nombre.includes(termino) || id.includes(termino);
-    });
-
+    filtrarCatalogo(inputBuscarProducto.value);
     paginaCatalogo = 1;
     renderizarCatalogo();
   });
@@ -1074,7 +1091,8 @@ export function iniciarCaja() {
         .querySelectorAll("#catalogo .chips-categorias .chip")
         .forEach((chip) => chip.classList.remove("active"));
       btnChipCategoria.classList.add("active");
-      cargarCatalogo(btnChipCategoria.dataset.categoria);
+      categoriaCatalogoActiva = btnChipCategoria.dataset.categoria ?? "";
+      cargarCatalogo(categoriaCatalogoActiva);
       return;
     }
 

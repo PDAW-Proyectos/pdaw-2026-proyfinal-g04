@@ -4,7 +4,7 @@ export const usuariosSeed = [
         email: "admin@kchin.com",
         contraseña: "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
         nombre: "Joaco",
-        apellido: "Yakete",
+        apellido: "Lopez",
         habilitado: true,
         rol: "admin"
     },
@@ -31,7 +31,7 @@ export const usuariosSeed = [
         email: "deshabilitado@kchin.com",
         contraseña: "$2b$10$flsOFZf0IzUVqZ6gG2cHUOWzLFkrLvUz.cMgWfJcGDYFuBtXg5lyC",
         nombre: "Luis",
-        apellido: "Luis",
+        apellido: "Rodriguez",
         habilitado: false,
         rol: "admin"
     }
