@@ -46,6 +46,8 @@ export class AuthService {
     login = async ({ email, password, requestedRole }) => {
         const credenciales = await this.userService.buscarUsuarioPorEmail(email);
     
+        if(!credenciales.habilitado) throw new ConflictError("El usuario está deshabilitado")
+
         if (
             !credenciales ||
             !(await bcrypt.compare(
