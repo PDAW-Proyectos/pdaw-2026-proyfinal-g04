@@ -685,7 +685,7 @@ export function iniciarCaja() {
     );
     const productosTransformados = productos
       .map((producto) => transformarProducto(producto, categoriasPorId))
-      .filter(Boolean);
+      .filter(producto => producto && Number(producto.precio) > 0);
 
     store.establecerProductos(productosTransformados);
     catalogoBase = productosTransformados;
