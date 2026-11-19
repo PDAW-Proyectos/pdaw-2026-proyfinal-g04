@@ -45,8 +45,6 @@ export class AuthService {
     
     login = async ({ email, password, requestedRole }) => {
         const credenciales = await this.userService.buscarUsuarioPorEmail(email);
-    
-        if(!credenciales.habilitado) throw new ConflictError("El usuario está deshabilitado")
 
         if (
             !credenciales ||
@@ -57,6 +55,8 @@ export class AuthService {
         ) {
             throw new UnauthorizedError("Email o contraseña incorrectos");
         }
+
+        if(credenciales.habilitado === false) throw new ConflictError("El usuario está deshabilitado")
     
         const rolReal = credenciales.rol || credenciales.role;
     
