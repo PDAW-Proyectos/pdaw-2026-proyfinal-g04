@@ -74,7 +74,7 @@ export function crearArticulosStore({ inventario = [], proveedores = [], itemsPo
             const busqueda = termino.toLowerCase();
 
             productosFiltrados = baseProductos.filter((producto) => {
-                const coincideTexto = producto.nombre.toLowerCase().includes(busqueda) || String(producto.id).toLowerCase().includes(busqueda) || String(producto.categoria).toLowerCase().includes(busqueda) || String(producto.precio).includes(busqueda);
+                const coincideTexto = producto.nombre.toLowerCase().includes(busqueda) || String(producto.id).toLowerCase().includes(busqueda) || String(producto.categoria).toLowerCase().includes(busqueda) || String(producto.precio ?? "Sin precio").toLowerCase().includes(busqueda);
 
                 let coincideSemaforo = true;
                 if (estadoStock === "critico") {

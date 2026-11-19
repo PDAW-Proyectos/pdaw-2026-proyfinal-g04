@@ -46,7 +46,7 @@ export function iniciarModalConsulta({ api, store, configuracionApi, notificar }
 
         document.getElementById("res-nombre").textContent = producto.nombre;
         document.getElementById("res-precio").textContent =
-            formatearPrecio(producto.precio);
+            producto.precio == null ? "Sin precio" : formatearPrecio(producto.precio);
 
         const badgeStock = document.getElementById("res-stock-badge");
         if (badgeStock) {

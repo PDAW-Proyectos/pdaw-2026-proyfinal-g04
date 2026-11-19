@@ -23,18 +23,23 @@ export function crearArticulosApi(base = "/api") {
     }
 
     function mapearProducto(producto, categorias = new Map()) {
-        const cotizacion = Number(producto.cotizacion);
-        if (typeof producto.precioUsd !== "number" || !Number.isFinite(producto.precioUsd) || producto.precioUsd < 0) {
-            throw new Error(`El producto ${producto.id} no tiene un precio USD válido`);
-        }
-        if (!Number.isFinite(cotizacion) || cotizacion <= 0) {
-            throw new Error(`El producto ${producto.id} no tiene una cotización válida`);
+        let precio = producto.precio ?? null;
+        if (producto.precioUsd !== undefined && producto.precioUsd !== null) {
+            const cotizacion = Number(producto.cotizacion);
+            if (typeof producto.precioUsd !== "number" || !Number.isFinite(producto.precioUsd) || producto.precioUsd < 0) {
+                throw new Error(`El producto ${producto.id} no tiene un precio USD válido`);
+            }
+            if (!Number.isFinite(cotizacion) || cotizacion <= 0) {
+                throw new Error(`El producto ${producto.id} no tiene una cotización válida`);
+            }
+
+            precio ??= redondearPrecio(producto.precioUsd * cotizacion);
         }
 
         return {
             ...producto,
             categoria: categorias.get(String(producto.idCategoria)) ?? producto.categoria ?? "General",
-            precio: producto.precio ?? redondearPrecio(producto.precioUsd * cotizacion),
+            precio,
             stock: Number(producto.unidad ?? producto.peso ?? 0),
         };
     }
