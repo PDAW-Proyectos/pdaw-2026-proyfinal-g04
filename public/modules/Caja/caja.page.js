@@ -35,9 +35,11 @@ import {
 import { crearPaginador } from "../../common/components/paginacion.js";
 
 const transformarProducto = (producto, categoriasPorId) => {
-  const precio = Number(producto.precioUsd) * Number(producto.cotizacion);
-
-  if (!Number.isFinite(precio) || precio <= 0) return null;
+  let precio = producto.precio ?? null;
+  if (producto.precioUsd !== undefined && producto.precioUsd !== null) {
+    precio = Number(producto.precioUsd) * Number(producto.cotizacion);
+    if (!Number.isFinite(precio) || precio < 0) return null;
+  }
 
   return {
     ...producto,
@@ -617,7 +619,7 @@ export function iniciarCaja() {
         (producto) => `
       <button type="button" class="resultado-busqueda" data-id="${producto.id}">
         <strong>${producto.nombre}</strong>
-        <span>${formatearPrecio(producto.precio)}</span>
+        <span>${producto.precio == null ? "Sin precio" : formatearPrecio(producto.precio)}</span>
       </button>
     `,
       )

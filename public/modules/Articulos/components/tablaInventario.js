@@ -17,7 +17,9 @@ export function crearTablaInventario({ tbody, onActualizar }) {
 
             productos.forEach((producto) => {
                 const fila = document.createElement("tr");
-                const precio = `$ ${Number(producto.precio).toLocaleString("es-AR")}`;
+                const precio = producto.precio == null
+                    ? "Sin precio"
+                    : `$ ${Number(producto.precio).toLocaleString("es-AR")}`;
                 let claseStock = "neutro";
 
                 if (producto.stock <= umbralesStock.critico) {
